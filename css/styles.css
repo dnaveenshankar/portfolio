@@ -367,7 +367,6 @@ code,
 del,
 dfn,
 em,
-img,
 ins,
 kbd,
 q,
@@ -429,6 +428,13 @@ video {
     font          : inherit;
     vertical-align: baseline;
 }
+
+img {
+    max-width: 100%; 
+    height: auto;    
+    display: block;
+}
+
 
 /* HTML5 display-role reset for older browsers */
 article,
@@ -762,65 +768,23 @@ table {
  * ## tablet devices (601px to 800px)  
  * -------------------------------------------------------------------- */
 @media screen and (max-width: 800px) {
-    .tab-1 {
-        flex : none;
-        width: 8.3333333333%;
+    .tab-1, .tab-2, .tab-3, .tab-4, .tab-5, .tab-6,
+    .tab-7, .tab-8, .tab-9, .tab-10, .tab-11, .tab-12 {
+        flex: none; /* Avoid flex growth */
     }
 
-    .tab-2 {
-        flex : none;
-        width: 16.6666666667%;
-    }
-
-    .tab-3 {
-        flex : none;
-        width: 25%;
-    }
-
-    .tab-4 {
-        flex : none;
-        width: 33.3333333333%;
-    }
-
-    .tab-5 {
-        flex : none;
-        width: 41.6666666667%;
-    }
-
-    .tab-6 {
-        flex : none;
-        width: 50%;
-    }
-
-    .tab-7 {
-        flex : none;
-        width: 58.3333333333%;
-    }
-
-    .tab-8 {
-        flex : none;
-        width: 66.6666666667%;
-    }
-
-    .tab-9 {
-        flex : none;
-        width: 75%;
-    }
-
-    .tab-10 {
-        flex : none;
-        width: 83.3333333333%;
-    }
-
-    .tab-11 {
-        flex : none;
-        width: 91.6666666667%;
-    }
-
-    .tab-12 {
-        flex : none;
-        width: 100%;
-    }
+    .tab-1 { width: 8.33%; }
+    .tab-2 { width: 16.67%; }
+    .tab-3 { width: 25%; }
+    .tab-4 { width: 33.33%; }
+    .tab-5 { width: 41.67%; }
+    .tab-6 { width: 50%; }
+    .tab-7 { width: 58.33%; }
+    .tab-8 { width: 66.67%; }
+    .tab-9 { width: 75%; }
+    .tab-10 { width: 83.33%; }
+    .tab-11 { width: 91.67%; }
+    .tab-12 { width: 100%; }
 }
 
 /* --------------------------------------------------------------------
@@ -828,95 +792,42 @@ table {
  * -------------------------------------------------------------------- */
 @media screen and (max-width: 600px) {
     .row {
-        width        : 100%;
-        padding-left : 6vw;
-        padding-right: 6vw;
+        width: 100%;
+        padding: 0 6vw; /* More uniform padding */
     }
 
     .row .row {
-        padding-left : 0;
-        padding-right: 0;
+        padding: 0; /* Resetting padding for nested rows */
     }
 
-    .mob-1 {
-        flex : none;
-        width: 8.3333333333%;
-    }
-
-    .mob-2 {
-        flex : none;
-        width: 16.6666666667%;
-    }
-
-    .mob-3 {
-        flex : none;
-        width: 25%;
-    }
-
-    .mob-4 {
-        flex : none;
-        width: 33.3333333333%;
-    }
-
-    .mob-5 {
-        flex : none;
-        width: 41.6666666667%;
-    }
-
-    .mob-6 {
-        flex : none;
-        width: 50%;
-    }
-
-    .mob-7 {
-        flex : none;
-        width: 58.3333333333%;
-    }
-
-    .mob-8 {
-        flex : none;
-        width: 66.6666666667%;
-    }
-
-    .mob-9 {
-        flex : none;
-        width: 75%;
-    }
-
-    .mob-10 {
-        flex : none;
-        width: 83.3333333333%;
-    }
-
-    .mob-11 {
-        flex : none;
-        width: 91.6666666667%;
-    }
-
-    .mob-12 {
-        flex : none;
-        width: 100%;
-    }
+    /* Mobile specific widths */
+    .mob-1 { width: 8.33%; }
+    .mob-2 { width: 16.67%; }
+    .mob-3 { width: 25%; }
+    .mob-4 { width: 33.33%; }
+    .mob-5 { width: 41.67%; }
+    .mob-6 { width: 50%; }
+    .mob-7 { width: 58.33%; }
+    .mob-8 { width: 66.67%; }
+    .mob-9 { width: 75%; }
+    .mob-10 { width: 83.33%; }
+    .mob-11 { width: 91.67%; }
+    .mob-12 { width: 100%; }
 }
 
 /* --------------------------------------------------------------------
  * ## small mobile devices (up to 400px)
  * -------------------------------------------------------------------- */
-
- /* stack columns vertically
- */
 @media screen and (max-width: 400px) {
     .row .row {
-        margin-left : 0;
-        margin-right: 0;
+        margin: 0; /* Simplified */
     }
 
     .column {
-        flex        : none;
-        width       : 100%;
-        margin-left : 0;
-        margin-right: 0;
-        padding     : 0;
+        flex: none;
+        width: 100%; /* Full width on small devices */
+        margin: 0; /* Reset margins */
+        padding: 0; /* Reset padding */
     }
 }
 
@@ -924,31 +835,15 @@ table {
  * ## additional column stackpoints 
  * -------------------------------------------------------------------- */
 @media screen and (max-width: 900px) {
-    .stack-on-900 {
-        flex        : none;
-        width       : 100%;
-        margin-left : 0;
-        margin-right: 0;
-    }
-}
-
-@media screen and (max-width: 700px) {
-    .stack-on-700 {
-        flex        : none;
-        width       : 100%;
-        margin-left : 0;
-        margin-right: 0;
-    }
-}
-
-@media screen and (max-width: 550px) {
+    .stack-on-900,
+    .stack-on-700,
     .stack-on-550 {
-        flex        : none;
-        width       : 100%;
-        margin-left : 0;
-        margin-right: 0;
+        flex: none;
+        width: 100%; /* Full width on specified breakpoints */
+        margin: 0; /* Reset margins */
     }
 }
+
 
 
 /* ===================================================================
