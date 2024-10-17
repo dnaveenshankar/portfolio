@@ -307,145 +307,108 @@
 
 
         <!-- # works -->
-
-<!-- Include this for Glightbox (Popup functionality) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-
-<script>
-    // Initialize Glightbox
-    const lightbox = GLightbox({
-        selector: '.glightbox'
-    });
-</script>
-
-<style>
-    .entry__thumb {
-        border-radius: 15px; /* Curved borders */
-        background-color: #333; /* Dark grey background */
-        padding: 15px;
-        text-align: center;
-        color: white;
-        margin-bottom: 15px; /* Add space between containers */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
-        cursor: pointer;
-        transition: transform 0.3s ease; /* Hover effect */
-        width: 200px; /* Make containers smaller */
-    }
-
-    .entry__thumb:hover {
-        transform: scale(1.05); /* Slight zoom effect on hover */
-    }
-
-    .entry__title {
-        font-size: 1.2em;
-        color: #fff;
-    }
-
-    /* Container wrapper for spacing */
-    .container {
-        display: flex;
-        flex-direction: row;
-        gap: 20px; /* Space between containers */
-        justify-content: center;
-        flex-wrap: wrap; /* Wrap to fit screen */
-    }
-
-    body {
-        background-color: #1a1a1a; /* Black background for the page */
-        color: white; /* White text for contrast */
-    }
-</style>
-
-<!-- Wrapper for containers -->
-<div class="container">
-    <!-- College Event Management System -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/event_management_system.jpg" class="entry__link glightbox" data-glightbox="title: College Event Management System; description: <p>A comprehensive system designed to streamline event planning and management for colleges, enabling easy coordination and collaboration among students and faculty.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">College Event Management System</h4>
-            </div>
-        </a>
+<section id="works" class="s-works target-section">
+    <div class="row">
+        <div class="column xl-12">
+            <div class="section-header" data-num="02">
+                <h2 class="text-display-title">Best Works.</h2>
+            </div> <!-- end section-header -->
+        </div>
     </div>
 
-    <!-- E-Museum -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/e_museum.jpg" class="entry__link glightbox" data-glightbox="title: E-Museum; description: <p>An innovative platform for cryptocurrency ticket bookings, providing users with a seamless experience in exploring museum exhibits.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">E-Museum</h4>
+    <div class="row folio-entries">
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: College Event Management System; description: .entry__desc-01">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">College Event Management System</h4>
+                        <div class="entry__cat">Web Development</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-01" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/event_management_system.jpg" alt="College Event Management System">
+                <p>A comprehensive system designed to streamline event planning and management for colleges, enabling easy coordination and collaboration among students and faculty.</p>
             </div>
-        </a>
-    </div>
+        </div> <!-- entry -->
 
-    <!-- Local Bus Ticket Booking -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/bus_ticket_booking.jpg" class="entry__link glightbox" data-glightbox="title: Local Bus Ticket Booking; description: <p>A user-friendly webpage designed to facilitate bus ticket bookings, providing convenience for local commuters.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">Local Bus Ticket Booking</h4>
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: E-Museum; description: .entry__desc-02">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">E-Museum</h4>
+                        <div class="entry__cat">Web Development</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-02" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/e_museum.jpg" alt="E-Museum">
+                <p>An innovative platform for cryptocurrency ticket bookings, providing users with a seamless experience in exploring museum exhibits.</p>
             </div>
-        </a>
-    </div>
+        </div> <!-- entry -->
 
-    <!-- Blood Donor Connection -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/gallery/blood_donor_connection.jpg" class="entry__link glightbox" data-glightbox="title: Blood Donor Connection; description: <p>A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">Blood Donor Connection</h4>
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: Local Bus Ticket Booking; description: .entry__desc-03">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">Local Bus Ticket Booking</h4>
+                        <div class="entry__cat">Web Development</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-03" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/bus_ticket_booking.jpg" alt="Local Bus Ticket Booking">
+                <p>A user-friendly webpage designed to facilitate bus ticket bookings, providing convenience for local commuters.</p>
             </div>
-        </a>
-    </div>
+        </div> <!-- entry -->
 
-    <!-- Automatic Timetable Generator -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/timetable_generator.jpg" class="entry__link glightbox" data-glightbox="title: Automatic Timetable Generator; description: <p>A tool designed to automatically generate class timetables, simplifying scheduling for students and educators.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">Automatic Timetable Generator</h4>
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: Blood Donor Connection; description: .entry__desc-04">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">Blood Donor Connection</h4>
+                        <div class="entry__cat">Web Development</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-04" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/blood_donor_connection.jpg" alt="Blood Donor Connection">
+                <p>A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>
             </div>
-        </a>
-    </div>
+        </div> <!-- entry -->
 
-    <!-- Netronics'23 & 2.0 Event Management -->
-    <div class="column entry">
-        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/event_management.jpg" class="entry__link glightbox" data-glightbox="title: Netronics'23 & 2.0; description: <p>Organized events "Netronics 23" & "Netronics 2.0" as Chairperson, successfully handling over 1000 participants.</p>">
-            <div class="entry__thumb">
-                <h4 class="entry__title">Netronics'23 & 2.0</h4>
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: Automatic Timetable Generator; description: .entry__desc-05">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">Automatic Timetable Generator</h4>
+                        <div class="entry__cat">Web Development</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-05" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/timetable_generator.jpg" alt="Automatic Timetable Generator">
+                <p>A tool designed to automatically generate class timetables, simplifying scheduling for students and educators.</p>
             </div>
-        </a>
-    </div>
-</div>
+        </div> <!-- entry -->
 
-<!-- Project Details: Initially Hidden -->
-<div id="project-1" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/event_management_system.jpg" alt="College Event Management System" style="width:100%; margin-top:10px;">
-    <p>A comprehensive system designed to streamline event planning and management for colleges, enabling easy coordination and collaboration among students and faculty.</p>
-</div>
+        <div class="column entry">
+            <a href="#" class="entry__link glightbox" data-glightbox="title: Event Management; description: .entry__desc-06">
+                <div class="entry__thumb">
+                    <div class="entry__container" style="background-color: black; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h4 class="entry__title">Netronics'23 & 2.0</h4>
+                        <div class="entry__cat">Event Management</div>
+                    </div>
+                </div>
+            </a>
+            <div class="glightbox-desc entry__desc-06" style="display: none;">
+                <img src="https://dnaveenshankar.github.io/portfolio/images/folio/event_management.jpg" alt="Event Management">
+                <p>Organized events "Netronics 23" & "Netronics 2.0" as Chairperson, successfully handling over 1000 participants.</p>
+            </div>
+        </div> <!-- entry -->
+    </div> <!-- folio entries -->
+</section>
 
-<div id="project-2" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/e_museum.jpg" alt="E-Museum" style="width:100%; margin-top:10px;">
-    <p>An innovative platform for cryptocurrency ticket bookings, providing users with a seamless experience in exploring museum exhibits.</p>
-</div>
-
-<div id="project-3" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/bus_ticket_booking.jpg" alt="Local Bus Ticket Booking" style="width:100%; margin-top:10px;">
-    <p>A user-friendly webpage designed to facilitate bus ticket bookings, providing convenience for local commuters.</p>
-</div>
-
-<div id="project-4" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/gallery/blood_donor_connection.jpg" alt="Blood Donor Connection" style="width:100%; margin-top:10px;">
-    <p>A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>
-</div>
-
-<div id="project-5" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/timetable_generator.jpg" alt="Automatic Timetable Generator" style="width:100%; margin-top:10px;">
-    <p>A tool designed to automatically generate class timetables, simplifying scheduling for students and educators.</p>
-</div>
-
-<div id="project-6" class="project-details" style="display:none;">
-    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/event_management.jpg" alt="Netronics'23 & 2.0 Event Management" style="width:100%; margin-top:10px;">
-    <p>Organized events "Netronics 23" & "Netronics 2.0" as Chairperson, successfully handling over 1000 participants.</p>
-</div>
-
-        
         <!-- end of works -->
        
 
