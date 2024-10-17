@@ -308,59 +308,47 @@
 
         <!-- # works -->
 
-<!-- Include this script at the end of the body to handle click functionality -->
-<script>
-    function showProjectDetails(projectId) {
-        // Hide all project details initially
-        var allProjects = document.querySelectorAll('.project-details');
-        allProjects.forEach(function (project) {
-            project.style.display = 'none';
-        });
+<!-- Include this for Glightbox (Popup functionality) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-        // Display the selected project details
-        var projectToShow = document.getElementById(projectId);
-        if (projectToShow) {
-            projectToShow.style.display = 'block';
-        }
-    }
+<script>
+    // Initialize Glightbox
+    const lightbox = GLightbox({
+        selector: '.glightbox'
+    });
 </script>
 
 <style>
     .entry__thumb {
         border-radius: 15px; /* Curved borders */
         background-color: #333; /* Dark grey background */
-        padding: 20px;
+        padding: 15px;
         text-align: center;
         color: white;
         margin-bottom: 15px; /* Add space between containers */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
         cursor: pointer;
         transition: transform 0.3s ease; /* Hover effect */
+        width: 200px; /* Make containers smaller */
     }
 
     .entry__thumb:hover {
         transform: scale(1.05); /* Slight zoom effect on hover */
     }
 
-    .project-details {
-        border-radius: 15px; /* Curved borders for project details */
-        background-color: #222; /* Dark background */
-        padding: 20px;
-        color: white;
-        margin-top: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
-    }
-
     .entry__title {
-        font-size: 1.5em;
+        font-size: 1.2em;
         color: #fff;
     }
 
     /* Container wrapper for spacing */
     .container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 20px; /* Space between containers */
+        justify-content: center;
+        flex-wrap: wrap; /* Wrap to fit screen */
     }
 
     body {
@@ -371,46 +359,58 @@
 
 <!-- Wrapper for containers -->
 <div class="container">
-    <!-- Container for College Event Management System -->
-    <div class="column entry" onclick="showProjectDetails('project-1')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">College Event Management System</h4>
-        </div>
+    <!-- College Event Management System -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/event_management_system.jpg" class="entry__link glightbox" data-glightbox="title: College Event Management System; description: <p>A comprehensive system designed to streamline event planning and management for colleges, enabling easy coordination and collaboration among students and faculty.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">College Event Management System</h4>
+            </div>
+        </a>
     </div>
 
-    <!-- Container for E-Museum -->
-    <div class="column entry" onclick="showProjectDetails('project-2')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">E-Museum</h4>
-        </div>
+    <!-- E-Museum -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/e_museum.jpg" class="entry__link glightbox" data-glightbox="title: E-Museum; description: <p>An innovative platform for cryptocurrency ticket bookings, providing users with a seamless experience in exploring museum exhibits.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">E-Museum</h4>
+            </div>
+        </a>
     </div>
 
-    <!-- Container for Local Bus Ticket Booking -->
-    <div class="column entry" onclick="showProjectDetails('project-3')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">Local Bus Ticket Booking</h4>
-        </div>
+    <!-- Local Bus Ticket Booking -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/bus_ticket_booking.jpg" class="entry__link glightbox" data-glightbox="title: Local Bus Ticket Booking; description: <p>A user-friendly webpage designed to facilitate bus ticket bookings, providing convenience for local commuters.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">Local Bus Ticket Booking</h4>
+            </div>
+        </a>
     </div>
 
-    <!-- Container for Blood Donor Connection -->
-    <div class="column entry" onclick="showProjectDetails('project-4')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">Blood Donor Connection</h4>
-        </div>
+    <!-- Blood Donor Connection -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/gallery/blood_donor_connection.jpg" class="entry__link glightbox" data-glightbox="title: Blood Donor Connection; description: <p>A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">Blood Donor Connection</h4>
+            </div>
+        </a>
     </div>
 
-    <!-- Container for Automatic Timetable Generator -->
-    <div class="column entry" onclick="showProjectDetails('project-5')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">Automatic Timetable Generator</h4>
-        </div>
+    <!-- Automatic Timetable Generator -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/timetable_generator.jpg" class="entry__link glightbox" data-glightbox="title: Automatic Timetable Generator; description: <p>A tool designed to automatically generate class timetables, simplifying scheduling for students and educators.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">Automatic Timetable Generator</h4>
+            </div>
+        </a>
     </div>
 
-    <!-- Container for Netronics'23 & 2.0 Event Management -->
-    <div class="column entry" onclick="showProjectDetails('project-6')">
-        <div class="entry__thumb">
-            <h4 class="entry__title">Netronics'23 & 2.0</h4>
-        </div>
+    <!-- Netronics'23 & 2.0 Event Management -->
+    <div class="column entry">
+        <a href="https://dnaveenshankar.github.io/portfolio/images/folio/event_management.jpg" class="entry__link glightbox" data-glightbox="title: Netronics'23 & 2.0; description: <p>Organized events "Netronics 23" & "Netronics 2.0" as Chairperson, successfully handling over 1000 participants.</p>">
+            <div class="entry__thumb">
+                <h4 class="entry__title">Netronics'23 & 2.0</h4>
+            </div>
+        </a>
     </div>
 </div>
 
