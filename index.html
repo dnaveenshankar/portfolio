@@ -308,7 +308,7 @@
 
         <!-- # works -->
 
-        <!-- Include this script at the end of the body to handle click functionality -->
+<!-- Include this script at the end of the body to handle click functionality -->
 <script>
     function showProjectDetails(projectId) {
         // Hide all project details initially
@@ -325,45 +325,92 @@
     }
 </script>
 
-<!-- Container for College Event Management System -->
-<div class="column entry" onclick="showProjectDetails('project-1')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #FF6347; padding: 20px; text-align: center; color: white;">
-        <h4 class="entry__title">College Event Management System</h4>
-    </div>
-</div>
+<style>
+    .entry__thumb {
+        border-radius: 15px; /* Curved borders */
+        background-color: #333; /* Dark grey background */
+        padding: 20px;
+        text-align: center;
+        color: white;
+        margin-bottom: 15px; /* Add space between containers */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+        cursor: pointer;
+        transition: transform 0.3s ease; /* Hover effect */
+    }
 
-<!-- Container for E-Museum -->
-<div class="column entry" onclick="showProjectDetails('project-2')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #32CD32; padding: 20px; text-align: center; color: white;">
-        <h4 class="entry__title">E-Museum</h4>
-    </div>
-</div>
+    .entry__thumb:hover {
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
 
-<!-- Container for Local Bus Ticket Booking -->
-<div class="column entry" onclick="showProjectDetails('project-3')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #1E90FF; padding: 20px; text-align: center; color: white;">
-        <h4 class="entry__title">Local Bus Ticket Booking</h4>
-    </div>
-</div>
+    .project-details {
+        border-radius: 15px; /* Curved borders for project details */
+        background-color: #222; /* Dark background */
+        padding: 20px;
+        color: white;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    }
 
-<!-- Container for Blood Donor Connection -->
-<div class="column entry" onclick="showProjectDetails('project-4')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #DC143C; padding: 20px; text-align: center; color: white;">
-        <h4 class="entry__title">Blood Donor Connection</h4>
-    </div>
-</div>
+    .entry__title {
+        font-size: 1.5em;
+        color: #fff;
+    }
 
-<!-- Container for Automatic Timetable Generator -->
-<div class="column entry" onclick="showProjectDetails('project-5')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #FFD700; padding: 20px; text-align: center; color: black;">
-        <h4 class="entry__title">Automatic Timetable Generator</h4>
-    </div>
-</div>
+    /* Container wrapper for spacing */
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Space between containers */
+    }
 
-<!-- Container for Netronics'23 & 2.0 Event Management -->
-<div class="column entry" onclick="showProjectDetails('project-6')" style="cursor: pointer;">
-    <div class="entry__thumb" style="background-color: #8A2BE2; padding: 20px; text-align: center; color: white;">
-        <h4 class="entry__title">Netronics'23 & 2.0</h4>
+    body {
+        background-color: #1a1a1a; /* Black background for the page */
+        color: white; /* White text for contrast */
+    }
+</style>
+
+<!-- Wrapper for containers -->
+<div class="container">
+    <!-- Container for College Event Management System -->
+    <div class="column entry" onclick="showProjectDetails('project-1')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">College Event Management System</h4>
+        </div>
+    </div>
+
+    <!-- Container for E-Museum -->
+    <div class="column entry" onclick="showProjectDetails('project-2')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">E-Museum</h4>
+        </div>
+    </div>
+
+    <!-- Container for Local Bus Ticket Booking -->
+    <div class="column entry" onclick="showProjectDetails('project-3')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">Local Bus Ticket Booking</h4>
+        </div>
+    </div>
+
+    <!-- Container for Blood Donor Connection -->
+    <div class="column entry" onclick="showProjectDetails('project-4')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">Blood Donor Connection</h4>
+        </div>
+    </div>
+
+    <!-- Container for Automatic Timetable Generator -->
+    <div class="column entry" onclick="showProjectDetails('project-5')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">Automatic Timetable Generator</h4>
+        </div>
+    </div>
+
+    <!-- Container for Netronics'23 & 2.0 Event Management -->
+    <div class="column entry" onclick="showProjectDetails('project-6')">
+        <div class="entry__thumb">
+            <h4 class="entry__title">Netronics'23 & 2.0</h4>
+        </div>
     </div>
 </div>
 
@@ -384,7 +431,7 @@
 </div>
 
 <div id="project-4" class="project-details" style="display:none;">
-    <img src="https://drive.google.com/uc?export=view&id=13fAwVWE-NbXW4AOtzZZFFw-7zih1S3_Z" alt="Blood Donor Connection" style="width:100%; margin-top:10px;">
+    <img src="https://dnaveenshankar.github.io/portfolio/images/folio/gallery/blood_donor_connection.jpg" alt="Blood Donor Connection" style="width:100%; margin-top:10px;">
     <p>A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>
 </div>
 
@@ -398,9 +445,8 @@
     <p>Organized events "Netronics 23" & "Netronics 2.0" as Chairperson, successfully handling over 1000 participants.</p>
 </div>
 
-
-
-<!-- end of works -->
+        
+        <!-- end of works -->
        
 
 
