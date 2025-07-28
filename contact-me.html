@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Let's Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      text-align: center;
+      color: #b50909;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 20px;
+      display: block;
+      color: #003366;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .form-section {
+      margin-bottom: 25px;
+    }
+
+    .checkbox-group,
+    .radio-group {
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+
+    .checkbox-group label,
+    .radio-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: normal;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #002244;
+    }
+
+    .social {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .social a {
+      color: #b50909;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>👋 Let's Collaborate!</h1>
+    <form action="https://formspree.io/f/mvgqranl" method="POST">
+
+      <!-- Why are you reaching out -->
+      <div class="form-section">
+        <label>Why are you contacting me?</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="Reason[]" value="Learn Web or Mobile App Dev" /> Learn Web/Mobile App Development</label>
+          <label><input type="checkbox" name="Reason[]" value="Tech collab" /> Tech Project Collaboration</label>
+          <label><input type="checkbox" name="Reason[]" value="Event help" /> Event Organizing Help</label>
+          <label><input type="checkbox" name="Reason[]" value="Problem solving" /> Problem Solving</label>
+          <label><input type="checkbox" name="Reason[]" value="College Workshop" /> College/School Workshop</label>
+          <label><input type="checkbox" name="Reason[]" value="Guest Lecture" /> Guest Lecture or Seminar</label>
+          <label><input type="checkbox" name="Reason[]" value="Personal Training" /> Personal Training Session</label>
+          <label><input type="checkbox" name="Reason[]" value="Just want to say hi" /> Just want to say hi 😄</label>
+        </div>
+      </div>
+
+      <!-- Collaboration Style -->
+      <div class="form-section">
+        <label>How do you prefer to connect?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="Collab_Mode" value="Daily sessions" required /> Daily Sessions</label>
+          <label><input type="radio" name="Collab_Mode" value="Hourly chat" /> Hourly Guidance</label>
+          <label><input type="radio" name="Collab_Mode" value="One-time help" /> One-Time Support</label>
+        </div>
+      </div>
+
+      <!-- Learning mode -->
+      <div class="form-section">
+        <label>Preferred Mode</label>
+        <select name="Learning_Mode" required>
+          <option value="" disabled selected>Select your preferred way</option>
+          <option value="Online">Online (Google Meet / Zoom)</option>
+          <option value="Chat-based">Text-based (Chat/Email)</option>
+          <option value="Hybrid">Hybrid</option>
+        </select>
+      </div>
+
+      <!-- Custom message -->
+      <div class="form-section">
+        <label>Your Message / Idea</label>
+        <textarea name="Message" rows="6" placeholder="Share your idea, your event details, or your challenge..." required></textarea>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="form-section">
+        <label>Your Name</label>
+        <input type="text" name="Name" placeholder="Your name" required />
+
+        <label>Your Email</label>
+        <input type="email" name="Email" placeholder="you@example.com" required />
+
+        <label>Your Mobile Number</label>
+        <input type="tel" name="Mobile" placeholder="+91XXXXXXXXXX" pattern="[0-9+ ]{8,15}" required />
+      </div>
+
+      <!-- Submit -->
+      <button type="submit">🚀 Let's Make It Happen</button>
+    </form>
+
+    <!-- Social -->
+    <div class="social">
+      <p>📸 Follow me on Instagram: <a href="https://www.instagram.com/_.naveen.d_" target="_blank">@_.naveen.d_</a></p>
+    </div>
+  </div>
+</body>
+</html>
