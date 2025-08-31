@@ -251,7 +251,6 @@
                         <!-- Work Experience -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Work Experience</h4>
-                            <!-- Work Experience -->
                             <ul class="s-about__list" style="list-style: none; padding: 0; margin: 0;">
                                 <!-- Wipro -->
                                 <li style="margin-bottom: 20px;">
@@ -262,16 +261,18 @@
                                         </a>
                                         <div style="color: red; font-weight: bold;">
                                             Wipro Technologies
+                                            <!-- 👇 company total experience will appear here -->
                                             <span class="company-exp" data-company="wipro"
                                                 style="color:#003366; font-weight: normal; font-size:14px;"></span>
                                         </div>
                                     </div>
                                     <div style="margin-left: 65px; margin-top: 8px;">
 
+                                        <!-- Added data-company="wipro" -->
                                         <div class="exp-role" data-role="Network Data Admin - L1"
                                             data-start="28 August 2025" data-end="Present"
                                             data-project="Flex-GIS-MEGACENTER" data-office="Wipro, Coimbatore (CMDC)"
-                                            data-skills="Networking"
+                                            data-skills="Networking" data-company="wipro"
                                             style="background: #e6f9f0; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #28a745; margin-bottom: 10px; color: #003366; font-weight: bold; cursor: pointer;">
                                             • Network Data Admin - L1<br>
                                             <span style="font-weight: normal;">28 August 2025 - Present</span>
@@ -280,6 +281,7 @@
                                         <div class="exp-role" data-role="Scholar Trainee" data-start="24 March 2025"
                                             data-end="27 August 2025" data-project="N/A"
                                             data-office="Wipro, Sholinganallur, Chennai (CDC5)" data-skills="Java FSD"
+                                            data-company="wipro"
                                             style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
                                             • Trainee<br>
                                             <span>24 March 2025 - 27 August 2025</span>
@@ -294,13 +296,17 @@
                                             <img src="./images/kaizen-logo.png" alt="Kaizen Technosoft"
                                                 style="width: 55px; height: auto;">
                                         </a>
-                                        <div style="color: red; font-weight: bold;">Kaizen Technosoft</div>
+                                        <div style="color: red; font-weight: bold;">
+                                            Kaizen Technosoft
+                                            <span class="company-exp" data-company="kaizen"
+                                                style="color:#003366; font-weight: normal; font-size:14px;"></span>
+                                        </div>
                                     </div>
                                     <div style="margin-left: 65px; margin-top: 8px;">
                                         <div class="exp-role" data-role="Web Developer Intern" data-start="21 Dec 2022"
                                             data-end="31 Dec 2022" data-project="N/A"
                                             data-office="Kaizen Technosoft, Saidapet, Chennai"
-                                            data-skills="HTML, CSS, Bootstrap"
+                                            data-skills="HTML, CSS, Bootstrap" data-company="kaizen"
                                             style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
                                             • Web Developer Intern<br>
                                             <span>21 Dec 2022 - 31 Dec 2022</span>
@@ -355,26 +361,21 @@
                                     if (months > 0) result += months + (months > 1 ? " months " : " month ");
                                     if (days > 0) result += days + (days > 1 ? " days" : " day");
 
-                                    return "(" + result.trim() + ")";
+                                    return result.trim();
                                 }
 
                                 document.addEventListener("DOMContentLoaded", function () {
-                                    // Show duration for each role
-                                    document.querySelectorAll(".exp-duration").forEach(function (el) {
-                                        let start = el.getAttribute("data-start");
-                                        let end = el.getAttribute("data-end");
-                                        el.innerText = " " + calculateDuration(start, end);
-                                    });
-
                                     // Calculate total per company
                                     let companyDurations = {};
-                                    document.querySelectorAll(".exp-duration").forEach(function (el) {
+
+                                    document.querySelectorAll(".exp-role").forEach(function (el) {
                                         let company = el.getAttribute("data-company");
                                         if (company) {
                                             let start = new Date(el.getAttribute("data-start"));
                                             let end = (el.getAttribute("data-end").toLowerCase() === "present") ? new Date() : new Date(el.getAttribute("data-end"));
+                                            let days = (end - start) / (1000 * 60 * 60 * 24);
                                             if (!companyDurations[company]) companyDurations[company] = { days: 0 };
-                                            companyDurations[company].days += (end - start) / (1000 * 60 * 60 * 24);
+                                            companyDurations[company].days += days;
                                         }
                                     });
 
@@ -413,250 +414,960 @@
                                     document.getElementById("expModal").style.display = "none";
                                 });
                             </script>
-
-
                         </div>
                         <!-- End - Work Experience -->
 
+
                         <!-- Education -->
                         <div class="grid-list-items__item s-about__block">
-                            <h4 class="s-about__block-title">Education
-                            </h4>
+                            <h4 class="s-about__block-title">Education</h4>
                             <ul class="s-about__list" style="list-style: none; padding: 0; margin: 0;">
 
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://bits-pilani-wilp.ac.in" target="_blank">
-                                        <img src="./images/bits.png" alt="BITS Pilani"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
+                                <!-- BITS Pilani -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://bits-pilani-wilp.ac.in" target="_blank">
+                                            <img src="./images/bits.png" alt="BITS Pilani"
+                                                style="width: 45px; height: auto;">
+                                        </a>
                                         <div style="color: red; font-weight: bold;">Birla Institute of Technology and
                                             Science (BITS) Pilani</div>
-                                        <div style="color: #003366;">M.Tech Software Systems (WILP, Current)</div>
                                     </div>
-                                </li>
-
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://sde.b-u.ac.in/SSS/OLP/Default.aspx" target="_blank">
-                                        <img src="./images/bu.png" alt="Bharathiar University"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
-                                        <div style="color: red; font-weight: bold;">Bharathiar University</div>
-                                        <div style="color: #003366;">MCA - 2026</div>
-                                    </div>
-                                </li>
-
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://www.psgcas.ac.in" target="_blank">
-                                        <img src="./images/psg.png" alt="PSG College of Arts & Science"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
-                                        <div style="color: red; font-weight: bold;">PSG College of Arts & Science</div>
-                                        <div style="color: #003366;">B.Voc in Networking and Mobile Application - 2024
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <div class="edu-role"
+                                            data-institution="Birla Institute of Technology and Science (BITS) Pilani"
+                                            data-degree="M.Tech Software Systems (WILP, Current)"
+                                            data-description="Enrolled for M.Tech Software Systems as a part of Wipro's WILP program."
+                                            data-college="BITS" data-university="BITS Pilani" data-city="Online"
+                                            data-start="Aug 2025" data-end="Aug 2029" data-course="M.Tech"
+                                            data-specialization="Software Systems" data-grade="N/A"
+                                            style="background: #e6f9f0; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #28a745; color: #003366; font-weight: bold; cursor: pointer;">
+                                            • M.Tech Software Systems<br>
                                         </div>
                                     </div>
                                 </li>
 
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://www.bharathivikas.co.in" target="_blank">
-                                        <img src="./images/bv.png" alt="Bharathi Vikas Matric Hr. Sec. School"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
+                                <!-- Bharathiar University -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://sde.b-u.ac.in/SSS/OLP/Default.aspx" target="_blank">
+                                            <img src="./images/bu.png" alt="Bharathiar University"
+                                                style="width: 45px; height: auto;">
+                                        </a>
+                                        <div style="color: red; font-weight: bold;">Bharathiar University</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <div class="edu-role" data-institution="Bharathiar University"
+                                            data-degree="MCA - 2026"
+                                            data-description="Enrolled for MCA in Distance Education."
+                                            data-college="Bharathiar University - College of Distance Education"
+                                            data-university="Bharathiar University" data-city="Coimbatore (Online)"
+                                            data-start="Oct 2024" data-end="Oct 2026" data-course="MCA"
+                                            data-specialization="N/A" data-grade="N/A"
+                                            style="background: #e6f9f0; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #28a745; color: #003366; font-weight: bold; cursor: pointer;">
+                                            • MCA (Distance, Current)<br>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <!-- PSGCAS -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.psgcas.ac.in" target="_blank">
+                                            <img src="./images/psg.png" alt="PSG College of Arts & Science"
+                                                style="width: 45px; height: auto;">
+                                        </a>
+                                        <div style="color: red; font-weight: bold;">PSG College of Arts & Science</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <div class="edu-role" data-institution="PSG College of Arts & Science"
+                                            data-degree="B.Voc in Networking and Mobile Application - 2024"
+                                            data-description="Completed UG graduation in PSGCAS."
+                                            data-college="PSG College of Arts & Science"
+                                            data-university="Bharathiar University" data-city="Coimbatore"
+                                            data-start="Jun 2021" data-end="May 2024"
+                                            data-course="B.Voc (Bachelor of Vocational)"
+                                            data-specialization="Networking and Mobile Application"
+                                            data-grade="8.6 CGPA"
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
+                                            • B.Voc in Networking and Mobile Application<br>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <!-- Bharathi Vikas -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.bharathivikas.co.in" target="_blank">
+                                            <img src="./images/bv.png" alt="Bharathi Vikas Matric Hr. Sec. School"
+                                                style="width: 45px; height: auto;">
+                                        </a>
                                         <div style="color: red; font-weight: bold;">Bharathi Vikas Matric Hr. Sec.
                                             School</div>
-                                        <div style="color: #003366;">HSE - 2021</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <div class="edu-role" data-institution="Bharathi Vikas Matric Hr. Sec. School"
+                                            data-degree="HSE - 2021"
+                                            data-description="Completed HSE +1 and +2 in Science stream."
+                                            data-college="Bharathi Vikas Matriculation Higher Secondary School"
+                                            data-university="Tamil Nadu State Board" data-city="Tirupur"
+                                            data-start="Jun 2019" data-end="May 2021" data-course="HSE +1 & HSE +2"
+                                            data-specialization="Maths, Computer Science, Physics, Chemistry"
+                                            data-grade="80% & Above"
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
+                                            • Higher Secondary (HSE)<br>
+                                        </div>
                                     </div>
                                 </li>
 
-                                <li style="display: flex; align-items: center; gap: 12px;">
-                                    <a href="https://www.instagram.com/kongu_matriculation_school" target="_blank">
-                                        <img src="./images/kms.jpg" alt="Kongu Matric School"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
+                                <!-- Kongu -->
+                                <li>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.instagram.com/kongu_matriculation_school" target="_blank">
+                                            <img src="./images/kms.jpg" alt="Kongu Matric School"
+                                                style="width: 45px; height: auto;">
+                                        </a>
                                         <div style="color: red; font-weight: bold;">Kongu Matric School</div>
-                                        <div style="color: #003366;">SSLC - 2019</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <div class="edu-role" data-institution="Kongu Matric School"
+                                            data-degree="SSLC - 2019"
+                                            data-description="Completed studies from LKG to Class 10."
+                                            data-college="Kongu Matriculation School"
+                                            data-university="Tamil Nadu State Board" data-city="Tirupur"
+                                            data-start="Jun 2007" data-end="May 2019" data-course="SSLC"
+                                            data-specialization="N/A" data-grade="80% & Above"
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
+                                            • SSLC<br>
+                                        </div>
                                     </div>
                                 </li>
-
                             </ul>
+
+
+                            <!-- Modal for Education -->
+                            <div id="eduModal"
+                                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;background: rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+                                <div
+                                    style="background:#ffffff; padding:20px; border-radius:10px; width:420px; max-height:80vh; overflow-y:auto; position:relative;">
+                                    <span id="closeEduModal"
+                                        style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold; font-size:20px;">✖</span>
+                                    <h3 id="eduInstitution" style="color:#003366; margin-bottom:10px;"></h3>
+                                    <p><strong>Degree:</strong> <span id="eduDegree"></span></p>
+                                    <p><strong>Description:</strong> <span id="eduDesc"></span></p>
+                                    <p><strong>College Name:</strong> <span id="eduCollege"></span></p>
+                                    <p><strong>University:</strong> <span id="eduUniversity"></span></p>
+                                    <p><strong>City:</strong> <span id="eduCity"></span></p>
+                                    <p><strong>Start Date:</strong> <span id="eduStart"></span></p>
+                                    <p><strong>End Date:</strong> <span id="eduEnd"></span></p>
+                                    <p><strong>Course:</strong> <span id="eduCourse"></span></p>
+                                    <p><strong>Specialization:</strong> <span id="eduSpecialization"></span></p>
+                                    <p><strong>Grade:</strong> <span id="eduGrade"></span></p>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.querySelectorAll(".edu-role").forEach(item => {
+                                    item.addEventListener("click", () => {
+                                        document.getElementById("eduInstitution").textContent = item.dataset.institution;
+                                        document.getElementById("eduDegree").textContent = item.dataset.degree;
+                                        document.getElementById("eduDesc").textContent = item.dataset.description;
+                                        document.getElementById("eduCollege").textContent = item.dataset.college;
+                                        document.getElementById("eduUniversity").textContent = item.dataset.university;
+                                        document.getElementById("eduCity").textContent = item.dataset.city;
+                                        document.getElementById("eduStart").textContent = item.dataset.start;
+                                        document.getElementById("eduEnd").textContent = item.dataset.end;
+                                        document.getElementById("eduCourse").textContent = item.dataset.course;
+                                        document.getElementById("eduSpecialization").textContent = item.dataset.specialization;
+                                        document.getElementById("eduGrade").textContent = item.dataset.grade;
+                                        document.getElementById("eduModal").style.display = "flex";
+                                    });
+                                });
+
+                                document.getElementById("closeEduModal").addEventListener("click", () => {
+                                    document.getElementById("eduModal").style.display = "none";
+                                });
+                            </script>
                         </div>
                         <!-- End - Education -->
 
 
-                        <!-- Leadership -->
+                        <!-- Leadership Experience -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Leadership Experience</h4>
                             <ul class="s-about__list" style="list-style: none; padding: 0; margin: 0;">
 
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://www.psgcas.ac.in" target="_blank">
-                                        <img src="./images/psg.png" alt="PSG College of Arts & Science"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
-                                        <div style="color: red; font-weight: bold;">IIC Student Ambassador</div>
-                                        <div style="color: #003366;">2022 – 2023: Organized 5+ events to promote
-                                            collaboration and innovation.</div>
+                                <!-- PSG College of Arts & Science -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.psgcas.ac.in" target="_blank">
+                                            <img src="./images/psg.png" alt="PSG College of Arts & Science"
+                                                style="width: 45px; height: auto;">
+                                        </a>
+                                        <div style="color: red; font-weight: bold;">PSG College of Arts & Science</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <!-- IIC Student Ambassador -->
+                                        <div class="leader-role" data-institution="PSG College of Arts & Science"
+                                            data-position="IIC Student Ambassador" data-year="2022 – 2023"
+                                            data-description="Spearheaded 5+ innovation-driven events, fostering collaboration among students and faculty, and promoting an entrepreneurial mindset."
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
+                                            • IIC Student Ambassador<br>
+                                        </div>
+
+                                        <!-- Association Chairperson -->
+                                        <div class="leader-role" data-institution="PSG College of Arts & Science"
+                                            data-position="Association Chairperson" data-year="2023 – 2024"
+                                            data-description="Led departmental initiatives by organizing inclusive academic and cultural events, strengthening team cohesion, and elevating the department’s academic visibility."
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer; margin-top: 8px;">
+                                            • Association Chairperson<br>
+                                        </div>
+
+                                        <!-- Student Council Member -->
+                                        <div class="leader-role" data-institution="PSG College of Arts & Science"
+                                            data-position="Student Council Member" data-year="2021 – 2024"
+                                            data-description="Represented student voices in council meetings, streamlined communication with faculty, and actively worked on initiatives to improve the campus experience."
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer; margin-top: 8px;">
+                                            • Student Council Member<br>
+                                        </div>
                                     </div>
                                 </li>
 
-                                <li
-                                    style="display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
-                                    <a href="https://www.psgcas.ac.in" target="_blank">
-                                        <img src="./images/psg.png" alt="PSG College of Arts & Science"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
-                                        <div style="color: red; font-weight: bold;">Association Chairperson</div>
-                                        <div style="color: #003366;">2023 – 2024: Organized inclusive events to enhance
-                                            departmental cohesion and academic profile.</div>
+                                <!-- Bharathi Vikas School -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.bharathivikas.co.in" target="_blank">
+                                            <img src="./images/bv.png" alt="Bharathi Vikas Matric Hr. Sec. School"
+                                                style="width: 45px; height: auto;">
+                                        </a>
+                                        <div style="color: red; font-weight: bold;">Bharathi Vikas Matric Hr. Sec.
+                                            School</div>
+                                    </div>
+                                    <div style="margin-left: 60px; margin-top: 8px;">
+                                        <!-- Student Representative -->
+                                        <div class="leader-role"
+                                            data-institution="Bharathi Vikas Matric Hr. Sec. School"
+                                            data-position="Student Representative" data-year="2019 – 2020"
+                                            data-description="Represented students in school activities, coordinated communication between staff and students, assisted in organizing cultural and academic events, and supported peers by addressing concerns and promoting discipline."
+                                            style="background: #f9f9f9; padding: 8px 12px; border-radius: 6px; border-left: 4px solid #6c757d; color: #003366; cursor: pointer;">
+                                            • Student Representative<br>
+                                        </div>
                                     </div>
                                 </li>
-
-                                <li style="display: flex; align-items: center; gap: 12px;">
-                                    <a href="https://www.psgcas.ac.in" target="_blank">
-                                        <img src="./images/psg.png" alt="PSG College of Arts & Science"
-                                            style="width: 45px; height: auto;">
-                                    </a>
-                                    <div>
-                                        <div style="color: red; font-weight: bold;">Student Council Member</div>
-                                        <div style="color: #003366;">2021 – 2024: Advocated for student concerns and
-                                            improved faculty communication.</div>
-                                    </div>
-                                </li>
-
                             </ul>
+
+                            <!-- Modal for Leadership -->
+                            <div id="leaderModal"
+                                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+                                <div
+                                    style="background:#ffffff; padding:20px; border-radius:10px; width:420px; max-height:80vh; overflow-y:auto; position:relative;">
+                                    <span id="closeLeaderModal"
+                                        style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold; font-size:20px;">✖</span>
+                                    <h3 id="leaderInstitution" style="color:#003366; margin-bottom:10px;"></h3>
+                                    <p><strong>Position:</strong> <span id="leaderPosition"></span></p>
+                                    <p><strong>Year:</strong> <span id="leaderYear"></span></p>
+                                    <p><strong>Description:</strong> <span id="leaderDesc"></span></p>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.querySelectorAll(".leader-role").forEach(item => {
+                                    item.addEventListener("click", () => {
+                                        document.getElementById("leaderInstitution").textContent = item.dataset.institution;
+                                        document.getElementById("leaderPosition").textContent = item.dataset.position;
+                                        document.getElementById("leaderYear").textContent = item.dataset.year;
+                                        document.getElementById("leaderDesc").textContent = item.dataset.description;
+                                        document.getElementById("leaderModal").style.display = "flex";
+                                    });
+                                });
+
+                                document.getElementById("closeLeaderModal").addEventListener("click", () => {
+                                    document.getElementById("leaderModal").style.display = "none";
+                                });
+                            </script>
                         </div>
-                        <!-- End - Leadership -->
+                        <!-- End - Leadership Experience -->
 
                         <!-- Awards -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Awards</h4>
 
-                            <ul class="s-about__list">
-                                <li>
-                                    TECHATHON '22
-                                    <span>Top Position for E-Museum Project</span>
+                            <ul class="s-about__list" style="list-style:none; padding:0; margin:0;">
+
+                                <!-- PSGCAS once -->
+                                <li style="margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <a href="https://www.psgcas.ac.in" target="_blank">
+                                            <img src="./images/psg.png" alt="PSG College of Arts & Science"
+                                                style="width: 45px; height: auto;">
+                                        </a>
+                                        <div style="color: red; font-weight: bold;">PSG College of Arts & Science</div>
+                                    </div>
+
+                                    <!-- Awards list under PSGCAS -->
+                                    <div
+                                        style="margin-left: 60px; margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+
+                                        <!-- Techathon ’22 -->
+                                        <div class="award-item" data-institution="PSG College of Arts & Science"
+                                            data-event="Techathon ’22" data-position="1st Place (Winner)"
+                                            data-recognition="Won 1st place for presenting the E-Museum Project, a crypto-based ticket booking system with a virtual museum experience, securing a cash prize of ₹5,000."
+                                            data-role="Back-End Developer – Implemented secure server-side logic, database management, and crypto-based ticketing module."
+                                            style="background:#f9f9f9; padding:8px 12px; border-radius:6px; border-left:4px solid #6c757d; color:#003366; font-weight:bold; cursor:pointer;">
+                                            • Techathon ’22 – Winner
+                                        </div>
+
+                                        <!-- Netronics ’23 -->
+                                        <div class="award-item" data-institution="PSG College of Arts & Science"
+                                            data-event="Netronics ’23 (Inter-Department Technical Symposium)"
+                                            data-position="NIL (Organizer Role)"
+                                            data-recognition="Successfully organized Netronics 2023 with 388+ participants across multiple departments."
+                                            data-role="Organizer – Coordinated logistics, handled registrations, and managed event execution."
+                                            style="background:#f9f9f9; padding:8px 12px; border-radius:6px; border-left:4px solid #6c757d; color:#003366; font-weight:bold; cursor:pointer;">
+                                            • Netronics ’23 – Organizer
+                                        </div>
+
+                                        <!-- Netronics 2.0 -->
+                                        <div class="award-item" data-institution="PSG College of Arts & Science"
+                                            data-event="Netronics 2.0 (Inter-Department Technical Symposium)"
+                                            data-position="NIL (Leadership Role)"
+                                            data-recognition="Directed Netronics 2.0 with participation from 1,000+ students, ensuring smooth planning and delivery."
+                                            data-role="Association Chairperson – Led the organizing committee, delegated responsibilities, and oversaw successful execution of sessions."
+                                            style="background:#f9f9f9; padding:8px 12px; border-radius:6px; border-left:4px solid #6c757d; color:#003366; font-weight:bold; cursor:pointer;">
+                                            • Netronics 2.0 – Organizer
+                                        </div>
+
+                                        <!-- Gateway ’24 -->
+                                        <div class="award-item" data-institution="PSG College of Arts & Science"
+                                            data-event="Gateway ’24 (Inter-College Technical Symposium)"
+                                            data-position="NIL (Organizer Role)"
+                                            data-recognition="Organized Gateway 2024, an inter-college symposium with participation from multiple institutions."
+                                            data-role="Organizer – Coordinated inter-college communications, managed logistics, and ensured smooth competition flow."
+                                            style="background:#f9f9f9; padding:8px 12px; border-radius:6px; border-left:4px solid #6c757d; color:#003366; font-weight:bold; cursor:pointer;">
+                                            • Gateway ’24 – Organizer
+                                        </div>
+
+                                    </div>
                                 </li>
                             </ul>
+
+                            <!-- Modal for Awards -->
+                            <div id="awardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+                                <div style="background:#ffffff; padding:20px; border-radius:10px; width:450px;
+            max-height:80vh; overflow-y:auto; position:relative;">
+                                    <span id="closeAwardModal"
+                                        style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold; font-size:20px;">✖</span>
+
+                                    <h3 id="awardInstitution" style="color:#003366; margin-bottom:10px;"></h3>
+                                    <p><strong>Event/Competition:</strong> <span id="awardEvent"></span></p>
+                                    <p><strong>Position:</strong> <span id="awardPosition"></span></p>
+                                    <p><strong>Recognition:</strong> <span id="awardRecognition"></span></p>
+                                    <p><strong>Role:</strong> <span id="awardRole"></span></p>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.querySelectorAll(".award-item").forEach(item => {
+                                    item.addEventListener("click", () => {
+                                        document.getElementById("awardInstitution").textContent = item.dataset.institution;
+                                        document.getElementById("awardEvent").textContent = item.dataset.event;
+                                        document.getElementById("awardPosition").textContent = item.dataset.position;
+                                        document.getElementById("awardRecognition").textContent = item.dataset.recognition;
+                                        document.getElementById("awardRole").textContent = item.dataset.role;
+                                        document.getElementById("awardModal").style.display = "flex";
+                                    });
+                                });
+
+                                document.getElementById("closeAwardModal").addEventListener("click", () => {
+                                    document.getElementById("awardModal").style.display = "none";
+                                });
+                            </script>
                         </div>
                         <!-- End - Awards -->
 
 
-                        <!-- Best Known -->
+
+                        <!-- Best Known For -->
                         <div class="grid-list-items__item s-about__block">
-                            <h4 class="s-about__block-title">Best Known
-                                For</h4>
-                            <ul class="s-about__list" style="list-style: none; padding: 0; margin: 0;">
-                                <li style="margin-bottom: 10px;">
-                                    <a href="web-development.html" target="_blank">Web Development</a>
+                            <h4 class="s-about__block-title">Best Known For</h4>
+                            <ul class="s-about__list" style="list-style:none; padding:0; margin:0;">
+
+                                <!-- Web Development -->
+                                <li class="best-item" data-title="Web Development"
+                                    data-description="Experienced in developing responsive and dynamic web applications using HTML, CSS, JavaScript, and frameworks like React and Node.js. Built projects such as E-Museum, portfolio sites, and academic platforms."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Web Development
                                 </li>
-                                <li style="margin-bottom: 10px;">
-                                    <a href="team-leadership.html" target="_blank">Leading a Team</a>
+
+                                <!-- Team Leadership -->
+                                <li class="best-item" data-title="Team Leadership"
+                                    data-description="Proven leadership skills as Association Chairperson and Student Ambassador. Successfully led teams in organizing departmental and inter-college events, ensuring collaboration and smooth execution."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Leading a Team
                                 </li>
-                                <li style="margin-bottom: 10px;">
-                                    <a href="event-organizing.html" target="_blank">Event Organizing</a>
+
+                                <!-- Event Organizing -->
+                                <li class="best-item" data-title="Event Organizing"
+                                    data-description="Organized major symposiums such as Netronics ’23, Netronics 2.0, and Gateway ’24. Coordinated logistics, handled registrations, managed schedules, and ensured professional event execution."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Event Organizing
                                 </li>
-                                <li>
-                                    <a href="problem-solving.html" target="_blank">Innovative Problem Solving</a>
+
+                                <!-- Problem Solving -->
+                                <li class="best-item" data-title="Innovative Problem Solving"
+                                    data-description="Recognized for innovative approaches in projects and competitions. For example, designed the E-Museum project with a crypto-based ticket booking system, solving real-world museum access challenges."
+                                    style="cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Innovative Problem Solving
                                 </li>
+
                             </ul>
+
+                            <!-- Modal for Best Known For -->
+                            <div id="bestModal"
+                                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+                                <div
+                                    style="background:#ffffff; padding:20px; border-radius:10px; width:450px;max-height:80vh; overflow-y:auto; position:relative;">
+                                    <span id="closeBestModal"
+                                        style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold; font-size:20px;">✖</span>
+                                    <h3 id="bestTitle" style="color:#003366; margin-bottom:10px;"></h3>
+                                    <p id="bestDescription"></p>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.querySelectorAll(".best-item").forEach(item => {
+                                    item.addEventListener("click", () => {
+                                        document.getElementById("bestTitle").textContent = item.dataset.title;
+                                        document.getElementById("bestDescription").textContent = item.dataset.description;
+                                        document.getElementById("bestModal").style.display = "flex";
+                                    });
+                                });
+
+                                document.getElementById("closeBestModal").addEventListener("click", () => {
+                                    document.getElementById("bestModal").style.display = "none";
+                                });
+                            </script>
                         </div>
-                        <!-- End - Best Know -->
+                        <!-- End - Best Known For -->
+
 
                         <!-- Interests -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Areas of Interest</h4>
-                            <ul class="s-about__list">
-                                <li>Prompt Engineering</li>
-                                <li>Software Development</li>
-                                <li>Networking and Cybersecurity</li>
-                                <li>Data Science and Analysis</li>
-                                <li>Cloud Computing</li>
+                            <ul class="s-about__list" style="list-style:none; padding:0; margin:0;">
+
+                                <!-- Prompt Engineering -->
+                                <li class="interest-item" data-title="Prompt Engineering"
+                                    data-description="Exploring advanced prompt design techniques for AI models to improve contextual responses, task accuracy, and adaptability across applications."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Prompt Engineering
+                                </li>
+
+                                <!-- Software Development -->
+                                <li class="interest-item" data-title="Software Development"
+                                    data-description="Strong interest in developing scalable software applications, with a focus on clean architecture, maintainability, and modern frameworks."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Software Development
+                                </li>
+
+                                <!-- Networking and Cybersecurity -->
+                                <li class="interest-item" data-title="Networking and Cybersecurity"
+                                    data-description="Passionate about computer networks, protocols, and security. Focused on understanding vulnerabilities, ethical hacking, and secure architecture design."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Networking and Cybersecurity
+                                </li>
+
+                                <!-- Data Science and Analysis -->
+                                <li class="interest-item" data-title="Data Science and Analysis"
+                                    data-description="Interested in extracting insights from structured and unstructured data using statistical methods, Python, and machine learning tools."
+                                    style="margin-bottom:10px; cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Data Science and Analysis
+                                </li>
+
+                                <!-- Cloud Computing -->
+                                <li class="interest-item" data-title="Cloud Computing"
+                                    data-description="Exploring cloud-native technologies including AWS, Azure, and GCP. Interested in cloud deployments, virtualization, and distributed systems."
+                                    style="cursor:pointer; color:#003366; font-weight:bold;">
+                                    • Cloud Computing
+                                </li>
                             </ul>
+
+                            <!-- Modal for Interests -->
+                            <div id="interestModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+        background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+                                <div style="background:#ffffff; padding:20px; border-radius:10px; width:450px;
+            max-height:80vh; overflow-y:auto; position:relative;">
+                                    <span id="closeInterestModal"
+                                        style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold; font-size:20px;">✖</span>
+
+                                    <h3 id="interestTitle" style="color:#003366; margin-bottom:10px;"></h3>
+                                    <p id="interestDescription"></p>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.querySelectorAll(".interest-item").forEach(item => {
+                                    item.addEventListener("click", () => {
+                                        document.getElementById("interestTitle").textContent = item.dataset.title;
+                                        document.getElementById("interestDescription").textContent = item.dataset.description;
+                                        document.getElementById("interestModal").style.display = "flex";
+                                    });
+                                });
+
+                                document.getElementById("closeInterestModal").addEventListener("click", () => {
+                                    document.getElementById("interestModal").style.display = "none";
+                                });
+                            </script>
                         </div>
                         <!-- End - Interests -->
+
 
                         <!-- Tech Skills -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Technical Skills</h4>
-                            <ul class="s-about__list">
-                                <li>Web Development</li>
-                                <li>Cloud Computing and Cyber Security</li>
-                                <li>MS Office Suite</li>
-                                <li>Basics of Data Structures</li>
-                                <li>Excel & Spreadsheets</li>
-                                <li>Powerchat (WhatsApp) CRM</li>
-                            </ul>
+                            <div class="skills-grid">
+                                <span class="skill-badge">Web Development</span>
+                                <span class="skill-badge">Cloud Computing & Cyber Security</span>
+                                <span class="skill-badge">MS Office Suite</span>
+                                <span class="skill-badge">Basics of Data Structures</span>
+                                <span class="skill-badge">Excel & Spreadsheets</span>
+                                <span class="skill-badge">Powerchat (WhatsApp) CRM</span>
+                            </div>
                         </div>
                         <!-- End - Tech Skils -->
 
                         <!-- Personal Skills -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Personal Skills</h4>
-                            <ul class="s-about__list">
-                                <li>Interpersonal Communication</li>
-                                <li>Self Starter</li>
-                                <li>Adaptability & Critical Thinking</li>
-                                <li>Leadership & Event Management</li>
-                                <li>Organizational Skills</li>
-                            </ul>
+                            <div class="skills-grid">
+                                <span class="skill-badge">Interpersonal Communication</span>
+                                <span class="skill-badge">Self Starter</span>
+                                <span class="skill-badge">Adaptability & Critical Thinking</span>
+                                <span class="skill-badge">Leadership & Event Management</span>
+                                <span class="skill-badge">Organizational Skills</span>
+                            </div>
                         </div>
                         <!-- End - Personal Skills -->
 
-                        <!-- Programing Languages -->
+                        <!-- Programming Languages -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Programming Languages</h4>
-                            <ul class="s-about__list">
-                                <li>C & C++</li>
-                                <li>Java</li>
-                                <li>Python</li>
-                                <li>HTML, PHP & SQL</li>
-                            </ul>
+                            <div class="skills-grid">
+                                <span class="skill-badge">C & C++</span>
+                                <span class="skill-badge">Java</span>
+                                <span class="skill-badge">Python</span>
+                                <span class="skill-badge">HTML, PHP & SQL</span>
+                            </div>
                         </div>
                         <!-- End - Programming Languages -->
+
+                        <!-- CSS for Skills -->
+                        <style>
+                            .skills-grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                                gap: 12px;
+                                margin-top: 12px;
+                            }
+
+                            .skill-badge {
+                                background: #f1f5f9;
+                                padding: 10px 15px;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: #003366;
+                                text-align: center;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                                cursor: default;
+                            }
+
+                            .skill-badge:hover {
+                                background: #003366;
+                                color: #fff;
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                            }
+                        </style>
 
                         <!-- Languages -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Languages</h4>
-                            <ul class="s-about__list">
-                                <li>Tamil</li>
-                                <li>English</li>
-                            </ul>
+
+                            <!-- Tamil -->
+                            <div class="language-card" onclick="openModal('tamilModal')">
+                                <div class="lang-header">
+                                    <strong>Tamil</strong> <span class="lang-note">(Mother Tongue)</span>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Read</span>
+                                    <div class="lang-bar">
+                                        <div class="fill full"></div>
+                                    </div>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Write</span>
+                                    <div class="lang-bar">
+                                        <div class="fill full"></div>
+                                    </div>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Speak</span>
+                                    <div class="lang-bar">
+                                        <div class="fill full"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- English -->
+                            <div class="language-card" onclick="openModal('englishModal')">
+                                <div class="lang-header">
+                                    <strong>English</strong>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Read</span>
+                                    <div class="lang-bar">
+                                        <div class="fill full"></div>
+                                    </div>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Write</span>
+                                    <div class="lang-bar">
+                                        <div class="fill mid"></div>
+                                    </div>
+                                </div>
+                                <div class="lang-skill">
+                                    <span>Speak</span>
+                                    <div class="lang-bar">
+                                        <div class="fill mid"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!--End - Languages -->
+                        <!-- End - Languages -->
+
+
+                        <!-- Tamil Modal -->
+                        <div id="tamilModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal('tamilModal')">&times;</span>
+                                <h3>தமிழ் (Tamil)</h3>
+                                <p>Tamil is my native and mother tongue. I am a proud Tamilan and deeply connected to my
+                                    roots and culture.</p>
+                                <blockquote
+                                    style="font-style: italic; color: #555; border-left: 3px solid #16a34a; padding-left: 10px;">
+                                    திருக்குறள்: <br>
+                                    "அகர முதல எழுத்தெல்லாம் ஆதி<br>
+                                    பகவன் முதற்றே உலகு."
+                                </blockquote>
+                                <small>— Thirukkural 1</small>
+                            </div>
+                        </div>
+
+                        <!-- English Modal -->
+                        <div id="englishModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal('englishModal')">&times;</span>
+                                <h3>English</h3>
+                                <p>Though English is not my native language, I learnt it to survive in the corporate and
+                                    professional world.
+                                    It has become a bridge that connects me globally while keeping my roots intact.</p>
+                            </div>
+                        </div>
+
+
+                        <!-- CSS -->
+                        <style>
+                            .language-card {
+                                background: #f9fafb;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 10px;
+                                padding: 15px;
+                                margin-bottom: 15px;
+                                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+                                transition: all 0.3s ease;
+                                cursor: pointer;
+                            }
+
+                            .language-card:hover {
+                                transform: translateY(-5px);
+                                border-color: #2563eb;
+                                box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2);
+                            }
+
+                            .lang-header {
+                                font-size: 16px;
+                                margin-bottom: 10px;
+                                color: #003366;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+
+                            .lang-note {
+                                font-size: 12px;
+                                color: #16a34a;
+                            }
+
+                            .lang-skill {
+                                display: flex;
+                                align-items: center;
+                                margin: 6px 0;
+                                gap: 10px;
+                            }
+
+                            .lang-skill span {
+                                flex: 0 0 60px;
+                                font-size: 14px;
+                                color: #374151;
+                            }
+
+                            .lang-bar {
+                                flex: 1;
+                                height: 8px;
+                                background: #e5e7eb;
+                                border-radius: 5px;
+                                overflow: hidden;
+                                position: relative;
+                            }
+
+                            .fill {
+                                height: 100%;
+                                border-radius: 5px;
+                                background: linear-gradient(90deg, #003366, #2563eb);
+                                width: 0;
+                                transition: width 0.8s ease;
+                            }
+
+                            .language-card:hover .fill.full {
+                                width: 100%;
+                            }
+
+                            .language-card:hover .fill.mid {
+                                width: 70%;
+                            }
+
+                            /* Modal Styles */
+                            .modal {
+                                display: none;
+                                position: fixed;
+                                z-index: 1000;
+                                left: 0;
+                                top: 0;
+                                width: 100%;
+                                height: 100%;
+                                overflow: auto;
+                                background: rgba(0, 0, 0, 0.6);
+                            }
+
+                            .modal-content {
+                                background: #fff;
+                                margin: 10% auto;
+                                padding: 20px;
+                                border-radius: 12px;
+                                max-width: 500px;
+                                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                                animation: fadeIn 0.3s ease;
+                            }
+
+                            .modal-content h3 {
+                                color: #003366;
+                            }
+
+                            .close {
+                                float: right;
+                                font-size: 24px;
+                                cursor: pointer;
+                                color: #666;
+                            }
+
+                            .close:hover {
+                                color: #000;
+                            }
+
+                            @keyframes fadeIn {
+                                from {
+                                    opacity: 0;
+                                    transform: scale(0.9);
+                                }
+
+                                to {
+                                    opacity: 1;
+                                    transform: scale(1);
+                                }
+                            }
+                        </style>
+
+
+                        <!-- JS -->
+                        <script>
+                            function openModal(id) {
+                                document.getElementById(id).style.display = "block";
+                            }
+                            function closeModal(id) {
+                                document.getElementById(id).style.display = "none";
+                            }
+                            window.onclick = function (event) {
+                                let modals = document.getElementsByClassName("modal");
+                                for (let m of modals) {
+                                    if (event.target == m) {
+                                        m.style.display = "none";
+                                    }
+                                }
+                            }
+                        </script>
+
 
                         <!-- Certifications -->
                         <div class="grid-list-items__item s-about__block">
                             <h4 class="s-about__block-title">Certifications</h4>
-                            <ul class="s-about__list">
-                                <li>
-                                    Cloud Computing and Distributed System
-                                    <span>NPTEL</span>
+                            <ul class="s-about__list" style="list-style: none; padding: 0; margin: 0;">
+                                <li class="cert-item">
+                                    <div class="cert-box">
+                                        <strong>Cloud Computing and Distributed System</strong>
+                                        <span class="issuer">NPTEL</span>
+                                    </div>
                                 </li>
-                                <li>
-                                    Software Developer - IT Services - Version 3.0
-                                    <span>NASSCOM</span>
+                                <li class="cert-item">
+                                    <div class="cert-box">
+                                        <strong>Software Developer - IT Services - Version 3.0</strong>
+                                        <span class="issuer">NASSCOM</span>
+                                    </div>
                                 </li>
-                                <li>
-                                    Event Management
-                                    <span>Great Learning</span>
+                                <li class="cert-item">
+                                    <div class="cert-box">
+                                        <strong>Event Management</strong>
+                                        <span class="issuer">Great Learning</span>
+                                    </div>
                                 </li>
-                                <li>
-                                    <em>and more...</em>
+                                <li class="cert-item">
+                                    <div class="cert-box more-link" onclick="openModal('moreCertsModal')">
+                                        <em>...and more</em>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
                         <!-- End - Certifications -->
+
+                        <!-- Modal -->
+                        <div id="moreCertsModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal('moreCertsModal')">&times;</span>
+                                <h3>More Certifications</h3>
+                                <p>
+                                    I’m constantly developing myself to fit in this fast-growing world 🌍.
+                                    But I can’t update everything here — reach out to me if you’d like to know more!
+                                </p>
+                                <blockquote
+                                    style="font-style: italic; color: #444; border-left: 3px solid #6b7280; padding-left: 10px; margin-top: 15px;">
+                                    “Learning never exhausts the mind.” — Leonardo da Vinci
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <!-- CSS -->
+                        <style>
+                            .cert-box {
+                                background: #f9fafb;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 10px;
+                                padding: 12px 15px;
+                                margin-bottom: 12px;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+                            }
+
+                            .cert-box:hover {
+                                transform: translateY(-4px);
+                                border-color: #4b5563;
+                                box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+                            }
+
+                            .issuer {
+                                display: block;
+                                font-size: 13px;
+                                color: #6b7280;
+                                margin-top: 4px;
+                            }
+
+                            .more-link {
+                                text-align: center;
+                                font-style: italic;
+                                color: #374151;
+                                cursor: pointer;
+                            }
+
+                            /* Modal Styles */
+                            .modal {
+                                display: none;
+                                position: fixed;
+                                z-index: 1000;
+                                left: 0;
+                                top: 0;
+                                width: 100%;
+                                height: 100%;
+                                overflow: auto;
+                                background: rgba(0, 0, 0, 0.6);
+                            }
+
+                            .modal-content {
+                                background: #fff;
+                                margin: 12% auto;
+                                padding: 20px;
+                                border-radius: 12px;
+                                max-width: 500px;
+                                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                                animation: fadeIn 0.3s ease;
+                            }
+
+                            .modal-content h3 {
+                                color: #111827;
+                                margin-bottom: 10px;
+                            }
+
+                            .close {
+                                float: right;
+                                font-size: 24px;
+                                cursor: pointer;
+                                color: #666;
+                            }
+
+                            .close:hover {
+                                color: #000;
+                            }
+
+                            @keyframes fadeIn {
+                                from {
+                                    opacity: 0;
+                                    transform: scale(0.9);
+                                }
+
+                                to {
+                                    opacity: 1;
+                                    transform: scale(1);
+                                }
+                            }
+                        </style>
+
+                        <!-- JS -->
+                        <script>
+                            function openModal(id) {
+                                document.getElementById(id).style.display = "block";
+                            }
+                            function closeModal(id) {
+                                document.getElementById(id).style.display = "none";
+                            }
+                            window.onclick = function (event) {
+                                let modals = document.getElementsByClassName("modal");
+                                for (let m of modals) {
+                                    if (event.target == m) {
+                                        m.style.display = "none";
+                                    }
+                                }
+                            }
+                        </script>
 
                         <!-- Technologies 
                         <div class="grid-list-items__item s-about__block">
@@ -879,82 +1590,191 @@
         <!-- # end works 
         ================================================== -->
 
+
+        <!--  testimonials -->
         <div class="row s-testimonials">
             <div class="column xl-12">
-
                 <h3 class="s-testimonials__header">Testimonials</h3>
 
-                <div class="swiper-container s-testimonials__slider">
+                <div class="testimonials-grid">
 
-                    <div class="swiper-wrapper">
-
-                        <div class="s-testimonials__slide swiper-slide">
-                            <div class="s-testimonials__author">
+                    <!-- Card 1 -->
+                    <div class="testimonial-card">
+                        <div class="card-inner">
+                            <!-- Front -->
+                            <div class="card-front">
                                 <img src="images/avatars/user.jpg" alt="Author image" class="s-testimonials__avatar">
-                                <cite class="s-testimonials__cite">
-                                    <strong>Dr. P. Nithya</strong>
-                                    <span>HOD, PSGCAS</span>
-                                </cite>
+                                <h4>Dr. P. Nithya</h4>
+                                <span>HOD, PSGCAS</span>
                             </div>
-                            <p>
-                                As the Head of Department, I have witnessed Naveen's dedication and hard work firsthand.
-                                He has proven himself to be the best student of the year, showing not only academic
-                                excellence but also a strong commitment to his projects and peers.
-                            </p>
-                        </div> <!-- end s-testimonials__slide -->
+                            <!-- Back -->
+                            <div class="card-back">
+                                <div class="testimonial-text">
+                                    <p>
+                                        As the Head of Department, I have witnessed Naveen's dedication and hard work
+                                        firsthand.
+                                        He has proven himself to be the best student of the year, showing not only
+                                        academic
+                                        excellence but also a strong commitment to his projects and peers.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="s-testimonials__slide swiper-slide">
-                            <div class="s-testimonials__author">
+                    <!-- Card 2 -->
+                    <div class="testimonial-card">
+                        <div class="card-inner">
+                            <div class="card-front">
                                 <img src="images/avatars/user.jpg" alt="Author image" class="s-testimonials__avatar">
-                                <cite class="s-testimonials__cite">
-                                    <strong>Dr. B. Uma Maheswari</strong>
-                                    <span>Associate Professor, PSGCAS</span>
-                                </cite>
+                                <h4>Dr. B. Uma Maheswari</h4>
+                                <span>Associate Professor, PSGCAS</span>
                             </div>
-                            <p>
-                                Naveen is known for his exceptional leadership skills and his ability to manage events
-                                successfully. His passion for event management shines through in every project he
-                                undertakes, making him a standout among his peers.
-                            </p>
-                        </div> <!-- end s-testimonials__slide -->
+                            <div class="card-back">
+                                <div class="testimonial-text">
+                                    <p>
+                                        Naveen is known for his exceptional leadership skills and his ability to manage
+                                        events successfully. His passion for event management shines through in every
+                                        project.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="s-testimonials__slide swiper-slide">
-                            <div class="s-testimonials__author">
+                    <!-- Card 3 -->
+                    <div class="testimonial-card">
+                        <div class="card-inner">
+                            <div class="card-front">
                                 <img src="images/avatars/user.jpg" alt="Author image" class="s-testimonials__avatar">
-                                <cite class="s-testimonials__cite">
-                                    <strong>Dr. L. S. Sindhuja</strong>
-                                    <span>Assistant Professor, PSGCAS</span>
-                                </cite>
+                                <h4>Dr. L. S. Sindhuja</h4>
+                                <span>Assistant Professor, PSGCAS</span>
                             </div>
-                            <p>
-                                Naveen's leadership capabilities are remarkable. He can manage any team individually,
-                                ensuring that every member feels valued and empowered. His approach to teamwork is truly
-                                commendable.
-                            </p>
-                        </div> <!-- end s-testimonials__slide -->
+                            <div class="card-back">
+                                <div class="testimonial-text">
+                                    <p>
+                                        Naveen's leadership capabilities are remarkable. He can manage any team
+                                        individually,
+                                        ensuring that every member feels valued and empowered. His approach to teamwork
+                                        is commendable.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="s-testimonials__slide swiper-slide">
-                            <div class="s-testimonials__author">
+                    <!-- Card 4 -->
+                    <div class="testimonial-card">
+                        <div class="card-inner">
+                            <div class="card-front">
                                 <img src="images/avatars/user.jpg" alt="Author image" class="s-testimonials__avatar">
-                                <cite class="s-testimonials__cite">
-                                    <strong>Dr. V. R. Kavitha</strong>
-                                    <span>Associate Professor, PSGCAS</span>
-                                </cite>
+                                <h4>Dr. V. R. Kavitha</h4>
+                                <span>Associate Professor, PSGCAS</span>
                             </div>
-                            <p>
-                                Naveen demonstrates expertise in coding and problem-solving. His analytical skills and
-                                innovative thinking have set a high standard for his fellow students. He consistently
-                                contributes valuable insights and solutions.
-                            </p>
-                        </div> <!-- end s-testimonials__slide -->
+                            <div class="card-back">
+                                <div class="testimonial-text">
+                                    <p>
+                                        Naveen demonstrates expertise in coding and problem-solving. His analytical
+                                        skills and
+                                        innovative thinking have set a high standard for his fellow students.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    </div> <!-- end swiper-wrapper -->
+                </div>
+            </div>
 
-                    <div class="swiper-pagination"></div>
+            <!-- CSS -->
+            <style>
+                .testimonials-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 25px;
+                    margin-top: 30px;
+                }
 
-                </div> <!-- end swiper-container -->
+                .testimonial-card {
+                    perspective: 1000px;
+                    height: 320px;
+                }
 
-            </div> <!-- end column -->
+                .card-inner {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    transition: transform 0.8s;
+                    transform-style: preserve-3d;
+                }
+
+                .testimonial-card:hover .card-inner {
+                    transform: rotateY(180deg);
+                }
+
+                .card-front,
+                .card-back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    border-radius: 15px;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+                    overflow: hidden;
+                }
+
+                .card-front {
+                    background: linear-gradient(135deg, #0077ff, #00d4ff);
+                    color: white;
+                }
+
+                .card-back {
+                    background: #ffffff;
+                    color: #333;
+                    transform: rotateY(180deg);
+                }
+
+                .s-testimonials__avatar {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    margin-bottom: 15px;
+                    border: 3px solid white;
+                }
+
+                .testimonial-text {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    padding-right: 5px;
+                }
+
+                .testimonial-text::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                .testimonial-text::-webkit-scrollbar-thumb {
+                    background: #0077ff;
+                    border-radius: 3px;
+                }
+
+                @media (max-width: 600px) {
+                    .testimonial-card {
+                        height: 280px;
+                    }
+
+                    .s-testimonials__avatar {
+                        width: 60px;
+                        height: 60px;
+                    }
+                }
+            </style>
+
         </div> <!-- end s-testimonials -->
 
         </section> <!-- end s-works -->
@@ -1019,9 +1839,6 @@
 
         </section> <!-- end s-numbers -->
 
-
-
-
         <!-- # services
 ================================================== -->
         <section id="services" class="s-services target-section">
@@ -1031,61 +1848,36 @@
 
                     <div class="section-header" data-num="03">
                         <h2 class="text-display-title">Services Offered</h2>
-                        <p style="font-style: italic; font-size: 0.9rem; margin-top: 10px;">
-                        </p>
                     </div> <!-- end section-header -->
 
-                    <div class="service-item">
-                        <h3 class="service-title"><i class="icon-calendar"></i> Event Planning</h3>
-                        <p>
-                            With a passion for organizing and leadership, I provide event planning services for
-                            tech-related academic or corporate events:
-                        </p>
-                        <ul>
-                            <li><strong>Tech Meetups & Study Groups:</strong> Organizing knowledge-sharing spaces that
-                                encourage collaboration.</li>
-                            <li><strong>Mini Hackathons & Tech Fests:</strong> Planning and coordinating fun, productive
-                                tech events that drive innovation.</li>
-                        </ul>
-                    </div>
+                    <div class="services-grid">
+                        <!-- Service Card -->
+                        <div class="service-card" onclick="openService('event')">
+                            <i class="icon-calendar service-icon"></i>
+                            <h3>Event Planning</h3>
+                            <p>Organizing seamless events with innovation and leadership.</p>
+                        </div>
 
-                    <div class="service-item">
-                        <h3 class="service-title"><i class="icon-graduation-cap"></i> Tutoring & Teaching</h3>
-                        <p>
-                            Whether you're a student or a beginner, I offer personalized learning experiences:
-                        </p>
-                        <ul>
-                            <li><strong>Peer Tutoring:</strong> One-on-one help in HTML, CSS, JavaScript, and basic
-                                networking or programming concepts.</li>
-                            <li><strong>Online Classes:</strong> Learn at your pace with structured sessions and
-                                project-based learning.</li>
-                        </ul>
-                    </div>
+                        <!-- Service Card -->
+                        <div class="service-card" onclick="openService('tutoring')">
+                            <i class="icon-graduation-cap service-icon"></i>
+                            <h3>Tutoring & Teaching</h3>
+                            <p>Helping learners grow through structured and personalized sessions.</p>
+                        </div>
 
-                    <div class="service-item">
-                        <h3 class="service-title"><i class="icon-mic"></i> Workshops & Guest Lectures</h3>
-                        <p>
-                            Interested in hosting a session for your college or community? I’m available for:
-                        </p>
-                        <ul>
-                            <li><strong>Hands-on Workshops:</strong> Covering beginner-friendly topics in web
-                                development, career skills, and networking.</li>
-                            <li><strong>Guest Lectures:</strong> Interactive and inspiring sessions tailored for
-                                academic institutions.</li>
-                        </ul>
-                    </div>
+                        <!-- Service Card -->
+                        <div class="service-card" onclick="openService('workshops')">
+                            <i class="icon-mic service-icon"></i>
+                            <h3>Workshops & Lectures</h3>
+                            <p>Hands-on sessions and talks to inspire and empower audiences.</p>
+                        </div>
 
-                    <div class="service-item">
-                        <h3 class="service-title"><i class="icon-code"></i> Web Development</h3>
-                        <p>
-                            I build responsive and functional websites tailored to your vision and purpose:
-                        </p>
-                        <ul>
-                            <li><strong>Custom Websites:</strong> From personal portfolios to business landing pages.
-                            </li>
-                            <li><strong>Maintenance:</strong> Ongoing support and updates for your digital presence.
-                            </li>
-                        </ul>
+                        <!-- Service Card -->
+                        <div class="service-card" onclick="openService('webdev')">
+                            <i class="icon-code service-icon"></i>
+                            <h3>Web Development</h3>
+                            <p>Designing responsive and functional websites for your needs.</p>
+                        </div>
                     </div>
 
                 </div> <!-- end column -->
@@ -1093,6 +1885,217 @@
         </section>
         <!-- # services end 
 ================================================== -->
+
+        <!-- Slide-up Panel -->
+        <div id="service-panel" class="service-panel">
+            <div class="service-panel-content">
+                <span class="close-btn" onclick="closeService()">×</span>
+                <div id="service-details"></div>
+
+                <!-- Book Now Button -->
+                <a href="contact-me.html" class="book-btn">Book Now</a>
+            </div>
+        </div>
+
+        <style>
+            /* Services Grid */
+            .services-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+            }
+
+            /* Service Card */
+            .service-card {
+                background: #1d1d1d;
+                padding: 30px 20px;
+                border-radius: 16px;
+                text-align: center;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .service-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 8px 20px rgba(0, 255, 128, 0.3);
+            }
+
+            .service-icon {
+                font-size: 40px;
+                color: #7CFC00;
+                margin-bottom: 15px;
+            }
+
+            .service-card h3 {
+                margin-bottom: 10px;
+                font-size: 3.5rem;
+                color: #fff;
+            }
+
+            .service-card p {
+                font-size: 1.5rem;
+                color: #bbb;
+            }
+
+            /* Slide-up Panel */
+            .service-panel {
+                position: fixed;
+                bottom: -100%;
+                left: 0;
+                width: 100%;
+                background: #f9f9f9;
+                /* light bg */
+                color: #222;
+                /* dark text */
+                transition: bottom 0.5s ease;
+                z-index: 1000;
+                padding: 30px 20px 60px;
+                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+                border-radius: 20px 20px 0 0;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .service-panel.active {
+                bottom: 0;
+            }
+
+            .service-panel-content {
+                max-width: 900px;
+                margin: auto;
+                text-align: center;
+            }
+
+            .service-panel-content h2 {
+                color: #006400;
+                /* dark green heading */
+                margin-bottom: 15px;
+            }
+
+            .service-panel-content p,
+            .service-panel-content li {
+                color: #333;
+                line-height: 1.6;
+            }
+
+            .service-panel-content ul {
+                text-align: left;
+                max-width: 600px;
+                margin: 15px auto;
+                padding-left: 20px;
+            }
+
+            /* Close button */
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 25px;
+                font-size: 28px;
+                cursor: pointer;
+                color: #555;
+            }
+
+            .close-btn:hover {
+                color: #000;
+            }
+
+            /* Book Button */
+            .book-btn {
+                display: inline-block;
+                margin-top: 25px;
+                padding: 12px 28px;
+                border-radius: 30px;
+                background: #7CFC00;
+                color: #000;
+                font-weight: bold;
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            .book-btn:hover {
+                background: #000;
+                /* Invert colors */
+                color: #7CFC00;
+                box-shadow: 0 0 15px rgba(124, 252, 0, 0.6);
+            }
+
+            /* Responsive Fixes */
+            @media(max-width: 768px) {
+                .service-card {
+                    padding: 20px 15px;
+                }
+
+                .service-card h3 {
+                    font-size: 1rem;
+                }
+
+                .service-icon {
+                    font-size: 32px;
+                }
+
+                .service-panel-content {
+                    text-align: left;
+                    padding: 10px;
+                }
+
+                .book-btn {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        </style>
+
+        <script>
+            function openService(service) {
+                let details = '';
+                if (service === 'event') {
+                    details = `
+            <h2>Event Planning</h2>
+            <p>With a passion for organizing and leadership, I provide event planning services for tech-related academic or corporate events:</p>
+            <ul>
+                <li><strong>Tech Meetups & Study Groups:</strong> Organizing knowledge-sharing spaces that encourage collaboration.</li>
+                <li><strong>Mini Hackathons & Tech Fests:</strong> Planning and coordinating fun, productive tech events that drive innovation.</li>
+            </ul>
+        `;
+                } else if (service === 'tutoring') {
+                    details = `
+            <h2>Tutoring & Teaching</h2>
+            <p>Whether you're a student or a beginner, I offer personalized learning experiences:</p>
+            <ul>
+                <li><strong>Peer Tutoring:</strong> One-on-one help in HTML, CSS, JavaScript, and basic networking or programming concepts.</li>
+                <li><strong>Online Classes:</strong> Learn at your pace with structured sessions and project-based learning.</li>
+            </ul>
+        `;
+                } else if (service === 'workshops') {
+                    details = `
+            <h2>Workshops & Guest Lectures</h2>
+            <p>Interested in hosting a session for your college or community? I’m available for:</p>
+            <ul>
+                <li><strong>Hands-on Workshops:</strong> Covering beginner-friendly topics in web development, career skills, and networking.</li>
+                <li><strong>Guest Lectures:</strong> Interactive and inspiring sessions tailored for academic institutions.</li>
+            </ul>
+        `;
+                } else if (service === 'webdev') {
+                    details = `
+            <h2>Web Development</h2>
+            <p>I build responsive and functional websites tailored to your vision and purpose:</p>
+            <ul>
+                <li><strong>Custom Websites:</strong> From personal portfolios to business landing pages.</li>
+                <li><strong>Maintenance:</strong> Ongoing support and updates for your digital presence.</li>
+            </ul>
+        `;
+                }
+
+                document.getElementById("service-details").innerHTML = details;
+                document.getElementById("service-panel").classList.add("active");
+            }
+
+            function closeService() {
+                document.getElementById("service-panel").classList.remove("active");
+            }
+        </script>
+
 
         <!-- # footer 
 ================================================== -->
@@ -1242,7 +2245,7 @@
 
                 <div class="column xl-6 lg-12">
                     <p class="ss-copyright">
-                        <span>© Copyright Naveen Shankar 2024</span>
+                        <span>© Copyright Naveen Shankar 2025</span>
                         <span>Design by Naveen Shankar</span>
                     </p>
                 </div>
