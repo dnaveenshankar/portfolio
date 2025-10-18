@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Version 2.0 - Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body, html {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* Animated Gradient Background */
+body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* Container */
+.container {
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.95);
+    padding: 50px 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+/* Animated Floating Particles */
+.particle {
+    position: absolute;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: float 10s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh) translateX(0) rotate(0deg);}
+    100% { transform: translateY(-20vh) translateX(50px) rotate(360deg);}
+}
+
+/* Heading */
+h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    animation: fadeInDown 1.5s ease forwards;
+    opacity: 0;
+}
+
+/* Paragraph */
+p {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    animation: fadeInUp 1.5s ease forwards;
+    opacity: 0;
+}
+
+/* Signature */
+.signature {
+    font-style: italic;
+    font-weight: 600;
+    color: #ff4c4c;
+    margin-top: 20px;
+    animation: fadeIn 2s ease forwards;
+    opacity: 0;
+}
+
+/* Back link */
+a.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 14px 30px;
+    font-weight: 600;
+    color: #fff;
+    background: #2c3e50;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    animation: fadeIn 2.5s ease forwards;
+    opacity: 0;
+}
+
+a.back-link:hover {
+    background: #34495e;
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .container {
+        padding: 35px 20px;
+    }
+    h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+    p {
+        font-size: 1em;
+    }
+    a.back-link {
+        padding: 12px 25px;
+    }
+}
+</style>
+</head>
+<body>
+<!-- Floating particles -->
+<div id="particles"></div>
+
+<div class="container">
+    <h1>Version 2.0 Coming Soon!</h1>
+    <p>This section of my portfolio is currently under development.</p>
+    <p>Exciting new projects and updates will be available here soon.</p>
+    <p class="signature">❤️ from Naveen</p>
+    <a class="back-link" href="index.html">← Back to Version 1.0</a>
+</div>
+
+<script>
+// Create floating particles
+const particlesContainer = document.getElementById('particles');
+const numParticles = 25;
+
+for (let i = 0; i < numParticles; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    const size = Math.random() * 6 + 4;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + 'vw';
+    particle.style.animationDuration = (Math.random() * 12 + 8) + 's';
+    particle.style.opacity = Math.random() * 0.5 + 0.2;
+    particlesContainer.appendChild(particle);
+}
+</script>
+</body>
+</html>
