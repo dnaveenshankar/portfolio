@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game - Naveen Shankar</title>
+<link rel="icon" href="favicon.png">
+<style>
+  * {margin:0; padding:0; box-sizing:border-box;}
+  html, body {height:100%; font-family:'Poppins', sans-serif; overflow:hidden;}
+
+  body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    position:relative;
+  }
+
+  @keyframes gradientBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+
+  h1 {color:#fff; text-align:center; text-shadow:2px 2px 5px rgba(0,0,0,0.3); margin-bottom:10px;}
+  #scoreBoard, #timer {
+    color:#fff; font-weight:bold; margin:5px 0; text-align:center;
+  }
+
+  #gameArea {
+    position:relative;
+    width:90%;
+    max-width:600px;
+    height:60vh;
+    overflow:hidden;
+    border-radius:15px;
+    margin-top:15px;
+  }
+
+  .balloon, .bomb {
+    position:absolute;
+    border-radius:50%;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+    color:#fff;
+    user-select:none;
+    transition: transform 0.2s, opacity 0.3s;
+    font-size:2rem;
+  }
+
+  .pop {transform: scale(1.5); opacity:0;}
+  .bomb:hover {transform:scale(1.2);}
+
+  button {
+    padding:12px 25px;
+    font-size:1rem;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    background:#2c3e50;
+    color:#fff;
+    font-weight:600;
+    transition:0.3s;
+    margin-top:15px;
+  }
+  button:hover {background:#34495e; transform:scale(1.1);}
+
+  /* Modal */
+  .modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.7);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+  }
+  .modal-content {
+    background:#fff;
+    padding:20px 30px;
+    border-radius:15px;
+    max-width:400px;
+    text-align:center;
+  }
+  .modal-content h2 {margin-bottom:15px; color:#333;}
+  .modal-content p {margin-bottom:20px; color:#555; line-height:1.5;}
+  .modal-content button {margin-top:0;}
+
+  @media(max-width:500px){
+    #gameArea {height:50vh;}
+    button {padding:10px 20px; font-size:0.9rem;}
+    .modal-content {width:90%; padding:15px;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Balloon Pop 🎈</h1>
+<div id="scoreBoard">Score: 0 | High Score: 0</div>
+<div id="timer">Time: 30s</div>
+<div id="gameArea"></div>
+<button id="restartBtn">Restart Game</button>
+<a href="index.html" style="margin-top:15px; color:#fff;">← Back to Portfolio</a>
+
+<!-- Modal -->
+<div id="instructionModal" class="modal">
+  <div class="modal-content">
+    <h2>Instructions</h2>
+    <p>Click the balloons to pop them and score points.<br>
+       Watch out for bombs! Clicking a bomb ends the game.<br>
+       You have 30 seconds. Try to beat your high score!</p>
+    <button id="startBtn">Start Game</button>
+  </div>
+</div>
+
+<div id="endModal" class="modal">
+  <div class="modal-content">
+    <h2 id="endMessage"></h2>
+    <p id="finalScore"></p>
+    <button id="tryAgainBtn">Try Again</button>
+    <button id="backBtn">Back to Portfolio</button>
+  </div>
+</div>
+
+<audio id="popSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
+<audio id="bombSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+
+<script>
+const gameArea = document.getElementById('gameArea');
+const scoreBoard = document.getElementById('scoreBoard');
+const timerElem = document.getElementById('timer');
+const restartBtn = document.getElementById('restartBtn');
+const popSound = document.getElementById('popSound');
+const bombSound = document.getElementById('bombSound');
+
+const instructionModal = document.getElementById('instructionModal');
+const startBtn = document.getElementById('startBtn');
+
+const endModal = document.getElementById('endModal');
+const endMessage = document.getElementById('endMessage');
+const finalScore = document.getElementById('finalScore');
+const tryAgainBtn = document.getElementById('tryAgainBtn');
+const backBtn = document.getElementById('backBtn');
+
+let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
+let gameInterval, countdownInterval;
+let timeLeft = 30;
+let gameOver = false;
+
+// Show instructions modal
+instructionModal.style.display = 'flex';
+
+function updateScore() {
+  scoreBoard.textContent = `Score: ${score} | High Score: ${highScore}`;
+}
+
+function createBalloon() {
+  if(gameOver) return;
+
+  const isBomb = Math.random() < 0.4;
+  const balloon = document.createElement('div');
+  const size = Math.random()*60+40;
+  const x = Math.random()*(gameArea.clientWidth-size);
+  balloon.style.width = balloon.style.height = `${size}px`;
+  balloon.style.left = `${x}px`;
+  balloon.style.bottom = `-100px`;
+  balloon.style.fontSize = `${size/3}px`;
+
+  if(isBomb){
+    balloon.classList.add('bomb');
+    balloon.textContent = '💣';
+  } else {
+    balloon.classList.add('balloon');
+    const color = `hsl(${Math.random()*360},70%,60%)`;
+    balloon.style.background = color;
+    balloon.textContent = '🎈';
+  }
+
+  const speed = Math.random()*2+2;
+  function move() {
+    const bottom = parseFloat(balloon.style.bottom);
+    if(bottom > gameArea.clientHeight + 50) {
+      balloon.remove();
+    } else {
+      balloon.style.bottom = `${bottom + speed}px`;
+      requestAnimationFrame(move);
+    }
+  }
+  requestAnimationFrame(move);
+
+  balloon.addEventListener('click', () => {
+    if(isBomb){
+      bombSound.currentTime=0;
+      bombSound.play();
+      endGame("Bomb clicked! Game Over!");
+      return;
+    }
+    score++;
+    if(score > highScore){
+      highScore = score;
+      localStorage.setItem('highScore', highScore);
+    }
+    updateScore();
+    popSound.currentTime = 0;
+    popSound.play();
+    balloon.classList.add('pop');
+    setTimeout(()=> balloon.remove(),300);
+  });
+
+  gameArea.appendChild(balloon);
+}
+
+function startGame() {
+  score=0;
+  timeLeft=30;
+  gameOver=false;
+  updateScore();
+  timerElem.textContent = `Time: ${timeLeft}s`;
+  gameArea.innerHTML='';
+  instructionModal.style.display='none';
+  gameInterval = setInterval(createBalloon, 800);
+
+  countdownInterval = setInterval(()=>{
+    timeLeft--;
+    timerElem.textContent = `Time: ${timeLeft}s`;
+    if(timeLeft <=0){
+      endGame();
+    }
+  },1000);
+}
+
+function endGame(msg){
+  gameOver=true;
+  clearInterval(gameInterval);
+  clearInterval(countdownInterval);
+  gameArea.innerHTML='';
+
+  if(!msg){
+    if(score >= highScore){
+      msg = "🎉 Congratulations! You beat your high score!";
+    } else {
+      msg = "No worries! Keep trying to beat your high score!";
+    }
+  }
+
+  endMessage.textContent = msg;
+  finalScore.textContent = `Your score: ${score} | High score: ${highScore}`;
+  endModal.style.display='flex';
+}
+
+// Button events
+startBtn.addEventListener('click', ()=> startGame());
+restartBtn.addEventListener('click', ()=> startGame());
+tryAgainBtn.addEventListener('click', ()=> {
+  endModal.style.display='none';
+  startGame();
+});
+backBtn.addEventListener('click', ()=> window.location.href='index.html');
+
+updateScore();
+</script>
+
+</body>
+</html>
