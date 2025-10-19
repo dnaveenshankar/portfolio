@@ -1,175 +1,879 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Version 2.0 - Coming Soon</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* Reset */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body, html {
-    height: 100%;
-    font-family: 'Poppins', sans-serif;
-    overflow: hidden;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Naveen Shankar D — v2.0 (Portfolio)</title>
+  <link rel="icon" href="favicon.png" type="image/png">
 
-/* Animated Gradient Background */
-body {
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-@keyframes gradientBG {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
+  <!-- GSAP for smoother, pro animations (optional; if blocked page still works) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
 
-/* Container */
-.container {
-    position: relative;
-    z-index: 2;
-    background: rgba(255,255,255,0.95);
-    padding: 50px 40px;
-    border-radius: 20px;
-    max-width: 600px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    overflow: hidden;
-}
-
-/* Animated Floating Particles */
-.particle {
-    position: absolute;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: float 10s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes float {
-    0% { transform: translateY(100vh) translateX(0) rotate(0deg);}
-    100% { transform: translateY(-20vh) translateX(50px) rotate(360deg);}
-}
-
-/* Heading */
-h1 {
-    font-size: 2.8em;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 20px;
-    animation: fadeInDown 1.5s ease forwards;
-    opacity: 0;
-}
-
-/* Paragraph */
-p {
-    font-size: 1.2em;
-    color: #555;
-    margin-bottom: 15px;
-    line-height: 1.6;
-    animation: fadeInUp 1.5s ease forwards;
-    opacity: 0;
-}
-
-/* Signature */
-.signature {
-    font-style: italic;
-    font-weight: 600;
-    color: #ff4c4c;
-    margin-top: 20px;
-    animation: fadeIn 2s ease forwards;
-    opacity: 0;
-}
-
-/* Back link */
-a.back-link {
-    display: inline-block;
-    margin-top: 25px;
-    padding: 14px 30px;
-    font-weight: 600;
-    color: #fff;
-    background: #2c3e50;
-    border-radius: 30px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    animation: fadeIn 2.5s ease forwards;
-    opacity: 0;
-}
-
-a.back-link:hover {
-    background: #34495e;
-    transform: scale(1.1);
-}
-
-/* Animations */
-@keyframes fadeInDown {
-    0% { opacity: 0; transform: translateY(-30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .container {
-        padding: 35px 20px;
+  <style>
+    /* ===== Reset & Base ===== */
+    :root{
+      --max-w:1200px;
+      --nav-h:72px;
+      --glass: rgba(255,255,255,0.04);
+      --muted: #b6bfd0;
+      --accent1: #ff5d9f;
+      --accent2: #9b7bff;
+      --accent3: #5eead4;
+      --bg-dark: #071029;
+      --card-bg: rgba(255,255,255,0.03);
     }
-    h1 {
-        font-size: 2em;
-        margin-bottom: 15px;
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#fff; background:var(--bg-dark); -webkit-font-smoothing:antialiased;}
+    a{color:inherit}
+    img{max-width:100%;height:auto;display:block}
+
+    /* ===== Animated multicolor background layers ===== */
+    .bg {
+      position:fixed; inset:0; z-index:-5; pointer-events:none; overflow:hidden;
+      background: linear-gradient(135deg,#071029 0%, #0b1320 25%, #071029 100%);
     }
-    p {
-        font-size: 1em;
+    .bg .blob {
+      position:absolute; width:120vmax; height:120vmax; left:-10vmax; top:-20vmax;
+      background: conic-gradient(from 90deg, rgba(255,93,159,0.18), rgba(255,178,127,0.16), rgba(155,123,255,0.14), rgba(94,234,212,0.12));
+      filter: blur(80px) saturate(120%); transform: rotate(0deg);
+      animation: spin 24s linear infinite;
+      mix-blend-mode: screen;
     }
-    a.back-link {
-        padding: 12px 25px;
+    .bg .overlay {
+      position:absolute; inset:0; background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.02), transparent 10%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.01), transparent 10%);
+      filter: blur(40px);
+      mix-blend-mode: overlay;
     }
-}
-</style>
+    @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+
+    /* ===== Page layout ===== */
+    .site { min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+
+    /* ===== Header / nav ===== */
+    header.site-header {
+      position:fixed; top:12px; left:50%; transform:translateX(-50%);
+      width:calc(100% - 32px); max-width:var(--max-w); z-index:100; height:var(--nav-h);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:8px 16px; border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: 0 8px 30px rgba(3,6,15,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(8px) saturate(120%);
+    }
+    .brand{ display:flex; gap:12px; align-items:center; text-decoration:none; }
+    .logo {
+      width:48px;height:48px;border-radius:12px; display:flex;align-items:center;justify-content:center;
+      font-weight:800; font-size:18px; color:#041022; background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));
+      background-size:300% 300%; animation: logoShift 7s linear infinite;
+      box-shadow: 0 8px 30px rgba(155,123,255,0.12), inset 0 -6px 12px rgba(255,255,255,0.06);
+    }
+    @keyframes logoShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .brand .brand-name { font-weight:700; font-size:15px; letter-spacing:0.2px; color:#fff }
+
+    nav.site-nav { display:flex; gap:8px; align-items:center; }
+    nav.site-nav a { padding:8px 12px; border-radius:10px; text-decoration:none; color:rgba(255,255,255,0.9); font-weight:600; font-size:14px; transition:all .22s; }
+    nav.site-nav a:hover, nav.site-nav a.active { color:#041022; background: linear-gradient(90deg,var(--accent2),var(--accent1)); transform:translateY(-3px); box-shadow:0 12px 30px rgba(100,70,255,0.12); }
+
+    .mobile-toggle { display:none; background:transparent; border:none; color:#fff; font-size:20px }
+
+    /* ===== Hero / Intro ===== */
+    main { width:100%; margin-top:120px; padding-bottom:60px; }
+    .hero {
+      width:100%; min-height:calc(100vh - 160px); display:flex; align-items:center; justify-content:center; padding:30px 20px;
+    }
+    .hero-inner { width:100%; max-width:var(--max-w); display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:center; }
+    .hero-left { text-align:left; }
+    .kicker { display:inline-block; padding:8px 12px; border-radius:999px; font-weight:700; font-size:13px; background:linear-gradient(90deg,var(--accent2),var(--accent1)); color:#041022; box-shadow:0 8px 20px rgba(155,123,255,0.06); margin-bottom:18px; }
+    h1.title { font-size:44px; line-height:1.03; margin-bottom:14px; color:#fff; }
+    p.lead { color:var(--muted); font-size:17px; max-width:65ch; line-height:1.6; }
+
+    .cta { margin-top:22px; display:flex; gap:12px; flex-wrap:wrap; }
+    .btn { padding:12px 18px; border-radius:12px; font-weight:700; text-decoration:none; color:#fff; background: linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 10px 30px rgba(109,139,255,0.12); transition:transform .2s ease; }
+    .btn.secondary { background:linear-gradient(90deg,var(--accent3),var(--accent2)) }
+    .btn:hover{ transform:translateY(-6px) }
+
+    .hero-card { width:100%; max-width:420px; min-height:420px; border-radius:18px; background:var(--card-bg); border:1px solid rgba(255,255,255,0.03); display:flex; align-items:center; justify-content:center; padding:20px; position:relative; box-shadow: 0 12px 40px rgba(3,6,15,0.6); }
+    .ns-avatar { width:220px;height:220px;border-radius:26px; display:flex;align-items:center;justify-content:center; font-weight:900; font-size:56px; color:#041022; background:linear-gradient(135deg,var(--accent1),var(--accent2),var(--accent3)); background-size:300% 300%; animation: avatarShift 9s linear infinite; box-shadow:0 14px 40px rgba(9,14,30,0.6); }
+    @keyframes avatarShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    /* floating small shapes (inside hero) */
+    .hero-shapes{ position:absolute; inset:0; pointer-events:none; }
+
+    /* ===== Section common styles ===== */
+    .section { width:100%; max-width:var(--max-w); margin:40px auto; padding:26px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 10px 30px rgba(3,6,15,0.45); }
+    .section h2 { font-size:20px; margin-bottom:6px; }
+    .muted { color:var(--muted); display:block; margin-bottom:12px; }
+
+    .grid { display:grid; gap:14px; }
+    .cols-2 { grid-template-columns: repeat(2,1fr); }
+    .cols-3 { grid-template-columns: repeat(3,1fr); }
+
+    .card { padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02); }
+    .card h3{ margin-bottom:6px }
+    .meta { color:var(--muted); font-size:13px }
+
+    /* Skills chips */
+    .chips { display:flex; flex-wrap:wrap; gap:10px; }
+    .chip { padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); font-weight:700; font-size:13px; color:#fff; border:1px solid rgba(255,255,255,0.02) }
+
+    /* Projects */
+    .project { display:flex; gap:12px; align-items:flex-start; }
+    .thumb { width:84px; height:64px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03) }
+
+    /* Testimonials */
+    .testimonials { display:grid; gap:12px; }
+    .testi { display:flex; gap:12px; align-items:flex-start; }
+    .testi img { width:56px; height:56px; object-fit:cover; border-radius:10px; }
+
+    /* Stats row */
+    .stats { display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; }
+    .stat { padding:12px; border-radius:12px; background:rgba(255,255,255,0.02); min-width:120px; text-align:center; }
+
+    /* Services */
+    .services-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+
+    /* Contact */
+    .contact-grid { display:grid; grid-template-columns: 1fr 360px; gap:18px; }
+    input, textarea { width:100%; padding:10px 12px; background:transparent; border:1px solid rgba(255,255,255,0.04); border-radius:8px; color:#fff; font-size:14px; }
+    textarea{ min-height:120px; resize:vertical }
+
+    /* Footer */
+    footer.site-footer { max-width:var(--max-w); width:100%; margin:30px auto; padding:18px; display:flex; gap:12px; align-items:center; justify-content:space-between; color:var(--muted) }
+    .socials { display:flex; gap:10px; }
+    .socials a { display:inline-flex; width:40px; height:40px; align-items:center; justify-content:center; border-radius:10px; background:rgba(255,255,255,0.02); color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,0.02) }
+
+    /* ===== Responsive ===== */
+    @media (max-width:1100px){ .hero-inner{ grid-template-columns: 1fr 360px; } .ns-avatar{ width:200px;height:200px;font-size:48px } }
+    @media (max-width:820px){
+      header.site-header{ left:12px; right:12px; width:auto; transform:none; border-radius:12px }
+      nav.site-nav{ display:none } .mobile-toggle{ display:block }
+      .hero-inner{ grid-template-columns:1fr; text-align:center } .hero-left{text-align:center}
+      .contact-grid{ grid-template-columns: 1fr; }
+      .cols-2{ grid-template-columns: 1fr; } .cols-3{ grid-template-columns: 1fr; }
+      footer.site-footer{ flex-direction:column; align-items:center; gap:8px }
+    }
+    @media (max-width:480px){
+      h1.title{ font-size:28px } .kicker{ font-size:12px;padding:6px 10px } .btn{ padding:10px 14px; font-size:13px }
+      header.site-header{ height:64px }
+    }
+
+    /* small utility */
+    .center { text-align:center }
+  </style>
 </head>
 <body>
-<!-- Floating particles -->
-<div id="particles"></div>
+  <div class="bg" aria-hidden="true">
+    <div class="blob"></div>
+    <div class="overlay"></div>
+  </div>
 
-<div class="container">
-    <h1>Version 2.0 Coming Soon!</h1>
-    <p>This section of my portfolio is currently under development.</p>
-    <p>Exciting new projects and updates will be available here soon.</p>
-    <p class="signature">❤️ from Naveen</p>
-    <a class="back-link" href="index.html">← Back to Version 1.0</a>
+  <div class="site">
+    <!-- Header / Navigation -->
+    <header class="site-header" role="banner" aria-label="Main navigation">
+      <a class="brand" href="#intro" aria-label="Naveen Shankar">
+        <div class="logo" id="logoNS">NS</div>
+        <div class="brand-name">Naveen Shankar D</div>
+      </a>
+
+      <nav class="site-nav" role="navigation" aria-label="Sections">
+        <a href="#intro" class="nav-link active" data-target="intro">Intro</a>
+        <a href="#about" class="nav-link" data-target="about">About Me</a>
+        <a href="#experience" class="nav-link" data-target="experience">Experience</a>
+        <a href="#education" class="nav-link" data-target="education">Education</a>
+        <a href="#skills" class="nav-link" data-target="skills">Skills</a>
+        <a href="#works" class="nav-link" data-target="works">Works</a>
+        <a href="#services" class="nav-link" data-target="services">Services</a>
+        <a href="game.html" target="_blank" rel="noopener" class="nav-link">Game</a>
+        <a href="#contact" class="nav-link" data-target="contact">Contact</a>
+      </nav>
+
+      <button class="mobile-toggle" aria-label="Open menu" title="Menu">☰</button>
+    </header>
+
+    <!-- Main content -->
+    <main>
+      <!-- HERO / INTRO -->
+      <section id="intro" class="hero" role="region" aria-labelledby="intro-title">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="kicker">Creative • Developer • Network Admin</div>
+            <h1 class="title" id="intro-title">Hi, I'm <span style="background:linear-gradient(90deg,var(--accent3),var(--accent2)); -webkit-background-clip:text; color:transparent">Naveen</span> — I design, build & secure digital systems.</h1>
+            <p class="lead">I mix design sensibility with front-end craftsmanship and strong networking expertise — building portfolios, web apps, and secure infrastructures. Explore sections below or try my Game.</p>
+            <div class="cta">
+              <a class="btn" href="#works">Explore Works ↓</a>
+              <a class="btn secondary" href="#contact">Get in Touch</a>
+            </div>
+          </div>
+
+          <aside class="hero-card" aria-hidden="false">
+            <div class="ns-avatar" id="ns-avatar" title="NS">NS</div>
+            <div class="hero-shapes" aria-hidden="true">
+              <!-- decorative shapes -->
+              <svg style="position:absolute; left:-40px; top:10px; width:140px; opacity:0.08" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="40" rx="12" fill="#ffb27f"/></svg>
+              <svg style="position:absolute; right:-30px; bottom:40px; width:120px; opacity:0.06" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#5eead4"/></svg>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="section" role="region" aria-labelledby="about-title">
+        <h2 id="about-title">About Me</h2>
+        <span class="muted">Who I am & what I do</span>
+        <div class="grid" style="margin-top:12px">
+          <div class="card">
+            <p style="line-height:1.7; color:var(--muted)">
+              Hey there! I'm a tech enthusiast with a passion for designing and managing network systems, ensuring seamless connectivity, and keeping infrastructure secure. I graduated with a <strong>B.Voc in Networking and Mobile Application</strong> from PSG College of Arts & Science. Currently, I’m working as a <strong>Network Data Administrator – L1 at Wipro Technologies, Coimbatore</strong>, through their Work Integrated Learning Program (WILP). Alongside my role, I’m also pursuing an <strong>M.Tech in Software Systems from BITS Pilani</strong>—because for me, learning and growth never stop.
+            </p>
+            <p style="line-height:1.7; color:var(--muted); margin-top:8px">
+              My expertise lies in network administration, system monitoring, troubleshooting, and cybersecurity practices. I also bring experience in web development, cloud computing, and data analysis, with strong command over languages like C, C++, Java, Python, HTML, PHP, and SQL. Notable projects include a college event management system, a crypto-based e-museum ticketing platform, and a bus ticket booking portal. Beyond technology, I’ve served as an IIC Student Ambassador and Association Chairperson, where I honed leadership, event management, and team collaboration skills.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section id="experience" class="section" role="region" aria-labelledby="experience-title">
+        <h2 id="experience-title">Work Experience</h2>
+        <span class="muted">Recent roles & timeline</span>
+
+        <div class="grid cols-2" style="margin-top:14px">
+          <div class="card">
+            <h3>Wipro Technologies</h3>
+            <div class="meta">Network Data Admin - L1</div>
+            <div class="meta" style="margin-top:6px">28 August 2025 - Present (6 months 28 days)</div>
+            <p class="muted" style="margin-top:8px">Role: Network Data Admin (L1). Responsibilities include system monitoring, data administration, ensuring connectivity, and supporting secure infrastructure within WILP.</p>
+          </div>
+
+          <div class="card">
+            <h3>Wipro Technologies</h3>
+            <div class="meta">Trainee</div>
+            <div class="meta" style="margin-top:6px">24 March 2025 - 27 August 2025</div>
+            <p class="muted" style="margin-top:8px">Completed training & hands-on labs in network administration and enterprise tooling.</p>
+          </div>
+
+          <div class="card">
+            <h3>Kaizen Technosoft</h3>
+            <div class="meta">Web Developer Intern</div>
+            <div class="meta" style="margin-top:6px">21 Dec 2022 - 31 Dec 2022 (10 days)</div>
+            <p class="muted" style="margin-top:8px">Built web pages and assisted on small features and bug fixes for client projects.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="education" class="section" role="region" aria-labelledby="education-title">
+        <h2 id="education-title">Education</h2>
+        <span class="muted">Academic background</span>
+
+        <div class="grid cols-2" style="margin-top:14px">
+          <div class="card">
+            <h3>BITS Pilani</h3>
+            <div class="meta">M.Tech — Software Systems (ongoing)</div>
+          </div>
+
+          <div class="card">
+            <h3>Bharathiar University</h3>
+            <div class="meta">MCA (Distance, Current)</div>
+          </div>
+
+          <div class="card">
+            <h3>PSG College of Arts & Science</h3>
+            <div class="meta">B.Voc — Networking & Mobile Application</div>
+          </div>
+
+          <div class="card">
+            <h3>Bharathi Vikas Matric Hr. Sec. School</h3>
+            <div class="meta">Higher Secondary (HSE)</div>
+          </div>
+
+          <div class="card">
+            <h3>Kongu Matric School</h3>
+            <div class="meta">SSLC</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEADERSHIP & AWARDS -->
+      <section id="leadership" class="section" role="region" aria-labelledby="leadership-title">
+        <h2 id="leadership-title">Leadership & Awards</h2>
+        <span class="muted">Leadership roles & notable recognitions</span>
+
+        <div class="grid cols-2" style="margin-top:12px">
+          <div class="card">
+            <h3>Leadership Experience</h3>
+            <div class="meta">PSG College of Arts & Science</div>
+            <ul class="muted" style="margin-top:8px; list-style:disc; padding-left:18px; color:var(--muted)">
+              <li>IIC Student Ambassador</li>
+              <li>Association Chairperson</li>
+              <li>Student Council Member</li>
+            </ul>
+            <div style="margin-top:8px">
+              <div class="meta">Bharathi Vikas Matric Hr. Sec. School</div>
+              <ul class="muted" style="margin-top:6px; list-style:disc; padding-left:18px;">
+                <li>Student Representative</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Awards & Events</h3>
+            <div class="meta">PSG College of Arts & Science</div>
+            <ul class="muted" style="margin-top:8px; list-style:disc; padding-left:18px;">
+              <li>Techathon ’22 – Winner</li>
+              <li>Netronics ’23 – Organizer</li>
+              <li>Netronics 2.0 – Organizer</li>
+              <li>Gateway ’24 – Organizer</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills" class="section" role="region" aria-labelledby="skills-title">
+        <h2 id="skills-title">Skills</h2>
+        <span class="muted">Technical & personal skills</span>
+
+        <div style="margin-top:12px">
+          <h4 style="margin-bottom:8px">Technical</h4>
+          <div class="chips">
+            <div class="chip">Web Development</div>
+            <div class="chip">Cloud Computing & Cyber Security</div>
+            <div class="chip">MS Office Suite</div>
+            <div class="chip">Data Structures (Basics)</div>
+            <div class="chip">Excel & Spreadsheets</div>
+            <div class="chip">Powerchat (WhatsApp) CRM</div>
+          </div>
+
+          <h4 style="margin:18px 0 8px">Programming Languages</h4>
+          <div class="chips">
+            <div class="chip">C & C++</div>
+            <div class="chip">Java</div>
+            <div class="chip">Python</div>
+            <div class="chip">HTML, PHP & SQL</div>
+          </div>
+
+          <h4 style="margin:18px 0 8px">Personal</h4>
+          <div class="chips">
+            <div class="chip">Interpersonal Communication</div>
+            <div class="chip">Self Starter</div>
+            <div class="chip">Adaptability & Critical Thinking</div>
+            <div class="chip">Leadership & Event Management</div>
+            <div class="chip">Organizational Skills</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKS / PROJECTS -->
+      <section id="works" class="section" role="region" aria-labelledby="works-title">
+        <h2 id="works-title">Best Works</h2>
+        <span class="muted">Selected projects</span>
+
+        <div class="grid cols-2" style="margin-top:14px">
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>College Event Management System</h4>
+              <p class="muted">Web Development</p>
+            </div>
+          </div>
+
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>E-Museum (crypto-based ticketing)</h4>
+              <p class="muted">Web Development</p>
+            </div>
+          </div>
+
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>Local Bus Ticket Booking</h4>
+              <p class="muted">Web Development</p>
+            </div>
+          </div>
+
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>Blood Donor Connection</h4>
+              <p class="muted">Web Development</p>
+            </div>
+          </div>
+
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>Automatic Timetable Generator</h4>
+              <p class="muted">Web Development</p>
+            </div>
+          </div>
+
+          <div class="card project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div>
+              <h4>Netronics'23 & 2.0</h4>
+              <p class="muted">Event Management</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials" class="section" role="region" aria-labelledby="testimonials-title">
+        <h2 id="testimonials-title">Testimonials</h2>
+        <span class="muted">What mentors & professors say</span>
+
+        <div class="testimonials" style="margin-top:12px">
+          <div class="testi card">
+            <div style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">PN</div>
+            <div>
+              <strong>Dr. P. Nithya</strong>
+              <div class="meta">HOD, PSGCAS</div>
+              <p class="muted" style="margin-top:6px">As the Head of Department, I have witnessed Naveen's dedication and hard work firsthand. He has proven himself to be the best student of the year...</p>
+            </div>
+          </div>
+
+          <div class="testi card">
+            <div style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">BU</div>
+            <div>
+              <strong>Dr. B. Uma Maheswari</strong>
+              <div class="meta">Associate Professor, PSGCAS</div>
+              <p class="muted" style="margin-top:6px">Naveen is known for his exceptional leadership skills and ability to manage events successfully...</p>
+            </div>
+          </div>
+
+          <div class="testi card">
+            <div style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">LS</div>
+            <div>
+              <strong>Dr. L. S. Sindhuja</strong>
+              <div class="meta">Assistant Professor, PSGCAS</div>
+              <p class="muted" style="margin-top:6px">Naveen's leadership capabilities are remarkable. He can manage any team individually...</p>
+            </div>
+          </div>
+
+          <div class="testi card">
+            <div style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">VK</div>
+            <div>
+              <strong>Dr. V. R. Kavitha</strong>
+              <div class="meta">Associate Professor, PSGCAS</div>
+              <p class="muted" style="margin-top:6px">Naveen demonstrates expertise in coding and problem-solving...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section id="stats" class="section" role="region" aria-labelledby="stats-title">
+        <h2 id="stats-title">Numbers That Matter</h2>
+        <span class="muted">Highlights</span>
+        <div class="stats">
+          <div class="stat">
+            <div style="font-size:22px;font-weight:800">84%</div>
+            <div class="muted">Academic Excellence</div>
+          </div>
+          <div class="stat">
+            <div style="font-size:22px;font-weight:800">3+</div>
+            <div class="muted">Awards & Recognitions</div>
+          </div>
+          <div class="stat">
+            <div style="font-size:22px;font-weight:800">5+</div>
+            <div class="muted">Projects Developed</div>
+          </div>
+          <div class="stat">
+            <div style="font-size:22px;font-weight:800">5+</div>
+            <div class="muted">Leadership Roles</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services" class="section" role="region" aria-labelledby="services-title">
+        <h2 id="services-title">Services</h2>
+        <span class="muted">How I can help</span>
+
+        <div class="services-grid" style="margin-top:12px">
+          <div class="card">
+            <h3>Event Planning</h3>
+            <p class="muted">Organizing seamless events with innovation and leadership.</p>
+          </div>
+          <div class="card">
+            <h3>Tutoring & Teaching</h3>
+            <p class="muted">Helping learners grow through structured and personalized sessions.</p>
+          </div>
+          <div class="card">
+            <h3>Workshops & Lectures</h3>
+            <p class="muted">Hands-on sessions and talks to inspire and empower audiences.</p>
+          </div>
+          <div class="card">
+            <h3>Web Development</h3>
+            <p class="muted">Designing responsive and functional websites for your needs.</p>
+          </div>
+          <div class="card">
+            <h3>Consulting</h3>
+            <p class="muted">Performance and security audits for web & network systems.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:16px">
+          <a class="btn" href="#contact">Book Now</a>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="section" role="region" aria-labelledby="contact-title">
+        <h2 id="contact-title">Get In Touch</h2>
+        <span class="muted">I am passionate about technology and innovation</span>
+
+        <div class="contact-grid" style="margin-top:12px">
+          <form class="card contact-form" onsubmit="handleContact(event)" aria-label="Contact form">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Your email" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+            <textarea name="message" placeholder="Message" required></textarea>
+            <button class="btn" type="submit">Message Me</button>
+          </form>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="card">
+              <h3>Contact</h3>
+              <div class="meta">dnaveenshankar2003@gmail.com</div>
+              <div class="meta">+91 95667 16114</div>
+            </div>
+            <div class="card">
+              <h3>Follow Me</h3>
+              <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+                <a href="https://www.facebook.com/naveen.shankar.37/" target="_blank" rel="noopener" class="chip">Facebook</a>
+                <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener" class="chip">X</a>
+                <a href="https://www.instagram.com/_.naveen.d_/" target="_blank" rel="noopener" class="chip">Instagram</a>
+                <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener" class="chip">GitHub</a>
+                <a href="https://www.linkedin.com/in/d-naveens/" target="_blank" rel="noopener" class="chip">LinkedIn</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Get My CV</h3>
+              <div style="margin-top:8px">
+                <a class="btn" href="mailto:dnaveenshankar2003@gmail.com?subject=CV%20Request">Request CV</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="site-footer" role="contentinfo">
+        <div class="version">v2.0 — naveenshankar.in</div>
+        <div class="socials" aria-hidden="false">
+          <a href="https://www.facebook.com/naveen.shankar.37/" target="_blank" rel="noopener" aria-label="Facebook">F</a>
+          <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener" aria-label="X">X</a>
+          <a href="https://www.instagram.com/_.naveen.d_/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+          <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
+          <a href="https://www.linkedin.com/in/d-naveens/" target="_blank" rel="noopener" aria-label="LinkedIn">IN</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ===== Scripts: interactions & animations (all inline for single-file) ===== -->
+  <script>
+    // Simple selector
+    const $ = q => document.querySelector(q);
+    const $$ = q => Array.from(document.querySelectorAll(q));
+
+    // Mobile nav toggle
+    const mobileToggle = $('.mobile-toggle');
+    const nav = $('.site-nav');
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', () => {
+        if (nav.style.display === 'flex') {
+          nav.style.display = '';
+          mobileToggle.textContent = '☰';
+        } else {
+          nav.style.display = 'flex';
+          nav.style.flexDirection = 'column';
+          nav.style.gap = '6px';
+          mobileToggle.textContent = '✕';
+        }
+      });
+    }
+
+    // Smooth scroll to ID with offset for sticky nav
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const navH = 84; // offset
+      const y = el.getBoundingClientRect().top + window.scrollY - navH;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      // close mobile nav if open
+      if (window.innerWidth < 820 && nav.style.display === 'flex') {
+        nav.style.display = '';
+        mobileToggle.textContent = '☰';
+      }
+    }
+
+    // Attach nav click handlers
+    $$('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href') || '';
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const id = href.replace('#','');
+          scrollToId(id);
+        }
+      });
+    });
+
+    // ScrollSpy using IntersectionObserver
+    const sections = ['intro','about','experience','education','skills','works','services','contact'];
+    const navLinks = $$('.nav-link');
+    const observerOptions = { root: null, rootMargin: '-30% 0px -40% 0px', threshold: 0 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        if (entry.isIntersecting) {
+          navLinks.forEach(n => n.classList.remove('active'));
+          const active = document.querySelector('.nav-link[href="#' + id + '"]');
+          if (active) active.classList.add('active');
+        }
+      });
+    }, observerOptions);
+    sections.forEach(s => {
+      const el = document.getElementById(s);
+      if (el) observer.observe(el);
+    });
+
+    // Simple fade-in reveal for cards/sections (fallback for GSAP)
+    function revealOnScroll() {
+      document.querySelectorAll('.card, .section, .project, .testi').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < (window.innerHeight - 80)) {
+          el.style.opacity = 1;
+          el.style.transform = 'translateY(0)';
+          el.style.transition = 'all .6s cubic-bezier(.2,.9,.2,1)';
+        } else {
+          el.style.opacity = 0;
+          el.style.transform = 'translateY(10px)';
+        }
+      });
+    }
+    // initial setup
+    document.querySelectorAll('.card, .section, .project, .testi').forEach(el => { el.style.opacity = 0; el.style.transform = 'translateY(10px)'; });
+
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', () => {
+      revealOnScroll();
+      // small logo bob
+      if (window.gsap) {
+        gsap.to('#logoNS', { y: -6, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        gsap.utils.toArray('.card').forEach((c, i) => {
+          gsap.from(c, { y: 18, opacity: 0, duration: 0.7, delay: i*0.05, ease: 'power3.out' });
+        });
+        // hero animations
+        gsap.from('.kicker', { y: 8, opacity: 0, duration: 0.8 });
+        gsap.from('.title', { y: 18, opacity: 0, duration: 0.9, delay: 0.1 });
+        gsap.from('.lead', { y: 18, opacity: 0, duration: 0.9, delay: 0.25 });
+        gsap.from('.btn', { y: 12, opacity: 0, duration: 0.9, delay: 0.35, stagger: 0.08 });
+      } else {
+        // fallback simple transitions
+        document.querySelectorAll('.card').forEach((c, i) => setTimeout(()=>{ c.style.opacity=1; c.style.transform='translateY(0)'; }, 200 + i*70));
+      }
+    });
+
+    // Avatar 3D tilt - small parallax
+    const avatar = document.getElementById('ns-avatar');
+    if (avatar) {
+      window.addEventListener('mousemove', (e) => {
+        const rect = avatar.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const rx = dy / 30;
+        const ry = -dx / 30;
+        avatar.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      window.addEventListener('mouseleave', ()=> avatar.style.transform = 'none');
+    }
+
+    // Particles (small floating dots) - lightweight
+    (function createParticles(){
+      const count = window.innerWidth < 600 ? 14 : 28;
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.inset = '0';
+      container.style.zIndex = -4;
+      container.style.pointerEvents = 'none';
+      document.body.appendChild(container);
+      for (let i=0;i<count;i++){
+        const d = document.createElement('div');
+        const size = Math.random() * 8 + 4;
+        d.style.width = size + 'px';
+        d.style.height = size + 'px';
+        d.style.borderRadius = '50%';
+        d.style.position = 'absolute';
+        d.style.left = (Math.random()*110 - 5) + 'vw';
+        d.style.top = (Math.random()*100) + 'vh';
+        d.style.background = 'rgba(255,255,255,'+(Math.random()*0.08+0.02)+')';
+        d.style.filter = 'blur(6px)';
+        d.style.animation = `floaty ${Math.random()*16 + 10}s linear infinite`;
+        d.style.opacity = (Math.random()*0.6 + 0.1).toString();
+        container.appendChild(d);
+      }
+      const style = document.createElement('style');
+      style.textContent = `@keyframes floaty { 0%{transform:translateY(0) } 50%{transform:translateY(-40vh) } 100%{transform:translateY(0)} }`;
+      document.head.appendChild(style);
+    })();
+
+    // Contact form placeholder
+    function handleContact(e){
+      e.preventDefault();
+      const form = e.target;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+      if(!name || !email || !message) {
+        alert('Please complete the form before sending.');
+        return;
+      }
+      const btn = form.querySelector('button[type="submit"]');
+      const old = btn.innerText;
+      btn.innerText = 'Sending…';
+      setTimeout(()=> {
+        alert('Thanks, ' + name + '! Message simulated as sent. I will reach out soon.');
+        form.reset();
+        btn.innerText = old;
+      }, 900);
+    }
+  </script>
+ 
+ 
+ <!-- Development Alert -->
+<!-- Full Page Under Development Alert -->
+<div id="dev-overlay">
+  <div class="dev-content">
+    <span class="close-btn" onclick="closeDevAlert()">&times;</span>
+    <h2>🚧 Under Development</h2>
+    <p>You’re currently viewing a <strong>trial version</strong> of this portfolio.</p>
+    <p>Some features and designs are still being built!</p>
+    <p class="signature">❤️ Love from <b>Naveen</b></p>
+  </div>
 </div>
 
-<script>
-// Create floating particles
-const particlesContainer = document.getElementById('particles');
-const numParticles = 25;
+<style>
+  /* === Overlay Container === */
+  #dev-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.95) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeIn 0.8s ease forwards;
+    padding: 20px;
+  }
 
-for (let i = 0; i < numParticles; i++) {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
-    const size = Math.random() * 6 + 4;
-    particle.style.width = size + 'px';
-    particle.style.height = size + 'px';
-    particle.style.left = Math.random() * 100 + 'vw';
-    particle.style.animationDuration = (Math.random() * 12 + 8) + 's';
-    particle.style.opacity = Math.random() * 0.5 + 0.2;
-    particlesContainer.appendChild(particle);
-}
+  /* === Alert Box === */
+  .dev-content {
+    position: relative;
+    background: linear-gradient(135deg, #ff0057, #ff7b00, #00c6ff, #8e2de2);
+    background-size: 400% 400%;
+    color: #fff;
+    padding: 50px 30px;
+    border-radius: 25px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    animation: gradientFlow 6s ease infinite, zoomIn 0.7s ease forwards;
+  }
+
+  /* === Text Styling === */
+  .dev-content h2 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
+  .dev-content p {
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+
+  .signature {
+    margin-top: 15px;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    opacity: 0.9;
+  }
+
+  /* === Close Button === */
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  .close-btn:hover {
+    color: #ffeb3b;
+    transform: rotate(90deg);
+  }
+
+  /* === Animations === */
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* === Mobile Responsiveness === */
+  @media (max-width: 600px) {
+    .dev-content {
+      padding: 35px 20px;
+      border-radius: 18px;
+    }
+    .close-btn {
+      top: 8px;
+      right: 15px;
+    }
+  }
+</style>
+
+<script>
+  // Dismiss the alert
+  function closeDevAlert() {
+    const overlay = document.getElementById("dev-overlay");
+    overlay.style.animation = "fadeOut 0.8s ease forwards";
+    setTimeout(() => overlay.remove(), 800);
+  }
 </script>
+
+
 </body>
 </html>
