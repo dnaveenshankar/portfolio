@@ -716,7 +716,6 @@
     }
 
     /* === Timeline Layout === */
-    /* === Timeline Layout === */
     .timeline-container {
       position: relative;
       max-width: 900px;
@@ -839,6 +838,315 @@
         left: 0;
       }
     }
+
+    /* === Leadership Cards === */
+    .leadership-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-top: 20px;
+    }
+
+    .main-card {
+      position: relative;
+      padding: 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 12px 30px rgba(3, 6, 15, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .main-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(94, 234, 212, 0.3);
+    }
+
+    /* Inner cards */
+    .sub-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .sub-card {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.25s ease;
+    }
+
+    .sub-card:hover {
+      background: rgba(94, 234, 212, 0.08);
+      border-color: rgba(94, 234, 212, 0.3);
+      transform: translateX(6px);
+    }
+
+    .sub-card h4 {
+      font-size: 15px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .sub-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* === Language Section === */
+    .languages {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lang-item span {
+      font-weight: 600;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .rating-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 6px 0;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #9b7bff, #6d9fff);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .level {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* === Neon Multicolor Tamil Text === */
+    .neon-text {
+      font-weight: 800;
+      font-size: 1.1em;
+      background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: neonGlow 3s linear infinite, colorShift 6s ease-in-out infinite;
+      text-shadow: 0 0 8px rgba(255, 0, 255, 0.6),
+        0 0 16px rgba(0, 255, 255, 0.4),
+        0 0 24px rgba(255, 255, 0, 0.3);
+    }
+
+    /* Glow Pulse Animation */
+    @keyframes neonGlow {
+
+      0%,
+      100% {
+        text-shadow: 0 0 6px rgba(255, 0, 255, 0.6),
+          0 0 14px rgba(0, 255, 255, 0.4),
+          0 0 22px rgba(255, 255, 0, 0.3);
+      }
+
+      50% {
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.8),
+          0 0 24px rgba(255, 0, 255, 0.6),
+          0 0 36px rgba(255, 255, 0, 0.4);
+      }
+    }
+
+    /* Slow Gradient Movement */
+    @keyframes colorShift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* === Interactive Chips with Neon Hover === */
+    .chip {
+      position: relative;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: 0.3px;
+      cursor: default;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+
+    /* Neon Glow on Hover */
+    .chip:hover {
+      background: linear-gradient(90deg, #9b7bff, #ff6a88, #5eead4);
+      background-size: 200% 200%;
+      animation: chipGlow 2.5s linear infinite;
+      color: #041022;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 12px rgba(155, 123, 255, 0.4),
+        0 0 24px rgba(255, 106, 136, 0.3),
+        0 0 36px rgba(94, 234, 212, 0.3);
+    }
+
+    /* Smooth Gradient Shift Animation */
+    @keyframes chipGlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* === Neon Thumbnails === */
+    .neon-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9b7bff, #ff6a88, #5eead4);
+      background-size: 200% 200%;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 10px rgba(155, 123, 255, 0.4);
+      animation: neonShift 3s linear infinite;
+      transition: all 0.35s ease;
+    }
+
+    /* Hover Glow */
+    .project:hover .neon-thumb {
+      transform: scale(1.15) rotate(6deg);
+      box-shadow: 0 0 16px rgba(155, 123, 255, 0.6),
+        0 0 28px rgba(255, 106, 136, 0.5),
+        0 0 42px rgba(94, 234, 212, 0.4);
+    }
+
+    /* Animate gradient movement */
+    @keyframes neonShift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Card layout tweaks */
+    .card.project {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 12px 16px;
+    }
+
+    /* Hover lift */
+    .card.project:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 14px rgba(155, 123, 255, 0.2);
+    }
+
+    .stats.chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .stats .chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .stats .chip:hover {
+      transform: translateY(-6px);
+      background: linear-gradient(135deg, #9b7bff, #ff6a88, #5eead4);
+      box-shadow: 0 8px 24px rgba(155, 123, 255, 0.3), 0 0 20px rgba(255, 106, 136, 0.3), 0 0 28px rgba(94, 234, 212, 0.2);
+    }
+
+    .stats .stat-number {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #9b7bff, #ff6a88, #5eead4);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .stats .chip:hover .stat-number {
+      text-shadow: 0 0 12px #9b7bff, 0 0 20px #ff6a88, 0 0 28px #5eead4;
+    }
+
+    .stats .level {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+
+    /* Card buttons container */
+    .card-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    /* Common button styles */
+    .card .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #fff;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-width: 100px;
+    }
   </style>
 </head>
 
@@ -914,12 +1222,25 @@
       <section id="intro" class="hero" role="region" aria-labelledby="intro-title">
         <div class="hero-inner">
           <div class="hero-left">
-            <div class="kicker">Network Engineer • Web Developer • Event Organizer</div>
-            <h1 class="title" id="intro-title">Hi, I'm <span
-                style="background:linear-gradient(90deg,var(--accent3),var(--accent2)); -webkit-background-clip:text; color:transparent">Naveen</span>
-              — I design, build & secure digital systems.</h1>
-            <p class="lead">I mix design sensibility with front-end craftsmanship and strong networking expertise —
-              building portfolios, web apps, and secure infrastructures. Explore sections below or try my Game.</p>
+            <div class="kicker">Network Data Administrator • Innovator • Lifelong Learner</div>
+
+            <h1 class="title" id="intro-title">
+              Hi, I'm
+              <span
+                style="background:linear-gradient(90deg,var(--accent3),var(--accent2)); -webkit-background-clip:text; color:transparent">
+                Naveen
+              </span>
+              — shaping the unseen backbone of the digital world, one network at a time.
+            </h1>
+
+            <p class="lead">
+              Currently working as a Network Data Administrator at Wipro through the WILP (WASE) program,
+              I ensure systems stay secure, connected, and resilient. While pursuing my M.Tech in Software Systems at
+              BITS Pilani,
+              I blend academic learning with real-world operations — designing infrastructures that keep the digital
+              world running smoothly.
+            </p>
+
             <div class="cta">
               <a class="btn" href="#works">Explore Works ↓</a>
               <a class="btn secondary" href="#contact">Get in Touch</a>
@@ -943,34 +1264,61 @@
         </div>
       </section>
 
+
       <!-- ABOUT -->
       <section id="about" class="section" role="region" aria-labelledby="about-title">
         <h2 id="about-title">About Me</h2>
-        <span class="muted">Who I am & what I do</span>
+        <span class="muted">Who I am ?</span>
+
         <div class="grid" style="margin-top:12px">
           <div class="card">
             <p style="line-height:1.7; color:var(--muted)">
-              Hey there! I'm a tech enthusiast with a passion for designing and managing network systems, ensuring
-              seamless connectivity, and keeping infrastructure secure. I graduated with a <strong>B.Voc in Networking
-                and Mobile Application</strong> from PSG College of Arts & Science. Currently, I’m working as a
-              <strong>Network Data Administrator – L1 at Wipro Technologies, Coimbatore</strong>, through their Work
-              Integrated Learning Program (WILP). Alongside my role, I’m also pursuing an <strong>M.Tech in Software
-                Systems from BITS Pilani</strong>—because for me, learning and growth never stop.
+              Hey there! I'm <strong>Naveen Shankar D</strong> from Tirupur — a tech enthusiast who loves keeping
+              networks
+              alive, secure, and seamlessly connected. I’m currently working as a
+              <strong>Network Data Administrator</strong> at <strong>Wipro Technologies, Coimbatore</strong>,
+              through the <strong>Work Integrated Learning Program (WILP – WASE)</strong>.
+              At <strong>EDOH Shared Services</strong>, I handle network data operations for multiple clients,
+              ensuring every connection stays efficient, stable, and connected.
             </p>
+
             <p style="line-height:1.7; color:var(--muted); margin-top:8px">
-              My expertise lies in network administration, system monitoring, troubleshooting, and cybersecurity
-              practices. I also bring experience in web development, cloud computing, and data analysis, with strong
-              command over languages like C, C++, Java, Python, HTML, PHP, and SQL. Notable projects include a college
-              event management system, a crypto-based e-museum ticketing platform, and a bus ticket booking portal.
-              Beyond technology, I’ve served as an IIC Student Ambassador and Association Chairperson, where I honed
-              leadership, event management, and team collaboration skills.
+              Alongside my role, I’m pursuing an <strong>M.Tech in Software Systems</strong> from
+              <strong>BITS Pilani</strong> — where I’m expanding my knowledge in software engineering, data management,
+              and network technologies. I also hold a <strong>B.Voc in Networking and Mobile Application</strong> from
+              <strong>PSG College of Arts & Science</strong>, and I’m a proud alumnus of its
+              <strong>Department of Networking and Mobile Application</strong>, where my tech journey truly began.
+            </p>
+
+            <p style="line-height:1.7; color:var(--muted); margin-top:8px">
+              My expertise lies in <strong>Network Administration, Cloud Computing, and Cyber Threat
+                Management</strong>,
+              along with a solid foundation in <strong>C, C++, Java, Python, SQL, HTML, CSS, PHP,</strong> and
+              <strong>JavaScript</strong>. Over time, I’ve developed projects like
+              <em>Events Corner</em>, <em>E-Museum</em>, <em>TranX</em>, and <em>Blood Bestow</em> — each built to solve
+              real problems and spark innovation.
+            </p>
+
+            <p style="line-height:1.7; color:var(--muted); margin-top:8px">
+              Beyond tech, I’ve always enjoyed taking the lead — serving as an
+              <strong>IIC Student Ambassador</strong>, <strong>Student Council Member</strong>, and
+              <strong>Association Chairperson</strong>. These experiences taught me how collaboration, communication,
+              and creativity can turn ideas into impact. One of my proudest moments? Winning <strong>Techathon
+                ’22</strong>!
+            </p>
+
+            <p style="line-height:1.7; color:var(--muted); margin-top:8px">
+              I’m also pursuing my <strong>Master of Computer Applications (MCA)</strong> from
+              <strong>Bharathiar University (Online)</strong> to broaden my academic and technical horizons.
+              Always open to new challenges, collaborations, and learning — I believe every connection,
+              digital or human, is a chance to build something incredible. ✨
             </p>
           </div>
         </div>
       </section>
 
+
       <!-- EXPERIENCE -->
-      <!-- EXPERIENCE / TIMELINE -->
       <section id="experience" class="section" role="region" aria-labelledby="experience-title">
         <h2 id="experience-title">Work Experience</h2>
         <span class="muted">My career timeline & journey</span>
@@ -1019,7 +1367,6 @@
 
 
       <!-- EDUCATION -->
-      <!-- EDUCATION / TIMELINE -->
       <section id="education" class="section" role="region" aria-labelledby="education-title">
         <h2 id="education-title">Education</h2>
         <span class="muted">Academic background</span>
@@ -1029,7 +1376,7 @@
           <div class="timeline-item left">
             <div class="content card">
               <h3>BITS Pilani</h3>
-              <div class="meta">M.Tech — Software Systems (Ongoing)</div>
+              <div class="meta">M.Tech — Software Systems (Current)</div>
               <div class="meta date">2025 – Present</div>
             </div>
           </div>
@@ -1074,38 +1421,70 @@
       <!-- LEADERSHIP & AWARDS -->
       <section id="leadership" class="section">
         <h2>Leadership & Awards</h2>
-        <span class="muted">Leadership roles & notable recognitions</span>
+        <span class="muted">A little glimpse into my journey leading, organizing & growing 🌟</span>
 
-        <div class="carousel">
-          <div class="card">
+        <div class="leadership-grid">
+          <!-- Card 1 -->
+          <div class="card main-card">
             <h3>Leadership Experience</h3>
             <div class="meta">PSG College of Arts & Science</div>
-            <ul>
-              <li>IIC Student Ambassador</li>
-              <li>Association Chairperson</li>
-              <li>Student Council Member</li>
-            </ul>
+
+            <div class="sub-cards">
+              <div class="sub-card">
+                <h4>IIC Student Ambassador</h4>
+                <p>Encouraged innovation & startup culture among peers 🚀</p>
+              </div>
+
+              <div class="sub-card">
+                <h4>Association Chairperson</h4>
+                <p>Led department events & networking initiatives 🎯</p>
+              </div>
+
+              <div class="sub-card">
+                <h4>Student Council Member</h4>
+                <p>Represented students and co-organized major fests 🏆</p>
+              </div>
+            </div>
           </div>
 
-          <div class="card">
+          <!-- Card 2 -->
+          <div class="card main-card">
             <h3>Awards & Events</h3>
             <div class="meta">PSG College of Arts & Science</div>
-            <ul>
-              <li>Techathon ’22 – Winner</li>
-              <li>Netronics ’23 – Organizer</li>
-              <li>Gateway ’24 – Organizer</li>
-            </ul>
+
+            <div class="sub-cards">
+              <div class="sub-card">
+                <h4>Techathon ’22 – Winner</h4>
+                <p>Secured top position with an innovative tech solution ⚡</p>
+              </div>
+
+              <div class="sub-card">
+                <h4>Netronics ’23 – Organizer</h4>
+                <p>Coordinated the intercollegiate event bringing tech minds together 🤝</p>
+              </div>
+
+              <div class="sub-card">
+                <h4>Gateway ’24 – Organizer</h4>
+                <p>Handled logistics & student coordination seamlessly 🎤</p>
+              </div>
+            </div>
           </div>
 
-          <div class="card">
+          <!-- Card 3 -->
+          <div class="card main-card">
             <h3>School Leadership</h3>
             <div class="meta">Bharathi Vikas Matric Hr. Sec. School</div>
-            <ul>
-              <li>Student Representative</li>
-            </ul>
+
+            <div class="sub-cards">
+              <div class="sub-card">
+                <h4>Student Representative</h4>
+                <p>Led school teams and anchored cultural events 🎓</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
 
 
       <!-- SKILLS -->
@@ -1114,6 +1493,7 @@
         <span class="muted">Technical & personal skills</span>
 
         <div style="margin-top:12px">
+          <!-- Technical -->
           <h4 style="margin-bottom:8px">Technical</h4>
           <div class="chips">
             <div class="chip">Web Development</div>
@@ -1121,9 +1501,11 @@
             <div class="chip">MS Office Suite</div>
             <div class="chip">Data Structures (Basics)</div>
             <div class="chip">Excel & Spreadsheets</div>
+            <div class="chip">Networking</div>
             <div class="chip">Powerchat (WhatsApp) CRM</div>
           </div>
 
+          <!-- Programming Languages -->
           <h4 style="margin:18px 0 8px">Programming Languages</h4>
           <div class="chips">
             <div class="chip">C & C++</div>
@@ -1132,6 +1514,7 @@
             <div class="chip">HTML, PHP & SQL</div>
           </div>
 
+          <!-- Personal -->
           <h4 style="margin:18px 0 8px">Personal</h4>
           <div class="chips">
             <div class="chip">Interpersonal Communication</div>
@@ -1140,8 +1523,37 @@
             <div class="chip">Leadership & Event Management</div>
             <div class="chip">Organizational Skills</div>
           </div>
+
+          <!-- Languages -->
+          <h4 style="margin:18px 0 8px">Languages</h4>
+          <div class="languages">
+            <div class="lang-item">
+              <span>English</span>
+              <div class="rating-bar">
+                <div class="rating-fill" style="width:85%"></div>
+              </div>
+              <p class="level">Working Proficiency</p>
+            </div>
+
+            <div class="lang-item">
+              <span><strong class="neon-text">தமிழ்</strong></span>
+              <div class="rating-bar">
+                <div class="rating-fill" style="width:100%; background:#b287ff"></div>
+              </div>
+              <p class="level">Mother Tongue</p>
+            </div>
+          </div>
+
+          <!-- Hobbies -->
+          <h4 style="margin:18px 0 8px">Hobbies & Interests</h4>
+          <div class="chips">
+            <div class="chip">🌐 Internet Surfing</div>
+            <div class="chip">🍳 Cooking</div>
+            <div class="chip">🎨 Designing</div>
+          </div>
         </div>
       </section>
+
 
       <!-- WORKS / PROJECTS -->
       <section id="works" class="section" role="region" aria-labelledby="works-title">
@@ -1150,7 +1562,7 @@
 
         <div class="grid cols-2" style="margin-top:14px">
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">CEM</div>
             <div>
               <h4>College Event Management System</h4>
               <p class="muted">Web Development</p>
@@ -1158,15 +1570,15 @@
           </div>
 
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">EM</div>
             <div>
-              <h4>E-Museum (crypto-based ticketing)</h4>
+              <h4>E-Museum (Crypto-based Ticketing)</h4>
               <p class="muted">Web Development</p>
             </div>
           </div>
 
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">LBT</div>
             <div>
               <h4>Local Bus Ticket Booking</h4>
               <p class="muted">Web Development</p>
@@ -1174,7 +1586,7 @@
           </div>
 
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">BDC</div>
             <div>
               <h4>Blood Donor Connection</h4>
               <p class="muted">Web Development</p>
@@ -1182,7 +1594,7 @@
           </div>
 
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">ATG</div>
             <div>
               <h4>Automatic Timetable Generator</h4>
               <p class="muted">Web Development</p>
@@ -1190,7 +1602,7 @@
           </div>
 
           <div class="card project">
-            <div class="thumb" aria-hidden="true"></div>
+            <div class="thumb neon-thumb">N23</div>
             <div>
               <h4>Netronics'23 & 2.0</h4>
               <p class="muted">Event Management</p>
@@ -1199,117 +1611,155 @@
         </div>
       </section>
 
-      <!-- TESTIMONIALS -->
-      <section id="testimonials" class="section" role="region" aria-labelledby="testimonials-title">
-        <h2 id="testimonials-title">Testimonials</h2>
-        <span class="muted">What mentors & professors say</span>
-
-        <div class="testimonials" style="margin-top:12px">
-          <div class="testi card">
-            <div
-              style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">
-              PN</div>
-            <div>
-              <strong>Dr. P. Nithya</strong>
-              <div class="meta">HOD, PSGCAS</div>
-              <p class="muted" style="margin-top:6px">As the Head of Department, I have witnessed Naveen's dedication
-                and hard work firsthand. He has proven himself to be the best student of the year...</p>
-            </div>
-          </div>
-
-          <div class="testi card">
-            <div
-              style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">
-              BU</div>
-            <div>
-              <strong>Dr. B. Uma Maheswari</strong>
-              <div class="meta">Associate Professor, PSGCAS</div>
-              <p class="muted" style="margin-top:6px">Naveen is known for his exceptional leadership skills and ability
-                to manage events successfully...</p>
-            </div>
-          </div>
-
-          <div class="testi card">
-            <div
-              style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">
-              LS</div>
-            <div>
-              <strong>Dr. L. S. Sindhuja</strong>
-              <div class="meta">Assistant Professor, PSGCAS</div>
-              <p class="muted" style="margin-top:6px">Naveen's leadership capabilities are remarkable. He can manage any
-                team individually...</p>
-            </div>
-          </div>
-
-          <div class="testi card">
-            <div
-              style="width:56px;height:56px;border-radius:10px;background:#11131a;display:flex;align-items:center;justify-content:center">
-              VK</div>
-            <div>
-              <strong>Dr. V. R. Kavitha</strong>
-              <div class="meta">Associate Professor, PSGCAS</div>
-              <p class="muted" style="margin-top:6px">Naveen demonstrates expertise in coding and problem-solving...</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- STATS -->
       <section id="stats" class="section" role="region" aria-labelledby="stats-title">
         <h2 id="stats-title">Numbers That Matter</h2>
-        <span class="muted">Highlights</span>
-        <div class="stats">
-          <div class="stat">
-            <div style="font-size:22px;font-weight:800">84%</div>
-            <div class="muted">Academic Excellence</div>
+        <span class="muted">Highlights from my journey so far</span>
+
+        <div class="stats chips">
+          <div class="chip">
+            <div class="stat-number">84%</div>
+            <div class="level">Academic Excellence</div>
           </div>
-          <div class="stat">
-            <div style="font-size:22px;font-weight:800">3+</div>
-            <div class="muted">Awards & Recognitions</div>
+
+          <div class="chip">
+            <div class="stat-number">10+</div>
+            <div class="level">Projects Developed</div>
           </div>
-          <div class="stat">
-            <div style="font-size:22px;font-weight:800">5+</div>
-            <div class="muted">Projects Developed</div>
+
+          <div class="chip">
+            <div class="stat-number">10+</div>
+            <div class="level">Certifications</div>
           </div>
-          <div class="stat">
-            <div style="font-size:22px;font-weight:800">5+</div>
-            <div class="muted">Leadership Roles</div>
+
+          <div class="chip">
+            <div class="stat-number">3+</div>
+            <div class="level">Leadership Roles</div>
+          </div>
+
+          <div class="chip">
+            <div class="stat-number">.6+ Years</div>
+            <div class="level">Corporate Experience</div>
+          </div>
+
+          <div class="chip">
+            <div class="stat-number">10+</div>
+            <div class="level">Events Organized</div>
           </div>
         </div>
       </section>
+
 
       <!-- SERVICES -->
-      <section id="services" class="section" role="region" aria-labelledby="services-title">
-        <h2 id="services-title">Services</h2>
-        <span class="muted">How I can help</span>
+      <section id="services" class="section" role="region" aria-labelledby="services-title"
+        style="width:100%; max-width:1200px; margin:40px auto; padding:26px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 10px 30px rgba(3,6,15,0.45);">
+        <h2 id="services-title" style="font-size:20px; margin-bottom:6px;">Services</h2>
+        <span class="muted" style="color:#b6bfd0; display:block; margin-bottom:12px;">How I can help</span>
 
-        <div class="services-grid" style="margin-top:12px">
-          <div class="card">
+        <div class="services-grid"
+          style="margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px;">
+
+          <!-- Event Planning -->
+          <div class="card"
+            style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02);">
             <h3>Event Planning</h3>
-            <p class="muted">Organizing seamless events with innovation and leadership.</p>
+            <p class="muted" style="color:#b6bfd0;">Organizing seamless events with innovation and leadership.</p>
+            <div class="card-buttons" style="display:flex; gap:10px; margin-top:12px;">
+              <a href="Event-Planning-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg, #9b7bff, #5eead4); box-shadow:0 6px 20px rgba(94,234,212,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#9b7bff,#ff6a88,#5eead4)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 16px rgba(155,123,255,0.6),0 0 28px rgba(255,106,136,0.5),0 0 42px rgba(94,234,212,0.4)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#9b7bff,#5eead4)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(94,234,212,0.2)';">View
+                More</a>
+              <a href="book-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 6px 20px rgba(109,139,255,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#6d8bff,#ff6a88,#9b7bff)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(109,139,255,0.4),0 0 16px rgba(94,234,212,0.3)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#6d8bff,#ff6a88)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(109,139,255,0.2)';">Book
+                Now</a>
+            </div>
           </div>
-          <div class="card">
-            <h3>Tutoring & Teaching</h3>
-            <p class="muted">Helping learners grow through structured and personalized sessions.</p>
-          </div>
-          <div class="card">
-            <h3>Workshops & Lectures</h3>
-            <p class="muted">Hands-on sessions and talks to inspire and empower audiences.</p>
-          </div>
-          <div class="card">
-            <h3>Web Development</h3>
-            <p class="muted">Designing responsive and functional websites for your needs.</p>
-          </div>
-          <div class="card">
-            <h3>Consulting</h3>
-            <p class="muted">Performance and security audits for web & network systems.</p>
-          </div>
-        </div>
 
-        <div style="margin-top:16px">
-          <a class="btn" href="#contact">Book Now</a>
+          <!-- Tutoring & Teaching -->
+          <div class="card"
+            style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02);">
+            <h3>Tutoring & Teaching</h3>
+            <p class="muted" style="color:#b6bfd0;">Helping learners grow through structured and personalized sessions.
+            </p>
+            <div class="card-buttons" style="display:flex; gap:10px; margin-top:12px;">
+              <a href="Tutoring-Teaching-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg, #9b7bff, #5eead4); box-shadow:0 6px 20px rgba(94,234,212,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#9b7bff,#ff6a88,#5eead4)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 16px rgba(155,123,255,0.6),0 0 28px rgba(255,106,136,0.5),0 0 42px rgba(94,234,212,0.4)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#9b7bff,#5eead4)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(94,234,212,0.2)';">View
+                More</a>
+              <a href="book-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 6px 20px rgba(109,139,255,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#6d8bff,#ff6a88,#9b7bff)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(109,139,255,0.4),0 0 16px rgba(94,234,212,0.3)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#6d8bff,#ff6a88)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(109,139,255,0.2)';">Book
+                Now</a>
+            </div>
+          </div>
+
+          <!-- Workshops & Lectures -->
+          <div class="card"
+            style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02);">
+            <h3>Workshops & Lectures</h3>
+            <p class="muted" style="color:#b6bfd0;">Hands-on sessions and talks to inspire and empower audiences.</p>
+            <div class="card-buttons" style="display:flex; gap:10px; margin-top:12px;">
+              <a href="Workshops-Lectures-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg, #9b7bff, #5eead4); box-shadow:0 6px 20px rgba(94,234,212,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#9b7bff,#ff6a88,#5eead4)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 16px rgba(155,123,255,0.6),0 0 28px rgba(255,106,136,0.5),0 0 42px rgba(94,234,212,0.4)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#9b7bff,#5eead4)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(94,234,212,0.2)';">View
+                More</a>
+              <a href="book-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 6px 20px rgba(109,139,255,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#6d8bff,#ff6a88,#9b7bff)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(109,139,255,0.4),0 0 16px rgba(94,234,212,0.3)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#6d8bff,#ff6a88)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(109,139,255,0.2)';">Book
+                Now</a>
+            </div>
+          </div>
+
+          <!-- Web Development -->
+          <div class="card"
+            style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02);">
+            <h3>Web Development</h3>
+            <p class="muted" style="color:#b6bfd0;">Designing responsive and functional websites for your needs.</p>
+            <div class="card-buttons" style="display:flex; gap:10px; margin-top:12px;">
+              <a href="Web-Development-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg, #9b7bff, #5eead4); box-shadow:0 6px 20px rgba(94,234,212,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#9b7bff,#ff6a88,#5eead4)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 16px rgba(155,123,255,0.6),0 0 28px rgba(255,106,136,0.5),0 0 42px rgba(94,234,212,0.4)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#9b7bff,#5eead4)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(94,234,212,0.2)';">View
+                More</a>
+              <a href="book-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 6px 20px rgba(109,139,255,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#6d8bff,#ff6a88,#9b7bff)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(109,139,255,0.4),0 0 16px rgba(94,234,212,0.3)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#6d8bff,#ff6a88)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(109,139,255,0.2)';">Book
+                Now</a>
+            </div>
+          </div>
+
+          <!-- Online Classes -->
+          <div class="card"
+            style="padding:14px; border-radius:10px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02);">
+            <h3>Online Classes</h3>
+            <p class="muted" style="color:#b6bfd0;">Online tutoring for web development & networking.</p>
+            <div class="card-buttons" style="display:flex; gap:10px; margin-top:12px;">
+              <a href="Online-Classes-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg, #9b7bff, #5eead4); box-shadow:0 6px 20px rgba(94,234,212,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#9b7bff,#ff6a88,#5eead4)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 0 16px rgba(155,123,255,0.6),0 0 28px rgba(255,106,136,0.5),0 0 42px rgba(94,234,212,0.4)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#9b7bff,#5eead4)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(94,234,212,0.2)';">View
+                More</a>
+              <a href="book-ns.html" target="_blank"
+                style="display:inline-block; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); box-shadow:0 6px 20px rgba(109,139,255,0.2); text-align:center; transition:all 0.3s ease;"
+                onmouseover="this.style.background='linear-gradient(135deg,#6d8bff,#ff6a88,#9b7bff)'; this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(109,139,255,0.4),0 0 16px rgba(94,234,212,0.3)';"
+                onmouseout="this.style.background='linear-gradient(90deg,#6d8bff,#ff6a88)'; this.style.transform='none'; this.style.boxShadow='0 6px 20px rgba(109,139,255,0.2)';">Book
+                Now</a>
+            </div>
+          </div>
+
         </div>
       </section>
+
+
+
 
       <!-- CONTACT -->
       <section id="contact" class="section" role="region" aria-labelledby="contact-title">
@@ -1317,13 +1767,21 @@
         <span class="muted">I am passionate about technology and innovation</span>
 
         <div class="contact-grid" style="margin-top:12px">
-          <form class="card contact-form" onsubmit="handleContact(event)" aria-label="Contact form">
+          <form class="card contact-form" action="https://formspree.io/f/mpwyeboy" method="POST" target="_blank"
+            aria-label="Contact form" onsubmit="setTimeout(() => { this.reset(); }, 100)">
             <input type="text" name="name" placeholder="Your name" required>
-            <input type="email" name="email" placeholder="Your email" required>
-            <input type="text" name="subject" placeholder="Subject" required>
+            <input type="text" name="contact" placeholder="Your contact" required>
+            <input type="text" name="sub" placeholder="Subject" required>
             <textarea name="message" placeholder="Message" required></textarea>
-            <button class="btn" type="submit">Message Me</button>
+            <button type="submit"
+              style="padding:12px 18px; border-radius:12px; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); transition:transform .2s, box-shadow .3s; display:inline-block;"
+              onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 0 18px rgba(255,106,136,0.5)'"
+              onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+              Message Me
+            </button>
           </form>
+
+
 
           <div style="display:flex;flex-direction:column;gap:12px">
             <div class="card">
@@ -1331,42 +1789,101 @@
               <div class="meta">dnaveenshankar2003@gmail.com</div>
               <div class="meta">+91 95667 16114</div>
             </div>
+
             <div class="card">
               <h3>Follow Me</h3>
               <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
                 <a href="https://www.facebook.com/naveen.shankar.37/" target="_blank" rel="noopener"
-                  class="chip">Facebook</a>
-                <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener" class="chip">X</a>
+                  style="text-decoration:none; padding:8px 14px; border-radius:20px; background:#4267B2; color:#fff; font-weight:600; transition:transform .2s, box-shadow .3s;"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px rgba(66,103,178,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  Facebook
+                </a>
+                <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener"
+                  style="text-decoration:none; padding:8px 14px; border-radius:20px; background:#000; color:#fff; font-weight:600; transition:transform .2s, box-shadow .3s;"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px rgba(0,0,0,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  X
+                </a>
                 <a href="https://www.instagram.com/_.naveen.d_/" target="_blank" rel="noopener"
-                  class="chip">Instagram</a>
-                <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener" class="chip">GitHub</a>
+                  style="text-decoration:none; padding:8px 14px; border-radius:20px; background:#E1306C; color:#fff; font-weight:600; transition:transform .2s, box-shadow .3s;"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px rgba(225,48,108,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  Instagram
+                </a>
+                <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener"
+                  style="text-decoration:none; padding:8px 14px; border-radius:20px; background:#333; color:#fff; font-weight:600; transition:transform .2s, box-shadow .3s;"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px rgba(51,51,51,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  GitHub
+                </a>
                 <a href="https://www.linkedin.com/in/d-naveens/" target="_blank" rel="noopener"
-                  class="chip">LinkedIn</a>
+                  style="text-decoration:none; padding:8px 14px; border-radius:20px; background:#0077B5; color:#fff; font-weight:600; transition:transform .2s, box-shadow .3s;"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px rgba(0,119,181,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  LinkedIn
+                </a>
               </div>
             </div>
 
             <div class="card">
               <h3>Get My CV</h3>
               <div style="margin-top:8px">
-                <a class="btn" href="mailto:dnaveenshankar2003@gmail.com?subject=CV%20Request">Request CV</a>
+                <a target="_blank" href="cv.pdf"
+                  style="text-decoration:none; padding:12px 18px; border-radius:12px; font-weight:700; color:#fff; background:linear-gradient(90deg,#6d8bff,#ff6a88); transition:transform .2s, box-shadow .3s; display:inline-block;"
+                  onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 0 18px rgba(255,106,136,0.5)'"
+                  onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+                  Request CV
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
+
       <!-- FOOTER -->
       <footer class="site-footer" role="contentinfo">
-        <div class="version">v2.0 — naveenshankar.in</div>
-        <div class="socials" aria-hidden="false">
-          <a href="https://www.facebook.com/naveen.shankar.37/" target="_blank" rel="noopener"
-            aria-label="Facebook">F</a>
-          <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener" aria-label="X">X</a>
-          <a href="https://www.instagram.com/_.naveen.d_/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
-          <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener" aria-label="GitHub">GH</a>
-          <a href="https://www.linkedin.com/in/d-naveens/" target="_blank" rel="noopener" aria-label="LinkedIn">IN</a>
-        </div>
-      </footer>
+  <div class="version" style="text-align:center; font-weight:bold;">
+    Current Version: <span id="currentVersion"></span> |
+    <a id="otherVersionLink" href="#" style="text-decoration:none; color:#6d8bff; font-weight:bold;">Switch Version</a>
+  </div>
+
+  <div class="socials" aria-hidden="false" style="margin-top:8px; text-align:center;">
+    <a href="https://www.facebook.com/naveen.shankar.37/" target="_blank" rel="noopener" aria-label="Facebook"
+      style="margin:0 6px; text-decoration:none;">F</a>
+    <a href="https://x.com/d_naveenshankar" target="_blank" rel="noopener" aria-label="X"
+      style="margin:0 6px; text-decoration:none;">X</a>
+    <a href="https://www.instagram.com/_.naveen.d_/" target="_blank" rel="noopener" aria-label="Instagram"
+      style="margin:0 6px; text-decoration:none;">IG</a>
+    <a href="https://github.com/dnaveenshankar" target="_blank" rel="noopener" aria-label="GitHub"
+      style="margin:0 6px; text-decoration:none;">GH</a>
+    <a href="https://www.linkedin.com/in/d-naveens/" target="_blank" rel="noopener" aria-label="LinkedIn"
+      style="margin:0 6px; text-decoration:none;">IN</a>
+  </div>
+</footer>
+
+<!-- Script to handle version display -->
+<script>
+  const currentPage = window.location.pathname.split("/").pop();
+  const currentVersionSpan = document.getElementById('currentVersion');
+  const otherVersionLink = document.getElementById('otherVersionLink');
+
+  if (currentPage === 'index.html') {
+    currentVersionSpan.textContent = 'v1.0';
+    otherVersionLink.textContent = 'v2.0';
+    otherVersionLink.href = 'index2.html';
+  } else if (currentPage === 'index2.html') {
+    currentVersionSpan.textContent = 'v2.0';
+    otherVersionLink.textContent = 'v1.0';
+    otherVersionLink.href = 'index.html';
+  } else {
+    currentVersionSpan.textContent = 'v1.0';
+    otherVersionLink.textContent = 'v2.0';
+    otherVersionLink.href = 'index2.html';
+  }
+</script>
+
     </main>
   </div>
 
