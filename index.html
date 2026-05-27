@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Naveen Shankar D — Network Engineer & Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════
+   TOKENS & RESET
+══════════════════════════════════════════ */
+:root{
+  --bg:#060810;
+  --bg2:#0d1020;
+  --surface:#111525;
+  --surface2:#181c2e;
+  --border:rgba(255,255,255,0.07);
+  --border-hover:rgba(99,179,237,0.35);
+  --c1:#00f5d4;   /* teal */
+  --c2:#7c6af5;   /* violet */
+  --c3:#f5a623;   /* amber */
+  --c4:#f564a9;   /* pink */
+  --text:#dde4f0;
+  --muted:#6b7590;
+  --heading:#ffffff;
+  --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--c1);border-radius:2px}
+
+/* ══ ANIMATED GRADIENT MESH BG ══ */
+.mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 80% 10%, rgba(0,245,212,.07) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 60% at 10% 80%, rgba(124,106,245,.07) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 40% at 50% 50%, rgba(245,100,169,.04) 0%,transparent 60%);
+  animation:meshMove 12s ease-in-out infinite alternate;
+}
+@keyframes meshMove{
+  0%  {background-position:0% 0%,100% 100%,50% 50%}
+  50% {background-position:30% 20%,70% 80%,60% 40%}
+  100%{background-position:10% 40%,90% 60%,40% 60%}
+}
+
+/* ══ ANIMATED AURORA LINES ══ */
+.aurora{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.aurora-line{
+  position:absolute;left:-20%;width:140%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--c1),transparent);
+  opacity:0;animation:auroraSweep 8s ease-in-out infinite;
+}
+.aurora-line:nth-child(1){top:20%;animation-delay:0s;background:linear-gradient(90deg,transparent,var(--c1),transparent)}
+.aurora-line:nth-child(2){top:50%;animation-delay:2.5s;background:linear-gradient(90deg,transparent,var(--c2),transparent)}
+.aurora-line:nth-child(3){top:75%;animation-delay:5s;background:linear-gradient(90deg,transparent,var(--c4),transparent)}
+@keyframes auroraSweep{
+  0%  {transform:translateX(-20%) skewY(-1deg);opacity:0}
+  20% {opacity:.35}
+  80% {opacity:.15}
+  100%{transform:translateX(20%) skewY(1deg);opacity:0}
+}
+
+/* ══ FLOATING ORBS ══ */
+.orb{
+  position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;
+  animation:orbFloat 15s ease-in-out infinite alternate;
+}
+.orb1{width:500px;height:500px;top:-150px;right:-100px;background:rgba(0,245,212,.06);animation-duration:18s}
+.orb2{width:400px;height:400px;bottom:-100px;left:-80px;background:rgba(124,106,245,.08);animation-duration:22s;animation-direction:alternate-reverse}
+.orb3{width:300px;height:300px;top:50%;left:50%;background:rgba(245,100,169,.05);animation-duration:25s}
+@keyframes orbFloat{
+  0%  {transform:translate(0,0) scale(1)}
+  50% {transform:translate(30px,-40px) scale(1.1)}
+  100%{transform:translate(-20px,30px) scale(0.95)}
+}
+
+/* ══ NOISE GRAIN ══ */
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 4rem;
+  background:rgba(6,8,16,.8);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Outfit',sans-serif;font-weight:900;font-size:1.3rem;
+  color:var(--heading);text-decoration:none;letter-spacing:-.03em;
+  position:relative;z-index:1;
+}
+.logo .dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--c1);margin-left:2px;vertical-align:middle;
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;
+  letter-spacing:.01em;transition:color .2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;
+  background:var(--c1);transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.nav-links a:hover{color:var(--c1)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  padding:.5rem 1.25rem;border:1px solid var(--c1);
+  color:var(--c1)!important;border-radius:6px;
+  transition:background .2s,color .2s!important;
+}
+.nav-cta::after{display:none!important}
+.nav-cta:hover{background:var(--c1)!important;color:var(--bg)!important}
+
+/* hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:300}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile nav drawer */
+.mobile-drawer{
+  position:fixed;inset:0;z-index:150;
+  background:rgba(6,8,16,.97);backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.mobile-drawer.open{opacity:1;pointer-events:all}
+.mobile-drawer a{
+  font-size:1.5rem;font-weight:700;color:var(--text);
+  text-decoration:none;transition:color .2s;
+}
+.mobile-drawer a:hover{color:var(--c1)}
+
+/* ══ SECTION BASE ══ */
+section{padding:6rem 5rem;position:relative;z-index:10}
+.s-label{
+  font-family:var(--mono);font-size:.72rem;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--c1);margin-bottom:.75rem;
+}
+.s-title{
+  font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:900;color:var(--heading);letter-spacing:-.03em;
+  line-height:1.1;margin-bottom:.75rem;
+}
+.s-sub{color:var(--muted);font-weight:300;max-width:520px}
+
+/* ══ HERO ══ */
+#hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:8rem 5rem 4rem;position:relative;z-index:10;
+}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.35rem 1rem;
+  background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);
+  border-radius:100px;font-size:.78rem;font-weight:600;color:var(--c1);
+  margin-bottom:1.5rem;font-family:var(--mono);
+  animation:fadeUp .6s ease both;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--c1);animation:pulse 2s infinite}
+
+h1.hero-title{
+  font-size:clamp(3rem,7vw,6rem);font-weight:900;
+  line-height:1.0;letter-spacing:-.04em;color:var(--heading);
+  margin-bottom:1.25rem;animation:fadeUp .6s .1s ease both;
+}
+.hero-title .accent{
+  background:linear-gradient(135deg,var(--c1),var(--c2),var(--c4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;background-size:200%;
+  animation:gradShift 4s ease infinite;
+}
+@keyframes gradShift{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+
+.hero-role{
+  font-family:var(--mono);font-size:clamp(.85rem,2vw,1.05rem);
+  color:var(--muted);margin-bottom:1.5rem;
+  animation:fadeUp .6s .2s ease both;
+}
+.hero-role .tag{
+  display:inline-block;padding:.2rem .7rem;
+  background:rgba(124,106,245,.12);border:1px solid rgba(124,106,245,.25);
+  border-radius:4px;color:var(--c2);font-size:.8rem;margin-right:.5rem;margin-bottom:.35rem;
+}
+.hero-desc{
+  font-size:1.05rem;color:var(--muted);max-width:560px;
+  margin-bottom:2.5rem;animation:fadeUp .6s .3s ease both;font-weight:300;
+}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp .6s .4s ease both}
+.btn-p{
+  padding:.8rem 2rem;background:var(--c1);color:var(--bg);
+  border:none;border-radius:8px;font-family:'Outfit',sans-serif;
+  font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;display:inline-block;
+}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(0,245,212,.3)}
+.btn-s{
+  padding:.8rem 2rem;background:transparent;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;
+  font-size:.95rem;font-weight:500;cursor:pointer;text-decoration:none;
+  transition:border-color .2s,color .2s;display:inline-block;
+}
+.btn-s:hover{border-color:var(--c1);color:var(--c1)}
+
+.hero-socials{
+  display:flex;gap:1.5rem;margin-top:2.5rem;flex-wrap:wrap;
+  animation:fadeUp .6s .5s ease both;
+}
+.hero-socials a{
+  color:var(--muted);text-decoration:none;font-size:.78rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;transition:color .2s;
+}
+.hero-socials a:hover{color:var(--c1)}
+
+/* ══ STATS BAR ══ */
+.stats-bar{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3rem 5rem;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:2rem;position:relative;z-index:10;
+}
+.stat-n{
+  font-family:'Outfit',sans-serif;font-size:2.8rem;font-weight:900;
+  color:var(--heading);letter-spacing:-.04em;line-height:1;
+}
+.stat-n span{
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-l{color:var(--muted);font-size:.82rem;margin-top:.3rem;font-weight:400}
+
+/* ══ ABOUT ══ */
+#about{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;margin-top:3rem}
+.about-text p{color:var(--muted);margin-bottom:1rem;font-weight:300;font-size:1rem}
+.about-text strong{color:var(--text);font-weight:600}
+
+.interest-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.i-tag{
+  padding:.3rem .9rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:100px;font-size:.78rem;color:var(--text);font-weight:500;
+  transition:border-color .2s,color .2s;cursor:default;
+}
+.i-tag:hover{border-color:var(--c1);color:var(--c1)}
+
+.about-right{display:flex;flex-direction:column;gap:1rem}
+.a-card{
+  padding:1.25rem 1.5rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;display:flex;align-items:flex-start;gap:1rem;
+  transition:border-color .2s,transform .2s;
+}
+.a-card:hover{border-color:rgba(0,245,212,.3);transform:translateX(4px)}
+.a-icon{font-size:1.5rem;flex-shrink:0}
+.a-card h4{font-size:.9rem;font-weight:700;color:var(--heading);margin-bottom:.2rem}
+.a-card p{font-size:.8rem;color:var(--muted);font-weight:300}
+
+/* ══ WORK EXPERIENCE ══ */
+#experience{}
+.exp-list{margin-top:3rem;display:flex;flex-direction:column;gap:1rem}
+
+.exp-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:border-color .2s;cursor:pointer;
+}
+.exp-card:hover{border-color:rgba(0,245,212,.25)}
+.exp-card.active{border-color:rgba(0,245,212,.4)}
+
+.exp-header{
+  display:flex;align-items:center;gap:1rem;padding:1.5rem;
+}
+.exp-logo{
+  width:44px;height:44px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;flex-shrink:0;font-weight:800;color:var(--bg);
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+}
+.exp-meta{flex:1}
+.exp-company{font-weight:700;color:var(--heading);font-size:.95rem}
+.exp-role{color:var(--c1);font-size:.82rem;font-weight:600;font-family:var(--mono)}
+.exp-date{font-size:.78rem;color:var(--muted);margin-top:.1rem}
+.exp-chevron{
+  color:var(--muted);font-size:.9rem;transition:transform .3s;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+}
+.exp-card.active .exp-chevron{transform:rotate(180deg)}
+
+.exp-body{
+  max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;
+  padding:0 1.5rem;
+}
+.exp-card.active .exp-body{max-height:600px;padding:.5rem 1.5rem 1.5rem}
+
+.detail-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;
+  padding:.75rem;background:var(--surface2);border-radius:8px;margin-top:.5rem;
+}
+.detail-row{display:flex;flex-direction:column;gap:.1rem}
+.d-label{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.d-val{font-size:.85rem;color:var(--text);font-weight:500}
+
+.skill-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.sk-tag{
+  padding:.2rem .7rem;background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.15);
+  border-radius:100px;font-size:.72rem;color:var(--c1);font-weight:600;
+}
+
+/* ══ EDUCATION ══ */
+#education{background:var(--bg2)}
+.edu-list{margin-top:3rem;display:flex;flex-direction:column;gap:1rem}
+
+.edu-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:border-color .2s;cursor:pointer;
+}
+.edu-card:hover{border-color:rgba(124,106,245,.25)}
+.edu-card.active{border-color:rgba(124,106,245,.5)}
+
+.edu-header{display:flex;align-items:center;gap:1rem;padding:1.5rem}
+.edu-badge{
+  width:44px;height:44px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:900;color:var(--bg);
+}
+.edu-meta{flex:1}
+.edu-degree{font-weight:700;color:var(--heading);font-size:.95rem}
+.edu-inst{color:var(--c2);font-size:.82rem;font-weight:600}
+.edu-year{font-size:.78rem;color:var(--muted);margin-top:.1rem;font-family:var(--mono)}
+
+.edu-body{
+  max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;
+  padding:0 1.5rem;
+}
+.edu-card.active .edu-body{max-height:800px;padding:.5rem 1.5rem 1.5rem}
+
+/* ══ PROJECTS ══ */
+#projects{}
+.proj-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.proj-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.75rem;transition:transform .25s,border-color .25s;
+  position:relative;overflow:hidden;
+}
+.proj-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--c1),var(--c2),var(--c4));
+  opacity:0;transition:opacity .3s;
+}
+.proj-card:hover{transform:translateY(-5px);border-color:rgba(0,245,212,.2)}
+.proj-card:hover::before{opacity:1}
+.proj-tag{
+  display:inline-block;padding:.2rem .75rem;
+  background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.15);
+  border-radius:100px;font-size:.68rem;font-weight:700;color:var(--c1);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;font-family:var(--mono);
+}
+.proj-title{
+  font-weight:800;font-size:1.05rem;color:var(--heading);margin-bottom:.6rem;
+}
+.proj-desc{color:var(--muted);font-size:.875rem;font-weight:300;line-height:1.6}
+
+/* ══ SKILLS ══ */
+#skills{background:var(--bg2)}
+.skills-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.skill-group{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.75rem;transition:border-color .2s;
+}
+.skill-group:hover{border-color:rgba(245,166,35,.25)}
+.sg-title{
+  font-family:var(--mono);font-size:.68rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--c3);margin-bottom:1rem;
+}
+.pill-row{display:flex;flex-wrap:wrap;gap:.45rem}
+.pill{
+  padding:.28rem .8rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:100px;font-size:.78rem;color:var(--text);font-weight:400;
+  transition:border-color .2s,color .2s;cursor:default;
+}
+.pill:hover{border-color:var(--c3);color:var(--c3)}
+
+/* ══ CERTS ══ */
+.certs-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1rem;margin-top:3rem;
+}
+.cert-card{
+  padding:1.25rem 1.5rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;display:flex;align-items:center;gap:1rem;
+  transition:border-color .2s,transform .2s;
+}
+.cert-card:hover{border-color:rgba(0,245,212,.3);transform:translateX(4px)}
+.cert-dot{width:8px;height:8px;border-radius:50%;background:var(--c1);flex-shrink:0}
+.cert-name{font-size:.88rem;color:var(--text);font-weight:600}
+.cert-org{font-size:.76rem;color:var(--muted)}
+
+/* ══ LEADERSHIP ══ */
+#leadership{}
+.lead-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.lead-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;transition:border-color .2s,transform .2s;overflow:hidden;cursor:pointer;
+}
+.lead-card.active,.lead-card:hover{border-color:rgba(124,106,245,.4)}
+.lead-role{font-weight:800;color:var(--heading);font-size:.95rem;margin-bottom:.3rem}
+.lead-org{font-size:.8rem;color:var(--c2);font-weight:600;margin-bottom:.2rem}
+.lead-year{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+.lead-desc{
+  font-size:.82rem;color:var(--muted);font-weight:300;
+  margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);
+  max-height:0;overflow:hidden;transition:max-height .3s,padding .3s,opacity .3s;opacity:0;
+}
+.lead-card.active .lead-desc,.lead-card:hover .lead-desc{
+  max-height:200px;opacity:1;
+}
+
+/* ══ AWARDS ══ */
+#awards{background:var(--bg2)}
+.awards-list{margin-top:3rem;display:flex;flex-direction:column;gap:.75rem}
+.award-item{
+  display:flex;align-items:center;gap:1.25rem;
+  padding:1.25rem 1.5rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;transition:border-color .2s,transform .2s;
+}
+.award-item:hover{border-color:rgba(245,166,35,.4);transform:translateX(6px)}
+.award-icon{font-size:1.5rem;flex-shrink:0}
+.award-name{font-weight:700;color:var(--heading);font-size:.9rem}
+.award-detail{font-size:.78rem;color:var(--muted)}
+.award-badge{
+  margin-left:auto;padding:.2rem .75rem;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);
+  border-radius:100px;font-size:.7rem;font-weight:700;color:var(--c3);
+  font-family:var(--mono);white-space:nowrap;flex-shrink:0;
+}
+
+/* ══ TESTIMONIALS ══ */
+#testimonials{}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.testi-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.75rem;position:relative;transition:border-color .2s,transform .2s;
+}
+.testi-card:hover{border-color:rgba(245,100,169,.3);transform:translateY(-4px)}
+.testi-quote{
+  font-size:2.5rem;line-height:1;color:var(--c4);font-weight:900;
+  margin-bottom:.5rem;opacity:.4;
+}
+.testi-text{font-size:.88rem;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:1rem}
+.testi-name{font-weight:700;color:var(--heading);font-size:.88rem}
+.testi-pos{font-size:.76rem;color:var(--c4);font-weight:500}
+
+/* ══ SERVICES ══ */
+#services{background:var(--bg2)}
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.svc-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.75rem;transition:border-color .2s,transform .2s;text-align:center;
+}
+.svc-card:hover{border-color:rgba(0,245,212,.3);transform:translateY(-5px)}
+.svc-icon{font-size:2.2rem;margin-bottom:1rem}
+.svc-title{font-weight:800;color:var(--heading);font-size:1rem;margin-bottom:.5rem}
+.svc-desc{color:var(--muted);font-size:.85rem;font-weight:300}
+.svc-cta{
+  display:inline-block;margin-top:1.25rem;
+  padding:.45rem 1.25rem;background:rgba(0,245,212,.08);
+  border:1px solid rgba(0,245,212,.2);border-radius:6px;
+  font-size:.78rem;font-weight:700;color:var(--c1);text-decoration:none;
+  transition:background .2s;
+}
+.svc-cta:hover{background:rgba(0,245,212,.18)}
+
+/* ══ LANGUAGES ══ */
+.lang-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1.25rem;margin-top:3rem;
+}
+.lang-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;
+}
+.lang-name{font-weight:800;color:var(--heading);font-size:1rem;margin-bottom:.25rem}
+.lang-native{font-size:.75rem;color:var(--c1);font-family:var(--mono);margin-bottom:.75rem}
+.lang-skills{display:flex;gap:.4rem;flex-wrap:wrap}
+.l-skill{
+  padding:.2rem .65rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:100px;font-size:.72rem;color:var(--text);
+}
+.lang-note{font-size:.8rem;color:var(--muted);font-weight:300;margin-top:.75rem;font-style:italic}
+.lang-quote{
+  margin-top:.75rem;padding:.75rem;background:var(--surface2);
+  border-left:2px solid var(--c1);border-radius:0 6px 6px 0;
+  font-size:.8rem;color:var(--muted);font-style:italic;
+}
+
+/* ══ CONTACT ══ */
+#contact{text-align:center}
+#contact .s-title,#contact .s-sub{margin-left:auto;margin-right:auto;text-align:center}
+.contact-cards{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;margin:2.5rem 0;
+}
+.c-card{
+  padding:1.25rem 2rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;text-decoration:none;color:var(--text);
+  display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:600;
+  transition:border-color .2s,transform .2s,color .2s;
+}
+.c-card:hover{border-color:var(--c1);color:var(--c1);transform:translateY(-3px)}
+.social-row{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+.social-row a{
+  color:var(--muted);text-decoration:none;font-size:.78rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;transition:color .2s;
+}
+.social-row a:hover{color:var(--c1)}
+
+/* ══ FOOTER ══ */
+footer{
+  border-top:1px solid var(--border);padding:2rem 5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  color:var(--muted);font-size:.8rem;position:relative;z-index:10;
+}
+footer a{color:var(--c1);text-decoration:none}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade.vis{opacity:1;transform:translateY(0)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  section{padding:5rem 1.5rem 3rem}
+  #hero{padding:7rem 1.5rem 3rem}
+  .stats-bar{grid-template-columns:repeat(2,1fr);padding:2.5rem 1.5rem}
+  .about-grid{grid-template-columns:1fr;gap:2rem}
+  footer{flex-direction:column;gap:.5rem;text-align:center;padding:2rem 1.5rem}
+  .hero-title{font-size:clamp(2.5rem,10vw,4rem)}
+}
+@media(max-width:480px){
+  .stats-bar{grid-template-columns:1fr 1fr;gap:1.5rem;padding:2rem 1rem}
+  section{padding:4.5rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ─ AMBIENT BG ─ -->
+<div class="mesh"></div>
+<div class="aurora">
+  <div class="aurora-line"></div>
+  <div class="aurora-line"></div>
+  <div class="aurora-line"></div>
+</div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- ─ NAV ─ -->
+<nav>
+  <a href="#hero" class="logo">NS<span class="dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="ham" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ─ MOBILE DRAWER ─ -->
+<div class="mobile-drawer" id="drawer">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#education" onclick="closeMenu()">Education</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<section id="hero">
+  <div>
+    <div class="hero-chip"><span class="live-dot"></span> Open to Freelance & Collaboration</div>
+    <h1 class="hero-title">
+      Naveen<br>
+      <span class="accent">Shankar D</span>
+    </h1>
+    <div class="hero-role">
+      <span class="tag">Network Engineer – L1</span>
+      <span class="tag">Software Developer</span>
+      <span class="tag">Event Organizer</span>
+    </div>
+    <p class="hero-desc">
+      Networking & cybersecurity professional at <strong style="color:var(--text)">Wipro Technologies</strong>,
+      pursuing <strong style="color:var(--text)">M.Tech at BITS Pilani</strong> via WILP.
+      Passionate about networks, secure infrastructure, and building impactful software.
+    </p>
+    <div class="hero-btns">
+      <a href="https://naveenshankar.in/cv.pdf" target="_blank" class="btn-p">Download CV</a>
+      <a href="#projects" class="btn-s">View Projects</a>
+      <a href="https://naveenshankar.in/contact-me.html" target="_blank" class="btn-s">Book a Service</a>
+    </div>
+    <div class="hero-socials">
+      <a href="https://linkedin.com/in/d-naveens" target="_blank">LinkedIn</a>
+      <a href="https://github.com/dnaveenshankar" target="_blank">GitHub</a>
+      <a href="mailto:dnaveenshankar2003@gmail.com">Email</a>
+      <a href="https://x.com/d_naveenshankar" target="_blank">Twitter</a>
+      <a href="https://instagram.com/_.naveen.d_/" target="_blank">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─ STATS ─ -->
+<div class="stats-bar">
+  <div class="fade">
+    <div class="stat-n">84<span>%+</span></div>
+    <div class="stat-l">Academic Excellence</div>
+  </div>
+  <div class="fade">
+    <div class="stat-n">5<span>+</span></div>
+    <div class="stat-l">Projects Developed</div>
+  </div>
+  <div class="fade">
+    <div class="stat-n">3<span>+</span></div>
+    <div class="stat-l">Awards & Recognitions</div>
+  </div>
+  <div class="fade">
+    <div class="stat-n">1K<span>+</span></div>
+    <div class="stat-l">Event Participants</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ABOUT
+═══════════════════════════════════ -->
+<section id="about">
+  <div class="s-label">Who I Am</div>
+  <h2 class="s-title">About Me</h2>
+  <div class="about-grid">
+    <div class="about-text fade">
+      <p>Hey! I'm a <strong>tech enthusiast</strong> with a passion for designing and managing <strong>network systems</strong>, ensuring seamless connectivity and keeping infrastructure secure.</p>
+      <p>I graduated with a <strong>B.Voc in Networking & Mobile Application</strong> from <strong>PSG College of Arts & Science</strong>. Currently working as a <strong>Network Engineer – L1</strong> at <strong>Wipro Technologies, Coimbatore</strong>, through their <strong>Work Integrated Learning Program (WILP)</strong>.</p>
+      <p>Alongside, I'm pursuing an <strong>M.Tech in Software Systems</strong> from <strong>BITS Pilani</strong> and an <strong>MCA (Distance)</strong> from <strong>Bharathiar University</strong> — because learning never stops.</p>
+      <p>Beyond tech, I've served as an <strong>IIC Student Ambassador</strong> and <strong>Association Chairperson</strong>, organizing large-scale events and leading teams of hundreds.</p>
+
+      <p style="margin-top:1.5rem;color:var(--c1);font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Areas of Interest</p>
+      <div class="interest-tags">
+        <span class="i-tag">Prompt Engineering</span>
+        <span class="i-tag">Software Development</span>
+        <span class="i-tag">Networking & Cybersecurity</span>
+        <span class="i-tag">Data Science & Analysis</span>
+        <span class="i-tag">Cloud Computing</span>
+      </div>
+
+      <p style="margin-top:1.5rem;color:var(--c1);font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Best Known For</p>
+      <div class="interest-tags">
+        <span class="i-tag">Web Development</span>
+        <span class="i-tag">Leading a Team</span>
+        <span class="i-tag">Event Organizing</span>
+        <span class="i-tag">Innovative Problem Solving</span>
+      </div>
+    </div>
+    <div class="about-right fade">
+      <div class="a-card">
+        <span class="a-icon">🌐</span>
+        <div>
+          <h4>Network & Systems</h4>
+          <p>Administration, monitoring, incident response, and cybersecurity best practices at enterprise scale.</p>
+        </div>
+      </div>
+      <div class="a-card">
+        <span class="a-icon">💻</span>
+        <div>
+          <h4>Software Development</h4>
+          <p>Full-stack web apps using HTML, PHP, SQL, Python, Java, C/C++ — from concept to deployment.</p>
+        </div>
+      </div>
+      <div class="a-card">
+        <span class="a-icon">☁️</span>
+        <div>
+          <h4>Cloud & Cybersecurity</h4>
+          <p>Cloud computing fundamentals, distributed systems, and cybersecurity practices.</p>
+        </div>
+      </div>
+      <div class="a-card">
+        <span class="a-icon">🎯</span>
+        <div>
+          <h4>Leadership & Events</h4>
+          <p>Organized Netronics '23 & 2.0 as Chairperson with 1000+ participants. IIC Ambassador & Student Council.</p>
+        </div>
+      </div>
+      <div class="a-card">
+        <span class="a-icon">📚</span>
+        <div>
+          <h4>Continuous Learning</h4>
+          <p>M.Tech BITS Pilani + MCA Bharathiar simultaneously — always leveling up skills.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     WORK EXPERIENCE
+═══════════════════════════════════ -->
+<section id="experience">
+  <div class="s-label">Career</div>
+  <h2 class="s-title">Work Experience</h2>
+  <p class="s-sub">Click any role to expand full details.</p>
+
+  <div class="exp-list">
+
+    <!-- Wipro L1 -->
+    <div class="exp-card fade" onclick="toggleCard(this)">
+      <div class="exp-header">
+        <div class="exp-logo">W</div>
+        <div class="exp-meta">
+          <div class="exp-company">Wipro Technologies</div>
+          <div class="exp-role">Network Engineer – L1</div>
+          <div class="exp-date">28 August 2025 – Present · Coimbatore</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="exp-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Start Date</span><span class="d-val">28 August 2025</span></div>
+          <div class="detail-row"><span class="d-label">End Date</span><span class="d-val">Present</span></div>
+          <div class="detail-row"><span class="d-label">Office</span><span class="d-val">Wipro Technologies, Coimbatore</span></div>
+          <div class="detail-row"><span class="d-label">Program</span><span class="d-val">Work Integrated Learning Program (WILP)</span></div>
+          <div class="detail-row"><span class="d-label">Project</span><span class="d-val">Network Data Administration – Enterprise</span></div>
+          <div class="detail-row"><span class="d-label">Type</span><span class="d-val">Full-Time (via WILP)</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Managing network data, system monitoring, and infrastructure reliability at enterprise scale. Involved in network troubleshooting, incident response, and maintaining security posture. Working alongside postgraduate studies through the WILP framework.
+        </div>
+        <div class="skill-list">
+          <span class="sk-tag">Network Administration</span>
+          <span class="sk-tag">System Monitoring</span>
+          <span class="sk-tag">Troubleshooting</span>
+          <span class="sk-tag">Cybersecurity</span>
+          <span class="sk-tag">Incident Response</span>
+          <span class="sk-tag">Infrastructure Management</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wipro Trainee -->
+    <div class="exp-card fade" onclick="toggleCard(this)">
+      <div class="exp-header">
+        <div class="exp-logo" style="background:linear-gradient(135deg,var(--c2),var(--c4))">W</div>
+        <div class="exp-meta">
+          <div class="exp-company">Wipro Technologies</div>
+          <div class="exp-role">Trainee – WILP</div>
+          <div class="exp-date">24 March 2025 – 27 August 2025 · Coimbatore</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="exp-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Start Date</span><span class="d-val">24 March 2025</span></div>
+          <div class="detail-row"><span class="d-label">End Date</span><span class="d-val">27 August 2025</span></div>
+          <div class="detail-row"><span class="d-label">Duration</span><span class="d-val">~5 Months</span></div>
+          <div class="detail-row"><span class="d-label">Office</span><span class="d-val">Wipro Technologies, Coimbatore</span></div>
+          <div class="detail-row"><span class="d-label">Program</span><span class="d-val">Work Integrated Learning Program</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Structured technical training in enterprise networking, IT service management, and systems administration while simultaneously pursuing M.Tech studies. Transitioned to full Network Engineer – L1 role upon program completion.
+        </div>
+        <div class="skill-list">
+          <span class="sk-tag">Networking Fundamentals</span>
+          <span class="sk-tag">IT Service Management</span>
+          <span class="sk-tag">Systems Administration</span>
+          <span class="sk-tag">Enterprise IT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kaizen -->
+    <div class="exp-card fade" onclick="toggleCard(this)">
+      <div class="exp-header">
+        <div class="exp-logo" style="background:linear-gradient(135deg,var(--c3),var(--c4))">K</div>
+        <div class="exp-meta">
+          <div class="exp-company">Kaizen Technosoft</div>
+          <div class="exp-role">Web Developer Intern</div>
+          <div class="exp-date">21 Dec 2022 – 31 Dec 2022 · Remote</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="exp-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Start Date</span><span class="d-val">21 December 2022</span></div>
+          <div class="detail-row"><span class="d-label">End Date</span><span class="d-val">31 December 2022</span></div>
+          <div class="detail-row"><span class="d-label">Duration</span><span class="d-val">10 Days</span></div>
+          <div class="detail-row"><span class="d-label">Type</span><span class="d-val">Internship</span></div>
+          <div class="detail-row"><span class="d-label">Company</span><span class="d-val">Kaizen Technosoft</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Contributed to web development projects during internship. Gained hands-on experience in frontend and backend development, professional code delivery standards, and real-world software development workflow.
+        </div>
+        <div class="skill-list">
+          <span class="sk-tag">HTML</span>
+          <span class="sk-tag">CSS</span>
+          <span class="sk-tag">PHP</span>
+          <span class="sk-tag">Web Development</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     EDUCATION
+═══════════════════════════════════ -->
+<section id="education">
+  <div class="s-label">Academics</div>
+  <h2 class="s-title">Education</h2>
+  <p class="s-sub">Click any institution to see full details.</p>
+
+  <div class="edu-list">
+
+    <!-- BITS Pilani -->
+    <div class="edu-card fade" onclick="toggleEdu(this)">
+      <div class="edu-header">
+        <div class="edu-badge" style="background:linear-gradient(135deg,#003da5,#0057d8)">B</div>
+        <div class="edu-meta">
+          <div class="edu-degree">M.Tech – Software Systems</div>
+          <div class="edu-inst">Birla Institute of Technology & Science (BITS) Pilani</div>
+          <div class="edu-year">2025 – Present · WILP (Work Integrated Learning Program)</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="edu-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Degree</span><span class="d-val">M.Tech</span></div>
+          <div class="detail-row"><span class="d-label">Course</span><span class="d-val">Software Systems</span></div>
+          <div class="detail-row"><span class="d-label">University</span><span class="d-val">BITS Pilani</span></div>
+          <div class="detail-row"><span class="d-label">Mode</span><span class="d-val">Work Integrated Learning Program (WILP)</span></div>
+          <div class="detail-row"><span class="d-label">Start Date</span><span class="d-val">2025</span></div>
+          <div class="detail-row"><span class="d-label">Status</span><span class="d-val">Ongoing</span></div>
+          <div class="detail-row"><span class="d-label">City</span><span class="d-val">Pilani, Rajasthan (Online via Wipro)</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Pursuing a postgraduate degree in Software Systems through BITS Pilani's WILP program, integrated with employment at Wipro Technologies. Focus on advanced software engineering, systems design, and computing fundamentals.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bharathiar MCA -->
+    <div class="edu-card fade" onclick="toggleEdu(this)">
+      <div class="edu-header">
+        <div class="edu-badge" style="background:linear-gradient(135deg,#7b2d8b,#a040b8)">BU</div>
+        <div class="edu-meta">
+          <div class="edu-degree">MCA – Master of Computer Applications</div>
+          <div class="edu-inst">Bharathiar University</div>
+          <div class="edu-year">Current · Distance Education</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="edu-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Degree</span><span class="d-val">MCA</span></div>
+          <div class="detail-row"><span class="d-label">Course</span><span class="d-val">Master of Computer Applications</span></div>
+          <div class="detail-row"><span class="d-label">University</span><span class="d-val">Bharathiar University</span></div>
+          <div class="detail-row"><span class="d-label">Mode</span><span class="d-val">Distance Education (School of Distance Education)</span></div>
+          <div class="detail-row"><span class="d-label">City</span><span class="d-val">Coimbatore, Tamil Nadu</span></div>
+          <div class="detail-row"><span class="d-label">Status</span><span class="d-val">Ongoing</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PSG B.Voc -->
+    <div class="edu-card fade" onclick="toggleEdu(this)">
+      <div class="edu-header">
+        <div class="edu-badge" style="background:linear-gradient(135deg,#1a5c38,#28a745)">PSG</div>
+        <div class="edu-meta">
+          <div class="edu-degree">B.Voc – Networking & Mobile Application</div>
+          <div class="edu-inst">PSG College of Arts & Science</div>
+          <div class="edu-year">Completed · Coimbatore</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="edu-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Degree</span><span class="d-val">B.Voc (Bachelor of Vocation)</span></div>
+          <div class="detail-row"><span class="d-label">Course</span><span class="d-val">Networking and Mobile Application</span></div>
+          <div class="detail-row"><span class="d-label">College</span><span class="d-val">PSG College of Arts & Science</span></div>
+          <div class="detail-row"><span class="d-label">University</span><span class="d-val">Bharathiar University</span></div>
+          <div class="detail-row"><span class="d-label">City</span><span class="d-val">Coimbatore, Tamil Nadu</span></div>
+          <div class="detail-row"><span class="d-label">Grade</span><span class="d-val">80% & Above</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Specialized undergraduate program in Networking and Mobile Application development. Built expertise in network fundamentals, mobile app development, web technologies, and cybersecurity basics. Active in IIC and student leadership throughout.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bharathi Vikas HSE -->
+    <div class="edu-card fade" onclick="toggleEdu(this)">
+      <div class="edu-header">
+        <div class="edu-badge" style="background:linear-gradient(135deg,#b8410a,#e05a12)">BV</div>
+        <div class="edu-meta">
+          <div class="edu-degree">Higher Secondary Certificate (HSE) – Class 12</div>
+          <div class="edu-inst">Bharathi Vikas Matric Hr. Sec. School</div>
+          <div class="edu-year">Completed · Tirupur</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="edu-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Degree</span><span class="d-val">HSE (Higher Secondary Education)</span></div>
+          <div class="detail-row"><span class="d-label">Course</span><span class="d-val">Higher Secondary (Class 11 & 12)</span></div>
+          <div class="detail-row"><span class="d-label">College Name</span><span class="d-val">Bharathi Vikas Matric Hr. Sec. School</span></div>
+          <div class="detail-row"><span class="d-label">University</span><span class="d-val">Tamil Nadu State Board</span></div>
+          <div class="detail-row"><span class="d-label">City</span><span class="d-val">Tirupur, Tamil Nadu</span></div>
+          <div class="detail-row"><span class="d-label">Grade</span><span class="d-val">80% & Above</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Completed Higher Secondary Education with strong academic performance. Served as Student Representative, demonstrating early leadership skills. Laid the academic foundation for a career in technology.
+        </div>
+      </div>
+    </div>
+
+    <!-- Kongu SSLC -->
+    <div class="edu-card fade" onclick="toggleEdu(this)">
+      <div class="edu-header">
+        <div class="edu-badge" style="background:linear-gradient(135deg,#0a4f8a,#1a7acf)">KM</div>
+        <div class="edu-meta">
+          <div class="edu-degree">SSLC – Class 10</div>
+          <div class="edu-inst">Kongu Matriculation School</div>
+          <div class="edu-year">Jun 2007 – May 2019 · Tirupur</div>
+        </div>
+        <div class="exp-chevron">▼</div>
+      </div>
+      <div class="edu-body">
+        <div class="detail-grid">
+          <div class="detail-row"><span class="d-label">Degree</span><span class="d-val">SSLC</span></div>
+          <div class="detail-row"><span class="d-label">Description</span><span class="d-val">Completed studies from LKG to Class 10</span></div>
+          <div class="detail-row"><span class="d-label">College Name</span><span class="d-val">Kongu Matriculation School</span></div>
+          <div class="detail-row"><span class="d-label">University</span><span class="d-val">Tamil Nadu State Board</span></div>
+          <div class="detail-row"><span class="d-label">City</span><span class="d-val">Tirupur, Tamil Nadu</span></div>
+          <div class="detail-row"><span class="d-label">Start Date</span><span class="d-val">June 2007</span></div>
+          <div class="detail-row"><span class="d-label">End Date</span><span class="d-val">May 2019</span></div>
+          <div class="detail-row"><span class="d-label">Course</span><span class="d-val">SSLC</span></div>
+          <div class="detail-row"><span class="d-label">Specialization</span><span class="d-val">N/A</span></div>
+          <div class="detail-row"><span class="d-label">Grade</span><span class="d-val">80% & Above</span></div>
+        </div>
+        <div style="margin-top:.75rem;font-size:.85rem;color:var(--muted);font-weight:300">
+          Spent foundational school years from LKG through Class 10 at Kongu Matriculation School, building academic roots and core values in Tirupur, Tamil Nadu.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECTS
+═══════════════════════════════════ -->
+<section id="projects">
+  <div class="s-label">Portfolio</div>
+  <h2 class="s-title">Featured Projects</h2>
+  <p class="s-sub">Web development and event management projects that make an impact.</p>
+  <div class="proj-grid">
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Web Development</span>
+      <div class="proj-title">College Event Management System</div>
+      <p class="proj-desc">A comprehensive system designed to streamline event planning and management for colleges, enabling easy coordination and collaboration among students and faculty.</p>
+    </div>
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Fintech · Web</span>
+      <div class="proj-title">E-Museum (Crypto Ticketing Platform)</div>
+      <p class="proj-desc">An innovative platform for cryptocurrency-based ticket bookings, providing users with a seamless experience in exploring museum exhibits digitally.</p>
+    </div>
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Web Development</span>
+      <div class="proj-title">Local Bus Ticket Booking</div>
+      <p class="proj-desc">A user-friendly webpage designed to facilitate bus ticket bookings online, providing convenience for local commuters and simplifying daily transport.</p>
+    </div>
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Social Good</span>
+      <div class="proj-title">Blood Donor Connection</div>
+      <p class="proj-desc">A platform connecting blood donors with those in need, promoting community engagement and awareness about the importance of blood donation.</p>
+    </div>
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Automation</span>
+      <div class="proj-title">Automatic Timetable Generator</div>
+      <p class="proj-desc">A tool designed to automatically generate conflict-free class timetables, simplifying scheduling for students and educators at academic institutions.</p>
+    </div>
+
+    <div class="proj-card fade">
+      <span class="proj-tag">Event Management</span>
+      <div class="proj-title">Netronics '23 & Netronics 2.0</div>
+      <p class="proj-desc">Organized national-level technical events as Association Chairperson, successfully managing logistics and coordination for 1000+ participants across both editions.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     SKILLS
+═══════════════════════════════════ -->
+<section id="skills">
+  <div class="s-label">Expertise</div>
+  <h2 class="s-title">Skills & Technologies</h2>
+  <div class="skills-grid">
+    <div class="skill-group fade">
+      <div class="sg-title">Programming Languages</div>
+      <div class="pill-row">
+        <span class="pill">C</span>
+        <span class="pill">C++</span>
+        <span class="pill">Java</span>
+        <span class="pill">Python</span>
+        <span class="pill">PHP</span>
+        <span class="pill">SQL</span>
+        <span class="pill">HTML</span>
+      </div>
+    </div>
+    <div class="skill-group fade">
+      <div class="sg-title">Networking & Security</div>
+      <div class="pill-row">
+        <span class="pill">Network Admin</span>
+        <span class="pill">System Monitoring</span>
+        <span class="pill">Troubleshooting</span>
+        <span class="pill">Cybersecurity</span>
+        <span class="pill">Infrastructure</span>
+        <span class="pill">Incident Response</span>
+      </div>
+    </div>
+    <div class="skill-group fade">
+      <div class="sg-title">Web & Cloud</div>
+      <div class="pill-row">
+        <span class="pill">Web Development</span>
+        <span class="pill">Cloud Computing</span>
+        <span class="pill">Distributed Systems</span>
+        <span class="pill">Data Analysis</span>
+        <span class="pill">CRM</span>
+      </div>
+    </div>
+    <div class="skill-group fade">
+      <div class="sg-title">Tools & Productivity</div>
+      <div class="pill-row">
+        <span class="pill">MS Office Suite</span>
+        <span class="pill">Excel & Spreadsheets</span>
+        <span class="pill">PowerChat (WhatsApp)</span>
+        <span class="pill">Data Structures</span>
+      </div>
+    </div>
+    <div class="skill-group fade">
+      <div class="sg-title">Personal Skills</div>
+      <div class="pill-row">
+        <span class="pill">Interpersonal Communication</span>
+        <span class="pill">Self Starter</span>
+        <span class="pill">Adaptability</span>
+        <span class="pill">Critical Thinking</span>
+        <span class="pill">Leadership</span>
+        <span class="pill">Event Management</span>
+        <span class="pill">Organizational Skills</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Languages -->
+  <div class="s-label" style="margin-top:3.5rem">Languages</div>
+  <h3 class="s-title" style="font-size:1.6rem">Spoken Languages</h3>
+  <div class="lang-grid">
+    <div class="lang-card fade">
+      <div class="lang-name">தமிழ் (Tamil)</div>
+      <div class="lang-native">Mother Tongue · Native</div>
+      <div class="lang-skills">
+        <span class="l-skill">Read</span>
+        <span class="l-skill">Write</span>
+        <span class="l-skill">Speak</span>
+      </div>
+      <div class="lang-note">I am a proud Tamilan, deeply connected to roots and culture.</div>
+      <div class="lang-quote">"அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு." — திருக்குறள் 1</div>
+    </div>
+    <div class="lang-card fade">
+      <div class="lang-name">English</div>
+      <div class="lang-native">Professional Proficiency</div>
+      <div class="lang-skills">
+        <span class="l-skill">Read</span>
+        <span class="l-skill">Write</span>
+        <span class="l-skill">Speak</span>
+      </div>
+      <div class="lang-note">Though not my native language, I learnt it to thrive in the corporate and professional world — a bridge that connects globally while keeping roots intact.</div>
+    </div>
+  </div>
+
+  <!-- Certifications -->
+  <div class="s-label" style="margin-top:3.5rem">Credentials</div>
+  <h3 class="s-title" style="font-size:1.6rem">Certifications</h3>
+  <div class="certs-grid">
+    <div class="cert-card fade">
+      <div class="cert-dot"></div>
+      <div>
+        <div class="cert-name">Cloud Computing & Distributed Systems</div>
+        <div class="cert-org">NPTEL</div>
+      </div>
+    </div>
+    <div class="cert-card fade">
+      <div class="cert-dot" style="background:var(--c2)"></div>
+      <div>
+        <div class="cert-name">Software Developer – IT Services v3.0</div>
+        <div class="cert-org">NASSCOM</div>
+      </div>
+    </div>
+    <div class="cert-card fade">
+      <div class="cert-dot" style="background:var(--c3)"></div>
+      <div>
+        <div class="cert-name">Event Management</div>
+        <div class="cert-org">Great Learning</div>
+      </div>
+    </div>
+    <div class="cert-card fade" style="border-style:dashed">
+      <div class="cert-dot" style="background:var(--c4)"></div>
+      <div>
+        <div class="cert-name">+ More Certifications</div>
+        <div class="cert-org">Reach out to know more — constantly upskilling 🌍</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     LEADERSHIP
+═══════════════════════════════════ -->
+<section id="leadership">
+  <div class="s-label">Impact</div>
+  <h2 class="s-title">Leadership Experience</h2>
+  <div class="lead-grid">
+
+    <div class="lead-card fade">
+      <div class="lead-role">IIC Student Ambassador</div>
+      <div class="lead-org">PSG College of Arts & Science</div>
+      <div class="lead-year">Institution's Innovation Council</div>
+      <div class="lead-desc">Represented the Institution's Innovation Council, fostering innovation culture and entrepreneurship among students. Organized IIC events and bridged student ideas with institutional support.</div>
+    </div>
+
+    <div class="lead-card fade">
+      <div class="lead-role">Association Chairperson</div>
+      <div class="lead-org">PSG College of Arts & Science</div>
+      <div class="lead-year">Dept. Association — Led 1000+ events</div>
+      <div class="lead-desc">Led the departmental association as Chairperson. Organized Netronics '23 and Netronics 2.0 with 1000+ participants. Managed budgets, teams, logistics, and coordination from scratch.</div>
+    </div>
+
+    <div class="lead-card fade">
+      <div class="lead-role">Student Council Member</div>
+      <div class="lead-org">PSG College of Arts & Science</div>
+      <div class="lead-year">College Governance Body</div>
+      <div class="lead-desc">Represented student interests within the college's governance structure. Contributed to policy discussions, event approvals, and inter-department coordination.</div>
+    </div>
+
+    <div class="lead-card fade">
+      <div class="lead-role">Student Representative</div>
+      <div class="lead-org">Bharathi Vikas Matric Hr. Sec. School</div>
+      <div class="lead-year">School Leadership</div>
+      <div class="lead-desc">Served as the voice of the student body, coordinating school activities and representing student needs to school management.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     AWARDS
+═══════════════════════════════════ -->
+<section id="awards">
+  <div class="s-label">Recognition</div>
+  <h2 class="s-title">Awards & Achievements</h2>
+  <div class="awards-list">
+
+    <div class="award-item fade">
+      <span class="award-icon">🏆</span>
+      <div>
+        <div class="award-name">Techathon '22 — Winner</div>
+        <div class="award-detail">PSG College of Arts & Science · Project Development & Innovation</div>
+      </div>
+      <span class="award-badge">1st Place</span>
+    </div>
+
+    <div class="award-item fade">
+      <span class="award-icon">🎪</span>
+      <div>
+        <div class="award-name">Netronics '23 — Organizer</div>
+        <div class="award-detail">PSG College of Arts & Science · National-level Technical Event</div>
+      </div>
+      <span class="award-badge">Chairperson</span>
+    </div>
+
+    <div class="award-item fade">
+      <span class="award-icon">🎪</span>
+      <div>
+        <div class="award-name">Netronics 2.0 — Organizer</div>
+        <div class="award-detail">PSG College of Arts & Science · 1000+ Participants</div>
+      </div>
+      <span class="award-badge">Chairperson</span>
+    </div>
+
+    <div class="award-item fade">
+      <span class="award-icon">🌟</span>
+      <div>
+        <div class="award-name">Gateway '24 — Organizer</div>
+        <div class="award-detail">PSG College of Arts & Science · Event Coordination</div>
+      </div>
+      <span class="award-badge">Organizer</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════ -->
+<section id="testimonials">
+  <div class="s-label">What They Say</div>
+  <h2 class="s-title">Testimonials</h2>
+  <div class="testi-grid">
+
+    <div class="testi-card fade">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">As the Head of Department, I have witnessed Naveen's dedication and hard work firsthand. He has proven himself to be the best student of the year, showing not only academic excellence but also a strong commitment to his projects and peers.</p>
+      <div class="testi-name">Dr. P. Nithya</div>
+      <div class="testi-pos">HOD, PSG College of Arts & Science</div>
+    </div>
+
+    <div class="testi-card fade">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Naveen is known for his exceptional leadership skills and his ability to manage events successfully. His passion for event management shines through in every project he takes on.</p>
+      <div class="testi-name">Dr. B. Uma Maheswari</div>
+      <div class="testi-pos">Associate Professor, PSG College of Arts & Science</div>
+    </div>
+
+    <div class="testi-card fade">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Naveen's leadership capabilities are remarkable. He can manage any team individually, ensuring that every member feels valued and empowered. His approach to teamwork is commendable.</p>
+      <div class="testi-name">Dr. L. S. Sindhuja</div>
+      <div class="testi-pos">Assistant Professor, PSG College of Arts & Science</div>
+    </div>
+
+    <div class="testi-card fade">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Naveen demonstrates expertise in coding and problem-solving. His analytical skills and innovative thinking have set a high standard for his fellow students.</p>
+      <div class="testi-name">Dr. V. R. Kavitha</div>
+      <div class="testi-pos">Associate Professor, PSG College of Arts & Science</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     SERVICES
+═══════════════════════════════════ -->
+<section id="services">
+  <div class="s-label">What I Offer</div>
+  <h2 class="s-title">Services</h2>
+  <p class="s-sub">Available for freelance engagements and professional collaborations.</p>
+  <div class="services-grid">
+    <div class="svc-card fade">
+      <div class="svc-icon">🎪</div>
+      <div class="svc-title">Event Planning</div>
+      <p class="svc-desc">Organizing seamless events with innovation and leadership — from concept to execution, for colleges and organizations.</p>
+      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+    </div>
+    <div class="svc-card fade">
+      <div class="svc-icon">📖</div>
+      <div class="svc-title">Tutoring & Teaching</div>
+      <p class="svc-desc">Helping learners grow through structured and personalized sessions in networking, programming, and web technologies.</p>
+      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+    </div>
+    <div class="svc-card fade">
+      <div class="svc-icon">🎤</div>
+      <div class="svc-title">Workshops & Lectures</div>
+      <p class="svc-desc">Hands-on sessions and talks to inspire and empower audiences on tech, networking, and innovation topics.</p>
+      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+    </div>
+    <div class="svc-card fade">
+      <div class="svc-icon">💻</div>
+      <div class="svc-title">Web Development</div>
+      <p class="svc-desc">Designing responsive, functional, and modern websites tailored to your personal or business needs.</p>
+      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     CONTACT
+═══════════════════════════════════ -->
+<section id="contact">
+  <div class="s-label">Let's Connect</div>
+  <h2 class="s-title">Get In Touch</h2>
+  <p class="s-sub">I'm passionate about technology and innovation. Open to projects, collaborations, and conversations.</p>
+  <div class="contact-cards">
+    <a href="mailto:dnaveenshankar2003@gmail.com" class="c-card">✉️ dnaveenshankar2003@gmail.com</a>
+    <a href="tel:+919566716114" class="c-card">📞 +91 95667 16114</a>
+    <a href="https://naveenshankar.in/contact-me.html" class="c-card" target="_blank">📋 Book a Service</a>
+    <a href="https://naveenshankar.in/cv.pdf" class="c-card" target="_blank">📄 Download CV</a>
+  </div>
+  <div class="social-row">
+    <a href="https://linkedin.com/in/d-naveens" target="_blank">LinkedIn</a>
+    <a href="https://github.com/dnaveenshankar" target="_blank">GitHub</a>
+    <a href="https://instagram.com/_.naveen.d_/" target="_blank">Instagram</a>
+    <a href="https://facebook.com/naveen.shankar.37/" target="_blank">Facebook</a>
+    <a href="https://x.com/d_naveenshankar" target="_blank">Twitter / X</a>
+  </div>
+</section>
+
+<!-- ─ FOOTER ─ -->
+<footer>
+  <span>© 2025 Naveen Shankar D · Chennai, India</span>
+  <span>Designed & coded by <a href="https://naveenshankar.in">Naveen Shankar</a></span>
+</footer>
+
+<script>
+/* ─ MOBILE MENU ─ */
+function toggleMenu(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+/* ─ ACCORDION: EXPERIENCE ─ */
+function toggleCard(el){
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('active'));
+  if(!wasActive) el.classList.add('active');
+}
+
+/* ─ ACCORDION: EDUCATION ─ */
+function toggleEdu(el){
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.edu-card').forEach(c=>c.classList.remove('active'));
+  if(!wasActive) el.classList.add('active');
+}
+
+/* ─ SCROLL FADE ─ */
+const fades = document.querySelectorAll('.fade');
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('vis'),(i%5)*80);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.08});
+fades.forEach(el=>obs.observe(el));
+
+/* ─ NAV ACTIVE HIGHLIGHT ─ */
+const sections = document.querySelectorAll('section[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{
+    if(window.scrollY>=s.offsetTop-140) current=s.id;
+  });
+  navAs.forEach(a=>{
+    a.style.color = a.getAttribute('href')==='#'+current ? 'var(--c1)' : '';
+  });
+},{passive:true});
+
+/* ─ OPEN FIRST CARDS BY DEFAULT ─ */
+window.addEventListener('DOMContentLoaded',()=>{
+  // auto-open first exp & edu after short delay so user sees the accordion feature
+});
+</script>
+</body>
+</html>
