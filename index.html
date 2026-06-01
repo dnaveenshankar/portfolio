@@ -564,6 +564,32 @@ footer a{color:var(--c1);text-decoration:none}
 .fade{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .fade.vis{opacity:1;transform:translateY(0)}
 
+/* ══ VERSION SWITCHER ══ */
+.ver-bar{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;
+  display:flex;align-items:center;gap:.35rem;
+  background:rgba(6,8,16,.9);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:100px;
+  padding:.4rem .6rem;
+}
+.ver-label{
+  font-family:var(--mono);font-size:.6rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;padding:0 .4rem;
+}
+.ver-btn{
+  padding:.3rem .75rem;border-radius:100px;font-size:.72rem;
+  font-family:var(--mono);font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:all .2s;text-decoration:none;
+  color:var(--muted);
+}
+.ver-btn:hover{color:var(--text);border-color:var(--border)}
+.ver-btn.active{
+  background:var(--c1);color:var(--bg);border-color:var(--c1);
+}
+@media(max-width:600px){
+  .ver-bar{bottom:1rem;right:1rem}
+}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:900px){
   nav{padding:1rem 1.5rem}
@@ -644,7 +670,7 @@ footer a{color:var(--c1);text-decoration:none}
     <div class="hero-btns">
       <a href="https://naveenshankar.in/cv.pdf" target="_blank" class="btn-p">Download CV</a>
       <a href="#projects" class="btn-s">View Projects</a>
-      <a href="https://naveenshankar.in/contact-me.html" target="_blank" class="btn-s">Book a Service</a>
+      <a href="contact-me.html" class="btn-s">Book a Service</a>
     </div>
     <div class="hero-socials">
       <a href="https://linkedin.com/in/d-naveens" target="_blank">LinkedIn</a>
@@ -1310,25 +1336,25 @@ footer a{color:var(--c1);text-decoration:none}
       <div class="svc-icon">🎪</div>
       <div class="svc-title">Event Planning</div>
       <p class="svc-desc">Organizing seamless events with innovation and leadership — from concept to execution, for colleges and organizations.</p>
-      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+      <a href="contact-me.html" class="svc-cta">Book Now →</a>
     </div>
     <div class="svc-card fade">
       <div class="svc-icon">📖</div>
       <div class="svc-title">Tutoring & Teaching</div>
       <p class="svc-desc">Helping learners grow through structured and personalized sessions in networking, programming, and web technologies.</p>
-      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+      <a href="contact-me.html" class="svc-cta">Book Now →</a>
     </div>
     <div class="svc-card fade">
       <div class="svc-icon">🎤</div>
       <div class="svc-title">Workshops & Lectures</div>
       <p class="svc-desc">Hands-on sessions and talks to inspire and empower audiences on tech, networking, and innovation topics.</p>
-      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+      <a href="contact-me.html" class="svc-cta">Book Now →</a>
     </div>
     <div class="svc-card fade">
       <div class="svc-icon">💻</div>
       <div class="svc-title">Web Development</div>
       <p class="svc-desc">Designing responsive, functional, and modern websites tailored to your personal or business needs.</p>
-      <a href="https://naveenshankar.in/contact-me.html" class="svc-cta" target="_blank">Book Now →</a>
+      <a href="contact-me.html" class="svc-cta">Book Now →</a>
     </div>
   </div>
 </section>
@@ -1343,7 +1369,7 @@ footer a{color:var(--c1);text-decoration:none}
   <div class="contact-cards">
     <a href="mailto:dnaveenshankar2003@gmail.com" class="c-card">✉️ dnaveenshankar2003@gmail.com</a>
     <a href="tel:+919566716114" class="c-card">📞 +91 95667 16114</a>
-    <a href="https://naveenshankar.in/contact-me.html" class="c-card" target="_blank">📋 Book a Service</a>
+    <a href="contact-me.html" class="c-card">📋 Book a Service</a>
     <a href="https://naveenshankar.in/cv.pdf" class="c-card" target="_blank">📄 Download CV</a>
   </div>
   <div class="social-row">
@@ -1357,9 +1383,17 @@ footer a{color:var(--c1);text-decoration:none}
 
 <!-- ─ FOOTER ─ -->
 <footer>
-  <span>© 2025 Naveen Shankar D · Chennai, India</span>
+  <span>© 2025 Naveen Shankar D · Coimbatore, India</span>
   <span>Designed & coded by <a href="https://naveenshankar.in">Naveen Shankar</a></span>
 </footer>
+
+<!-- ─ VERSION SWITCHER ─ -->
+<div class="ver-bar">
+  <span class="ver-label">Ver</span>
+  <a class="ver-btn" href="index2.html" title="Version 1 — Classic">v1</a>
+  <a class="ver-btn" href="index3.html" title="Version 2 — Previous">v2</a>
+  <a class="ver-btn active" href="index.html" title="Version 3 — Current (You are here)">v3</a>
+</div>
 
 <script>
 /* ─ MOBILE MENU ─ */

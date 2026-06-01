@@ -1,173 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Let's Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #f4f7fa;
-      margin: 0;
-      padding: 40px;
-      color: #333;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Let's Connect — Naveen Shankar D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#060810;
+  --bg2:#0d1020;
+  --surface:#111525;
+  --surface2:#181c2e;
+  --border:rgba(255,255,255,0.07);
+  --c1:#00f5d4;
+  --c2:#7c6af5;
+  --c3:#f5a623;
+  --c4:#f564a9;
+  --text:#dde4f0;
+  --muted:#6b7590;
+  --heading:#ffffff;
+  --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--c1);border-radius:2px}
 
-    .container {
-      max-width: 720px;
-      margin: auto;
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 14px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    }
+/* ─ AMBIENT ─ */
+.mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 10%,rgba(0,245,212,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 10% 80%,rgba(124,106,245,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,rgba(245,100,169,.04) 0%,transparent 60%);
+  animation:meshMove 12s ease-in-out infinite alternate;
+}
+@keyframes meshMove{
+  0%{background-position:0% 0%,100% 100%,50% 50%}
+  50%{background-position:30% 20%,70% 80%,60% 40%}
+  100%{background-position:10% 40%,90% 60%,40% 60%}
+}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora-line{
+  position:absolute;left:-20%;width:140%;height:1px;
+  opacity:0;animation:auroraSweep 8s ease-in-out infinite;
+}
+.aurora-line:nth-child(1){top:20%;animation-delay:0s;background:linear-gradient(90deg,transparent,var(--c1),transparent)}
+.aurora-line:nth-child(2){top:55%;animation-delay:3s;background:linear-gradient(90deg,transparent,var(--c2),transparent)}
+.aurora-line:nth-child(3){top:80%;animation-delay:6s;background:linear-gradient(90deg,transparent,var(--c4),transparent)}
+@keyframes auroraSweep{
+  0%{transform:translateX(-20%) skewY(-1deg);opacity:0}
+  20%{opacity:.35}80%{opacity:.15}100%{transform:translateX(20%) skewY(1deg);opacity:0}
+}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:orbFloat 18s ease-in-out infinite alternate}
+.orb1{width:500px;height:500px;top:-150px;right:-100px;background:rgba(0,245,212,.05)}
+.orb2{width:350px;height:350px;bottom:-80px;left:-60px;background:rgba(124,106,245,.07);animation-direction:alternate-reverse;animation-duration:22s}
+@keyframes orbFloat{0%{transform:translate(0,0) scale(1)}50%{transform:translate(25px,-35px) scale(1.08)}100%{transform:translate(-15px,25px) scale(.96)}}
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.5;
+}
 
-    h1 {
-      text-align: center;
-      color: #b50909;
-      margin-bottom: 30px;
-    }
+/* ─ NAV ─ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 4rem;
+  background:rgba(6,8,16,.85);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Outfit',sans-serif;font-weight:900;font-size:1.3rem;
+  color:var(--heading);text-decoration:none;letter-spacing:-.03em;
+}
+.logo .dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--c1);margin-left:2px;vertical-align:middle;
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.nav-back{
+  color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;
+  display:flex;align-items:center;gap:.5rem;transition:color .2s;
+}
+.nav-back:hover{color:var(--c1)}
+@media(max-width:600px){nav{padding:1rem 1.25rem}}
 
-    label {
-      font-weight: bold;
-      margin-top: 20px;
-      display: block;
-      color: #003366;
-    }
+/* ─ PAGE WRAPPER ─ */
+.page{
+  position:relative;z-index:10;
+  max-width:900px;margin:0 auto;
+  padding:7rem 2rem 5rem;
+}
 
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-      margin-bottom: 20px;
-    }
+/* ─ HEADER ─ */
+.page-header{text-align:center;margin-bottom:3rem}
+.page-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.35rem 1rem;
+  background:rgba(0,245,212,.08);border:1px solid rgba(0,245,212,.2);
+  border-radius:100px;font-size:.78rem;font-weight:600;color:var(--c1);
+  margin-bottom:1.25rem;font-family:var(--mono);
+  animation:fadeUp .5s ease both;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--c1);animation:pulse 2s infinite}
 
-    textarea {
-      resize: vertical;
-    }
+.page-title{
+  font-size:clamp(2.2rem,6vw,3.5rem);font-weight:900;
+  letter-spacing:-.04em;color:var(--heading);line-height:1.1;
+  margin-bottom:.75rem;
+  animation:fadeUp .5s .1s ease both;
+}
+.page-title .acc{
+  background:linear-gradient(135deg,var(--c1),var(--c2),var(--c4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;background-size:200%;
+  animation:gradShift 4s ease infinite;
+}
+@keyframes gradShift{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
 
-    .form-section {
-      margin-bottom: 25px;
-    }
+.page-sub{
+  color:var(--muted);font-size:1rem;font-weight:300;
+  max-width:480px;margin:0 auto;
+  animation:fadeUp .5s .2s ease both;
+}
 
-    .checkbox-group,
-    .radio-group {
-      margin-top: 10px;
-      margin-left: 10px;
-    }
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-    .checkbox-group label,
-    .radio-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: normal;
-    }
+/* ─ FORM CARD ─ */
+.form-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:2.5rem;
+  animation:fadeUp .5s .3s ease both;
+}
 
-    button {
-      background-color: #003366;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-    }
+/* ─ SECTION DIVIDER ─ */
+.form-section-title{
+  font-family:var(--mono);font-size:.68rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.15em;color:var(--c1);
+  margin-bottom:1rem;margin-top:2rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.form-section-title::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.form-section-title:first-of-type{margin-top:0}
 
-    button:hover {
-      background-color: #002244;
-    }
+/* ─ REASON GRID ─ */
+.reason-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem;
+  margin-bottom:.5rem;
+}
+.reason-btn{
+  padding:.65rem 1rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;font-size:.85rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:.6rem;
+  user-select:none;
+}
+.reason-btn .rb-icon{font-size:1rem;flex-shrink:0}
+.reason-btn:hover{border-color:rgba(0,245,212,.3);color:var(--text);background:rgba(0,245,212,.04)}
+.reason-btn.sel{
+  border-color:var(--c1);color:var(--c1);
+  background:rgba(0,245,212,.08);
+}
 
-    .social {
-      text-align: center;
-      margin-top: 25px;
-    }
+/* ─ MODE GRID ─ */
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem}
+.mode-btn{
+  padding:.65rem 1rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;font-size:.85rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .2s;text-align:center;user-select:none;
+}
+.mode-btn:hover{border-color:rgba(124,106,245,.3);color:var(--text)}
+.mode-btn.sel{border-color:var(--c2);color:var(--c2);background:rgba(124,106,245,.08)}
 
-    .social a {
-      color: #b50909;
-      font-weight: bold;
-      text-decoration: none;
-    }
+/* ─ SESSION TYPE ─ */
+.session-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.sess-btn{
+  padding:.65rem 1rem;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;font-size:.82rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .2s;text-align:center;user-select:none;
+}
+.sess-btn:hover{border-color:rgba(245,166,35,.3);color:var(--text)}
+.sess-btn.sel{border-color:var(--c3);color:var(--c3);background:rgba(245,166,35,.08)}
 
-    .social a:hover {
-      text-decoration: underline;
-    }
-  </style>
+/* ─ INPUTS ─ */
+.field{margin-top:1.25rem}
+.field label{
+  display:block;font-family:var(--mono);font-size:.68rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.5rem;
+}
+.field input,.field textarea,.field select{
+  width:100%;padding:.85rem 1rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;
+  font-size:.95rem;font-weight:400;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+  resize:vertical;
+}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--c1);
+  box-shadow:0 0 0 3px rgba(0,245,212,.08);
+}
+.field select option{background:var(--surface2);color:var(--text)}
+.field textarea{min-height:120px;line-height:1.6}
+
+.fields-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ─ SUBMIT ─ */
+.submit-row{margin-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.btn-submit{
+  padding:.9rem 2.5rem;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  color:var(--bg);border:none;border-radius:8px;
+  font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s;
+  display:inline-flex;align-items:center;gap:.6rem;
+  letter-spacing:-.01em;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(0,245,212,.25);opacity:.95}
+.btn-submit:active{transform:translateY(0)}
+.submit-note{font-size:.78rem;color:var(--muted);font-weight:300}
+
+/* ─ SUCCESS STATE ─ */
+.success-msg{
+  display:none;text-align:center;padding:2rem;
+}
+.success-msg.show{display:block}
+.success-icon{font-size:3rem;margin-bottom:1rem}
+.success-title{font-size:1.4rem;font-weight:800;color:var(--heading);margin-bottom:.5rem}
+.success-sub{color:var(--muted);font-size:.9rem;font-weight:300}
+
+/* ─ QUICK CONTACT ─ */
+.quick-contact{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1rem;margin-top:2rem;
+}
+.qc-item{
+  display:flex;align-items:center;gap:.75rem;
+  padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;text-decoration:none;color:var(--text);
+  font-size:.85rem;font-weight:500;transition:border-color .2s,color .2s,transform .2s;
+}
+.qc-item:hover{border-color:var(--c1);color:var(--c1);transform:translateY(-2px)}
+.qc-item .qi{font-size:1.1rem}
+
+/* ─ FOOTER STRIP ─ */
+.page-footer{
+  text-align:center;margin-top:3rem;
+  color:var(--muted);font-size:.8rem;
+}
+.page-footer a{color:var(--c1);text-decoration:none}
+
+/* ─ FADE ─ */
+.fade{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.fade.vis{opacity:1;transform:translateY(0)}
+
+.ver-bar{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;
+  display:flex;align-items:center;gap:.35rem;
+  background:rgba(6,8,16,.9);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:100px;
+  padding:.4rem .6rem;
+}
+.ver-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:0 .4rem}
+.ver-btn{
+  padding:.3rem .75rem;border-radius:100px;font-size:.72rem;
+  font-family:var(--mono);font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:all .2s;text-decoration:none;color:var(--muted);
+}
+.ver-btn:hover{color:var(--text);border-color:var(--border)}
+.ver-btn.active{background:var(--c1);color:var(--bg);border-color:var(--c1)}
+
+/* ─ RESPONSIVE ─ */
+@media(max-width:600px){
+  .page{padding:6rem 1rem 4rem}
+  .form-card{padding:1.5rem}
+  .fields-row{grid-template-columns:1fr}
+  .session-grid{grid-template-columns:1fr 1fr}
+  .submit-row{flex-direction:column;align-items:flex-start}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>👋 Let's Collaborate!</h1>
-    <form action="https://formspree.io/f/mvgqranl" method="POST">
 
-      <!-- Why are you reaching out -->
-      <div class="form-section">
-        <label>Why are you contacting me?</label>
-        <div class="checkbox-group">
-          <label><input type="checkbox" name="Reason[]" value="Learn Web or Mobile App Dev" /> Learn Web/Mobile App Development</label>
-          <label><input type="checkbox" name="Reason[]" value="Tech collab" /> Tech Project Collaboration</label>
-          <label><input type="checkbox" name="Reason[]" value="Event help" /> Event Organizing Help</label>
-          <label><input type="checkbox" name="Reason[]" value="Problem solving" /> Problem Solving</label>
-          <label><input type="checkbox" name="Reason[]" value="College Workshop" /> College/School Workshop</label>
-          <label><input type="checkbox" name="Reason[]" value="Guest Lecture" /> Guest Lecture or Seminar</label>
-          <label><input type="checkbox" name="Reason[]" value="Personal Training" /> Personal Training Session</label>
-          <label><input type="checkbox" name="Reason[]" value="Just want to say hi" /> Just want to say hi 😄</label>
+<div class="mesh"></div>
+<div class="aurora">
+  <div class="aurora-line"></div>
+  <div class="aurora-line"></div>
+  <div class="aurora-line"></div>
+</div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">NS<span class="dot"></span></a>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-chip"><span class="live-dot"></span> Open for Collaboration</div>
+    <h1 class="page-title">👋 Let's <span class="acc">Collaborate!</span></h1>
+    <p class="page-sub">Tell me what you have in mind — I'll get back to you as soon as possible.</p>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card fade" id="formCard">
+
+    <form id="contactForm" onsubmit="handleSubmit(event)">
+
+      <!-- REASON -->
+      <div class="form-section-title">Why are you contacting me?</div>
+      <div class="reason-grid" id="reasonGrid">
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Learn Web/Mobile App Development"><span class="rb-icon">📱</span> Learn Web/Mobile App Development</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Tech Project Collaboration"><span class="rb-icon">🤝</span> Tech Project Collaboration</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Event Organizing Help"><span class="rb-icon">🎪</span> Event Organizing Help</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Problem Solving"><span class="rb-icon">🧩</span> Problem Solving</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="College/School Workshop"><span class="rb-icon">🏫</span> College/School Workshop</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Guest Lecture or Seminar"><span class="rb-icon">🎤</span> Guest Lecture or Seminar</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Personal Training Session"><span class="rb-icon">🎯</span> Personal Training Session</div>
+        <div class="reason-btn" onclick="selectReason(this)" data-val="Just want to say hi"><span class="rb-icon">😄</span> Just want to say hi!</div>
+      </div>
+      <input type="hidden" id="reasonVal" name="reason"/>
+
+      <!-- SESSION TYPE -->
+      <div class="form-section-title">Session type</div>
+      <div class="session-grid" id="sessionGrid">
+        <div class="sess-btn" onclick="selectSession(this)" data-val="Daily Sessions">Daily Sessions</div>
+        <div class="sess-btn" onclick="selectSession(this)" data-val="Hourly Guidance">Hourly Guidance</div>
+        <div class="sess-btn" onclick="selectSession(this)" data-val="One-Time Support">One-Time Support</div>
+      </div>
+      <input type="hidden" id="sessionVal" name="session"/>
+
+      <!-- PREFERRED MODE -->
+      <div class="form-section-title">Preferred mode of connect</div>
+      <div class="mode-grid" id="modeGrid">
+        <div class="mode-btn" onclick="selectMode(this)" data-val="Online (Google Meet / Zoom)">🎥 Online (Meet / Zoom)</div>
+        <div class="mode-btn" onclick="selectMode(this)" data-val="Text-based (Chat/Email)">💬 Text-based (Chat/Email)</div>
+        <div class="mode-btn" onclick="selectMode(this)" data-val="Hybrid">🔀 Hybrid</div>
+      </div>
+      <input type="hidden" id="modeVal" name="mode"/>
+
+      <!-- MESSAGE -->
+      <div class="form-section-title">Your message / idea</div>
+      <div class="field" style="margin-top:.5rem">
+        <textarea name="message" placeholder="Describe your project, idea, or what you'd like to learn..." rows="5"></textarea>
+      </div>
+
+      <!-- CONTACT DETAILS -->
+      <div class="form-section-title">Your details</div>
+      <div class="fields-row">
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" name="name" placeholder="e.g. Arun Kumar" required/>
+        </div>
+        <div class="field">
+          <label>Your Email</label>
+          <input type="email" name="email" placeholder="you@email.com" required/>
         </div>
       </div>
-
-      <!-- Collaboration Style -->
-      <div class="form-section">
-        <label>How do you prefer to connect?</label>
-        <div class="radio-group">
-          <label><input type="radio" name="Collab_Mode" value="Daily sessions" required /> Daily Sessions</label>
-          <label><input type="radio" name="Collab_Mode" value="Hourly chat" /> Hourly Guidance</label>
-          <label><input type="radio" name="Collab_Mode" value="One-time help" /> One-Time Support</label>
-        </div>
+      <div class="field">
+        <label>Mobile Number</label>
+        <input type="tel" name="mobile" placeholder="+91 XXXXX XXXXX"/>
       </div>
 
-      <!-- Learning mode -->
-      <div class="form-section">
-        <label>Preferred Mode</label>
-        <select name="Learning_Mode" required>
-          <option value="" disabled selected>Select your preferred way</option>
-          <option value="Online">Online (Google Meet / Zoom)</option>
-          <option value="Chat-based">Text-based (Chat/Email)</option>
-          <option value="Hybrid">Hybrid</option>
-        </select>
+      <!-- SUBMIT -->
+      <div class="submit-row">
+        <button type="submit" class="btn-submit">🚀 Let's Make It Happen</button>
+        <span class="submit-note">I usually respond within 24 hours.</span>
       </div>
 
-      <!-- Custom message -->
-      <div class="form-section">
-        <label>Your Message / Idea</label>
-        <textarea name="Message" rows="6" placeholder="Share your idea, your event details, or your challenge..." required></textarea>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="form-section">
-        <label>Your Name</label>
-        <input type="text" name="Name" placeholder="Your name" required />
-
-        <label>Your Email</label>
-        <input type="email" name="Email" placeholder="you@example.com" required />
-
-        <label>Your Mobile Number</label>
-        <input type="tel" name="Mobile" placeholder="+91XXXXXXXXXX" pattern="[0-9+ ]{8,15}" required />
-      </div>
-
-      <!-- Submit -->
-      <button type="submit">🚀 Let's Make It Happen</button>
     </form>
 
-    <!-- Social -->
-    <div class="social">
-      <p>📸 Follow me on Instagram: <a href="https://www.instagram.com/_.naveen.d_" target="_blank">@_.naveen.d_</a></p>
+    <!-- SUCCESS -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Message Sent!</div>
+      <p class="success-sub">Thanks for reaching out. I'll get back to you as soon as possible.<br/>
+      In the meantime, feel free to connect on social media.</p>
+      <div style="margin-top:1.5rem">
+        <a href="index.html" style="color:var(--c1);text-decoration:none;font-weight:600;font-size:.9rem">← Back to Portfolio</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK CONTACT -->
+  <div class="fade" style="margin-top:2rem">
+    <div class="form-section-title" style="margin-top:0">Or reach me directly</div>
+    <div class="quick-contact">
+      <a href="mailto:dnaveenshankar2003@gmail.com" class="qc-item"><span class="qi">✉️</span> dnaveenshankar2003@gmail.com</a>
+      <a href="tel:+919566716114" class="qc-item"><span class="qi">📞</span> +91 95667 16114</a>
+      <a href="https://linkedin.com/in/d-naveens" class="qc-item" target="_blank"><span class="qi">💼</span> LinkedIn</a>
+      <a href="https://instagram.com/_.naveen.d_/" class="qc-item" target="_blank"><span class="qi">📸</span> @_.naveen.d_</a>
+      <a href="https://github.com/dnaveenshankar" class="qc-item" target="_blank"><span class="qi">🐙</span> GitHub</a>
+      <a href="https://x.com/d_naveenshankar" class="qc-item" target="_blank"><span class="qi">🐦</span> Twitter / X</a>
     </div>
   </div>
+
+  <div class="page-footer fade">
+    <p>© 2025 <a href="index.html">Naveen Shankar D</a> · Coimbatore, Tamil Nadu</p>
+  </div>
+
+</div>
+
+<script>
+/* ─ SELECTORS ─ */
+function selectReason(el){
+  document.querySelectorAll('.reason-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('reasonVal').value = el.dataset.val;
+}
+function selectSession(el){
+  document.querySelectorAll('.sess-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('sessionVal').value = el.dataset.val;
+}
+function selectMode(el){
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('modeVal').value = el.dataset.val;
+}
+
+/* ─ SUBMIT ─ */
+function handleSubmit(e){
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  if(!name || !email){ alert('Please fill in your name and email.'); return; }
+
+  /* Build mailto as fallback */
+  const reason  = document.getElementById('reasonVal').value || 'Not specified';
+  const session = document.getElementById('sessionVal').value || 'Not specified';
+  const mode    = document.getElementById('modeVal').value || 'Not specified';
+  const msg     = form.message.value.trim() || 'No message provided';
+  const mobile  = form.mobile.value.trim() || 'Not provided';
+
+  const body = encodeURIComponent(
+    `Hi Naveen,\n\nReason: ${reason}\nSession: ${session}\nMode: ${mode}\n\nMessage:\n${msg}\n\nFrom: ${name}\nEmail: ${email}\nMobile: ${mobile}`
+  );
+  window.open(`mailto:dnaveenshankar2003@gmail.com?subject=Portfolio Contact – ${reason}&body=${body}`,'_blank');
+
+  /* Show success */
+  form.style.display='none';
+  document.getElementById('successMsg').classList.add('show');
+}
+
+/* ─ SCROLL FADE ─ */
+const fades = document.querySelectorAll('.fade');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('vis'),i*100);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.06});
+fades.forEach(el=>obs.observe(el));
+</script>
+<!-- ─ VERSION SWITCHER ─ -->
+<div class="ver-bar">
+  <span class="ver-label">Ver</span>
+  <a class="ver-btn" href="index2.html" title="Version 1">v1</a>
+  <a class="ver-btn" href="index3.html" title="Version 2">v2</a>
+  <a class="ver-btn active" href="index.html" title="Version 3 — Current">v3</a>
+</div>
+
 </body>
 </html>
