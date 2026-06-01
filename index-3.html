@@ -2267,20 +2267,20 @@
     const currentVersionSpan = document.getElementById('currentVersion');
     const otherVersionLink = document.getElementById('otherVersionLink');
 
-    if(currentPage === 'index.html') {
-        currentVersionSpan.textContent = 'v1.0';
-        otherVersionLink.textContent = 'v2.0';
-        otherVersionLink.href = 'index2.html';
-    } else if(currentPage === 'index2.html') {
-        currentVersionSpan.textContent = 'v2.0';
-        otherVersionLink.textContent = 'v1.0';
-        otherVersionLink.href = 'index.html';
-    } else {
-        // Default fallback
-        currentVersionSpan.textContent = 'v1.0';
-        otherVersionLink.textContent = 'v2.0';
-        otherVersionLink.href = 'index2.html';
-    }
+    if (currentPage === 'index-3.html') {
+    currentVersionSpan.textContent = 'v1.0';
+    otherVersionLink.textContent = 'v2.0';
+    otherVersionLink.href = 'index2.html';
+  } else if (currentPage === 'index2.html') {
+    currentVersionSpan.textContent = 'v2.0';
+    otherVersionLink.textContent = 'v3.0';
+    otherVersionLink.href = 'index.html';
+  } else {
+    // index.html = v3
+    currentVersionSpan.textContent = 'v3.0';
+    otherVersionLink.textContent = 'v1.0';
+    otherVersionLink.href = 'index-3.html';
+  }
 </script>
 
 </div>
