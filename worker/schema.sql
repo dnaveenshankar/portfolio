@@ -37,3 +37,14 @@ CREATE TABLE IF NOT EXISTS profile (
 
 INSERT OR IGNORE INTO profile (id, full_name, title, bio, location, email, avatar_url, updated_at)
 VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+
+-- Skills section — same pattern as profile, but a list instead of a singleton.
+CREATE TABLE IF NOT EXISTS skills (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT,             -- e.g. 'Frontend', 'Backend', 'DevOps'
+  proficiency INTEGER,       -- 1-100, optional
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);

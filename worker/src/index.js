@@ -8,7 +8,7 @@ import {
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://admin.naveenshankar.in",
-  "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+  "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type,Authorization",
   "Access-Control-Allow-Credentials": "true",
 };
@@ -266,6 +266,69 @@ export default {
             uniqueVisitors: g.sum.uniques,
           })),
         });
+      }
+
+      // GET /admin/skills  (auth required) — list all skills
+      if (path === "/admin/skills" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM skills ORDER BY sort_order ASC, id ASC"
+        ).all();
+        return json({ skills: results });
+      }
+
+      // POST /admin/skills  (auth required)  { name, category, proficiency, sort_order }
+      if (path === "/admin/skills" && request.method === "POST") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const { name, category, proficiency, sort_order } = await request.json();
+        if (!name) return json({ error: "Name is required" }, 400);
+
+        const now = Date.now();
+        const result = await env.DB.prepare(
+          `INSERT INTO skills (name, category, proficiency, sort_order, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?)`
+        )
+          .bind(name, category || null, proficiency || null, sort_order || 0, now, now)
+          .run();
+
+        await logActivity(env, auth.username, "skill_create", name, request);
+        return json({ success: true, id: result.meta.last_row_id });
+      }
+
+      // PUT /admin/skills/:id  (auth required)  { name, category, proficiency, sort_order }
+      if (path.startsWith("/admin/skills/") && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const id = parseInt(path.split("/").pop(), 10);
+        const { name, category, proficiency, sort_order } = await request.json();
+        if (!name) return json({ error: "Name is required" }, 400);
+
+        await env.DB.prepare(
+          `UPDATE skills SET name = ?, category = ?, proficiency = ?, sort_order = ?, updated_at = ?
+           WHERE id = ?`
+        )
+          .bind(name, category || null, proficiency || null, sort_order || 0, Date.now(), id)
+          .run();
+
+        await logActivity(env, auth.username, "skill_update", name, request);
+        return json({ success: true });
+      }
+
+      // DELETE /admin/skills/:id  (auth required)
+      if (path.startsWith("/admin/skills/") && request.method === "DELETE") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const id = parseInt(path.split("/").pop(), 10);
+        await env.DB.prepare("DELETE FROM skills WHERE id = ?").bind(id).run();
+
+        await logActivity(env, auth.username, "skill_delete", `id ${id}`, request);
+        return json({ success: true });
       }
 
       return json({ error: "Not found" }, 404);
