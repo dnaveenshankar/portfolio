@@ -6,6 +6,20 @@ import {
   randomToken,
 } from "./auth.js";
 
+// Allowlist of simple list-type CMS tables usable via the generic /admin/data/:table routes.
+// Table and column names here are the only ones ever interpolated into SQL for those routes.
+const GENERIC_TABLES = {
+  experience: { columns: ["role", "company", "location", "start_date", "end_date", "description", "sort_order"], required: ["role", "company"] },
+  education: { columns: ["institution", "degree", "field", "start_date", "end_date", "description", "sort_order"], required: ["institution"] },
+  projects: { columns: ["title", "description", "url", "repo_url", "tech_stack", "sort_order"], required: ["title"] },
+  certifications: { columns: ["name", "issuer", "issue_date", "credential_url", "sort_order"], required: ["name"] },
+  achievements: { columns: ["title", "description", "date", "sort_order"], required: ["title"] },
+  workshops: { columns: ["title", "role", "organizer", "date", "description", "sort_order"], required: ["title"] },
+  testimonials: { columns: ["name", "role", "company", "quote", "sort_order"], required: ["name", "quote"] },
+  social_links: { columns: ["platform", "url", "sort_order"], required: ["platform", "url"] },
+  services: { columns: ["name", "description", "sort_order"], required: ["name"] },
+};
+
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "https://admin.naveenshankar.in",
   "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
@@ -328,6 +342,218 @@ export default {
         await env.DB.prepare("DELETE FROM skills WHERE id = ?").bind(id).run();
 
         await logActivity(env, auth.username, "skill_delete", `id ${id}`, request);
+        return json({ success: true });
+      }
+
+      // ---- Generic CRUD for simple list-type CMS sections ----
+      // Table/column names are only ever taken from this fixed allowlist, never from
+      // user input, so building SQL strings from them here is safe.
+      const dataMatch = path.match(/^\/admin\/data\/([a-z_]+)(?:\/(\d+))?$/);
+      if (dataMatch) {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const table = dataMatch[1];
+        const id = dataMatch[2] ? parseInt(dataMatch[2], 10) : null;
+        const config = GENERIC_TABLES[table];
+        if (!config) return json({ error: "Unknown section" }, 404);
+
+        if (request.method === "GET") {
+          const { results } = await env.DB.prepare(
+            `SELECT * FROM ${table} ORDER BY sort_order ASC, id ASC`
+          ).all();
+          return json({ items: results });
+        }
+
+        if (request.method === "POST") {
+          const body = await request.json();
+          for (const req of config.required) {
+            if (!body[req]) return json({ error: `${req} is required` }, 400);
+          }
+          const now = Date.now();
+          const cols = config.columns;
+          const placeholders = cols.map(() => "?").join(", ");
+          const values = cols.map((c) => body[c] ?? null);
+          const result = await env.DB.prepare(
+            `INSERT INTO ${table} (${cols.join(", ")}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`
+          )
+            .bind(...values, now, now)
+            .run();
+          await logActivity(env, auth.username, `${table}_create`, body[cols[0]], request);
+          return json({ success: true, id: result.meta.last_row_id });
+        }
+
+        if (request.method === "PUT" && id) {
+          const body = await request.json();
+          for (const req of config.required) {
+            if (!body[req]) return json({ error: `${req} is required` }, 400);
+          }
+          const cols = config.columns;
+          const setClause = cols.map((c) => `${c} = ?`).join(", ");
+          const values = cols.map((c) => body[c] ?? null);
+          await env.DB.prepare(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`)
+            .bind(...values, Date.now(), id)
+            .run();
+          await logActivity(env, auth.username, `${table}_update`, body[cols[0]], request);
+          return json({ success: true });
+        }
+
+        if (request.method === "DELETE" && id) {
+          await env.DB.prepare(`DELETE FROM ${table} WHERE id = ?`).bind(id).run();
+          await logActivity(env, auth.username, `${table}_delete`, `id ${id}`, request);
+          return json({ success: true });
+        }
+
+        return json({ error: "Method not allowed" }, 405);
+      }
+
+      // ---- Quotes (daily quote, optionally scheduled) ----
+      if (path === "/admin/quotes" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM quotes ORDER BY scheduled_date DESC, id DESC"
+        ).all();
+        return json({ items: results });
+      }
+      if (path === "/admin/quotes" && request.method === "POST") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { text, author, scheduled_date, is_active } = await request.json();
+        if (!text) return json({ error: "Quote text is required" }, 400);
+        const now = Date.now();
+        const result = await env.DB.prepare(
+          `INSERT INTO quotes (text, author, scheduled_date, is_active, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?)`
+        )
+          .bind(text, author || null, scheduled_date || null, is_active ? 1 : 0, now, now)
+          .run();
+        await logActivity(env, auth.username, "quote_create", text.slice(0, 40), request);
+        return json({ success: true, id: result.meta.last_row_id });
+      }
+      if (path.match(/^\/admin\/quotes\/\d+$/) && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        const { text, author, scheduled_date, is_active } = await request.json();
+        if (!text) return json({ error: "Quote text is required" }, 400);
+        await env.DB.prepare(
+          `UPDATE quotes SET text = ?, author = ?, scheduled_date = ?, is_active = ?, updated_at = ? WHERE id = ?`
+        )
+          .bind(text, author || null, scheduled_date || null, is_active ? 1 : 0, Date.now(), id)
+          .run();
+        await logActivity(env, auth.username, "quote_update", text.slice(0, 40), request);
+        return json({ success: true });
+      }
+      if (path.match(/^\/admin\/quotes\/\d+$/) && request.method === "DELETE") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        await env.DB.prepare("DELETE FROM quotes WHERE id = ?").bind(id).run();
+        await logActivity(env, auth.username, "quote_delete", `id ${id}`, request);
+        return json({ success: true });
+      }
+
+      // ---- Availability (rotational shifts) ----
+      if (path === "/admin/availability" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM availability ORDER BY date DESC"
+        ).all();
+        return json({ items: results });
+      }
+      if (path === "/admin/availability" && request.method === "POST") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { date, shift_type, note } = await request.json();
+        if (!date || !shift_type) return json({ error: "Date and shift type are required" }, 400);
+        const now = Date.now();
+        const result = await env.DB.prepare(
+          `INSERT INTO availability (date, shift_type, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`
+        )
+          .bind(date, shift_type, note || null, now, now)
+          .run();
+        await logActivity(env, auth.username, "availability_create", `${date} ${shift_type}`, request);
+        return json({ success: true, id: result.meta.last_row_id });
+      }
+      if (path.match(/^\/admin\/availability\/\d+$/) && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        const { date, shift_type, note } = await request.json();
+        if (!date || !shift_type) return json({ error: "Date and shift type are required" }, 400);
+        await env.DB.prepare(
+          `UPDATE availability SET date = ?, shift_type = ?, note = ?, updated_at = ? WHERE id = ?`
+        )
+          .bind(date, shift_type, note || null, Date.now(), id)
+          .run();
+        await logActivity(env, auth.username, "availability_update", `${date} ${shift_type}`, request);
+        return json({ success: true });
+      }
+      if (path.match(/^\/admin\/availability\/\d+$/) && request.method === "DELETE") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        await env.DB.prepare("DELETE FROM availability WHERE id = ?").bind(id).run();
+        await logActivity(env, auth.username, "availability_delete", `id ${id}`, request);
+        return json({ success: true });
+      }
+
+      // ---- Blog ----
+      if (path === "/admin/blog" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM blog_posts ORDER BY created_at DESC"
+        ).all();
+        return json({ items: results });
+      }
+      if (path === "/admin/blog" && request.method === "POST") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const { title, slug, content, published } = await request.json();
+        if (!title || !slug) return json({ error: "Title and slug are required" }, 400);
+        const now = Date.now();
+        try {
+          const result = await env.DB.prepare(
+            `INSERT INTO blog_posts (title, slug, content, published, published_at, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`
+          )
+            .bind(title, slug, content || null, published ? 1 : 0, published ? now : null, now, now)
+            .run();
+          await logActivity(env, auth.username, "blog_create", title, request);
+          return json({ success: true, id: result.meta.last_row_id });
+        } catch (e) {
+          return json({ error: "That slug is already in use" }, 400);
+        }
+      }
+      if (path.match(/^\/admin\/blog\/\d+$/) && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        const { title, slug, content, published } = await request.json();
+        if (!title || !slug) return json({ error: "Title and slug are required" }, 400);
+        const existing = await env.DB.prepare("SELECT published, published_at FROM blog_posts WHERE id = ?").bind(id).first();
+        const published_at = published && !existing?.published ? Date.now() : existing?.published_at || null;
+        try {
+          await env.DB.prepare(
+            `UPDATE blog_posts SET title = ?, slug = ?, content = ?, published = ?, published_at = ?, updated_at = ? WHERE id = ?`
+          )
+            .bind(title, slug, content || null, published ? 1 : 0, published_at, Date.now(), id)
+            .run();
+          await logActivity(env, auth.username, "blog_update", title, request);
+          return json({ success: true });
+        } catch (e) {
+          return json({ error: "That slug is already in use" }, 400);
+        }
+      }
+      if (path.match(/^\/admin\/blog\/\d+$/) && request.method === "DELETE") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+        const id = parseInt(path.split("/").pop(), 10);
+        await env.DB.prepare("DELETE FROM blog_posts WHERE id = ?").bind(id).run();
+        await logActivity(env, auth.username, "blog_delete", `id ${id}`, request);
         return json({ success: true });
       }
 

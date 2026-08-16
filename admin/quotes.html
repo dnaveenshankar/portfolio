@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Quotes — naveenshankar.in Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background:#0f1115; color:#eee; margin:0; }
+  header { display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem; border-bottom:1px solid #23262e; }
+  header a { color:#8aa4ff; text-decoration:none; font-size:.85rem; }
+  header h1 { font-size:1.1rem; margin:0; }
+  main { max-width:700px; margin:2rem auto; padding:0 1.5rem; }
+  .item-card { background:#181b21; border-radius:10px; padding:1rem; margin-bottom:.8rem; }
+  label { display:block; font-size:.72rem; color:#999; margin-bottom:.25rem; text-transform:uppercase; }
+  input, textarea { width:100%; padding:.5rem; border-radius:6px; border:1px solid #333; background:#0f1115; color:#eee; font-size:.85rem; font-family:inherit; margin-bottom:.6rem; }
+  textarea { min-height:55px; resize:vertical; }
+  .row { display:flex; gap:.6rem; }
+  .row > div { flex:1; }
+  .active-row { display:flex; align-items:center; gap:.5rem; margin-bottom:.6rem; }
+  .actions { margin-top:.4rem; display:flex; gap:.5rem; }
+  button.small { background:none; border:1px solid #333; color:#ccc; padding:.35rem .8rem; border-radius:5px; cursor:pointer; font-size:.78rem; }
+  button.small:hover { border-color:#4f7cff; color:#fff; }
+  button.small.danger:hover { border-color:#ff6b6b; color:#ff6b6b; }
+  .add-form { background:#181b21; padding:1.2rem; border-radius:10px; margin-top:1.5rem; }
+  .add-form h2 { font-size:.9rem; margin:0 0 .9rem; }
+  button.primary { padding:.6rem 1.3rem; border:none; border-radius:6px; background:#4f7cff; color:#fff; font-weight:600; cursor:pointer; font-size:.85rem; margin-top:.4rem; }
+  .msg { font-size:.8rem; margin-top:.6rem; min-height:1em; }
+  .empty { color:#666; font-size:.85rem; padding:1rem; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <a href="/dashboard.html">&larr; Dashboard</a>
+  <h1>Quotes</h1>
+</header>
+
+<main>
+  <div id="itemsContainer"></div>
+
+  <div class="add-form">
+    <h2>Add a quote</h2>
+    <textarea id="newText" placeholder="Quote text"></textarea>
+    <div class="row">
+      <div><label>Author</label><input id="newAuthor" /></div>
+      <div><label>Scheduled Date (optional)</label><input id="newDate" type="date" /></div>
+    </div>
+    <div class="active-row"><input type="checkbox" id="newActive" checked /> <label style="margin:0;">Active</label></div>
+    <button class="primary" id="addBtn">Add Quote</button>
+    <div class="msg" id="addMsg"></div>
+  </div>
+</main>
+
+<script>
+const API = "https://api.naveenshankar.in";
+const token = sessionStorage.getItem("admin_token");
+if (!token) window.location.href = "/login.html";
+
+const authedFetch = (path, opts = {}) =>
+  fetch(`${API}${path}`, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+  });
+
+async function loadQuotes() {
+  const res = await authedFetch("/admin/quotes");
+  if (res.status === 401) { window.location.href = "/login.html"; return; }
+  const data = await res.json();
+  const container = document.getElementById("itemsContainer");
+
+  if (!data.items || data.items.length === 0) {
+    container.innerHTML = '<div class="empty">No quotes yet.</div>';
+    return;
+  }
+
+  container.innerHTML = data.items
+    .map(
+      (q) => `<div class="item-card" data-id="${q.id}">
+        <textarea data-field="text">${q.text}</textarea>
+        <div class="row">
+          <div><label>Author</label><input data-field="author" value="${q.author || ""}" /></div>
+          <div><label>Scheduled Date</label><input type="date" data-field="scheduled_date" value="${q.scheduled_date || ""}" /></div>
+        </div>
+        <div class="active-row"><input type="checkbox" data-field="is_active" ${q.is_active ? "checked" : ""} /> <label style="margin:0;">Active</label></div>
+        <div class="actions">
+          <button class="small saveBtn">Save</button>
+          <button class="small danger deleteBtn">Delete</button>
+        </div>
+      </div>`
+    )
+    .join("");
+
+  container.querySelectorAll(".item-card").forEach((card) => {
+    const id = card.dataset.id;
+    card.querySelector(".saveBtn").addEventListener("click", async () => {
+      const payload = {
+        text: card.querySelector('[data-field="text"]').value,
+        author: card.querySelector('[data-field="author"]').value,
+        scheduled_date: card.querySelector('[data-field="scheduled_date"]').value || null,
+        is_active: card.querySelector('[data-field="is_active"]').checked,
+      };
+      await authedFetch(`/admin/quotes/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      loadQuotes();
+    });
+    card.querySelector(".deleteBtn").addEventListener("click", async () => {
+      if (!confirm("Delete this quote?")) return;
+      await authedFetch(`/admin/quotes/${id}`, { method: "DELETE" });
+      loadQuotes();
+    });
+  });
+}
+
+document.getElementById("addBtn").addEventListener("click", async () => {
+  const msg = document.getElementById("addMsg");
+  const text = document.getElementById("newText").value.trim();
+  if (!text) { msg.style.color = "#ff6b6b"; msg.textContent = "Quote text is required."; return; }
+
+  const payload = {
+    text,
+    author: document.getElementById("newAuthor").value,
+    scheduled_date: document.getElementById("newDate").value || null,
+    is_active: document.getElementById("newActive").checked,
+  };
+
+  const res = await authedFetch("/admin/quotes", { method: "POST", body: JSON.stringify(payload) });
+  const data = await res.json();
+  if (!res.ok) { msg.style.color = "#ff6b6b"; msg.textContent = data.error || "Failed"; return; }
+
+  msg.style.color = "#7CFC9E";
+  msg.textContent = "Added.";
+  document.getElementById("newText").value = "";
+  document.getElementById("newAuthor").value = "";
+  document.getElementById("newDate").value = "";
+  loadQuotes();
+});
+
+loadQuotes();
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Edit Section — naveenshankar.in Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background:#0f1115; color:#eee; margin:0; }
+  header { display:flex; align-items:center; gap:1rem; padding:1rem 1.5rem; border-bottom:1px solid #23262e; }
+  header a { color:#8aa4ff; text-decoration:none; font-size:.85rem; }
+  header h1 { font-size:1.1rem; margin:0; }
+  main { max-width:800px; margin:2rem auto; padding:0 1.5rem; }
+  .item-card { background:#181b21; border-radius:10px; padding:1rem; margin-bottom:.8rem; }
+  .item-card .grid-fields { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  .item-card .grid-fields .full { grid-column:1 / -1; }
+  label { display:block; font-size:.72rem; color:#999; margin-bottom:.25rem; text-transform:uppercase; letter-spacing:.02em; }
+  input, textarea { width:100%; padding:.5rem; border-radius:6px; border:1px solid #333; background:#0f1115; color:#eee; font-size:.85rem; font-family:inherit; }
+  textarea { min-height:60px; resize:vertical; }
+  .actions { margin-top:.7rem; display:flex; gap:.5rem; }
+  button.small { background:none; border:1px solid #333; color:#ccc; padding:.35rem .8rem; border-radius:5px; cursor:pointer; font-size:.78rem; }
+  button.small:hover { border-color:#4f7cff; color:#fff; }
+  button.small.danger:hover { border-color:#ff6b6b; color:#ff6b6b; }
+  .add-form { background:#181b21; padding:1.2rem; border-radius:10px; margin-top:1.5rem; }
+  .add-form h2 { font-size:.9rem; margin:0 0 .9rem; }
+  button.primary { padding:.6rem 1.3rem; border:none; border-radius:6px; background:#4f7cff; color:#fff; font-weight:600; cursor:pointer; font-size:.85rem; margin-top:.8rem; }
+  .msg { font-size:.8rem; margin-top:.6rem; min-height:1em; }
+  .empty { color:#666; font-size:.85rem; padding:1rem; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <a href="/dashboard.html">&larr; Dashboard</a>
+  <h1 id="pageTitle">Section</h1>
+</header>
+
+<main>
+  <div id="itemsContainer"></div>
+
+  <div class="add-form">
+    <h2>Add new</h2>
+    <div class="grid-fields" id="addFields"></div>
+    <button class="primary" id="addBtn">Add</button>
+    <div class="msg" id="addMsg"></div>
+  </div>
+</main>
+
+<script>
+const API = "https://api.naveenshankar.in";
+const token = sessionStorage.getItem("admin_token");
+if (!token) window.location.href = "/login.html";
+
+// Field config per table — must match the Worker's GENERIC_TABLES columns.
+const TABLE_FIELDS = {
+  experience: { title: "Experience", fields: [
+    { key: "role", label: "Role", type: "text" },
+    { key: "company", label: "Company", type: "text" },
+    { key: "location", label: "Location", type: "text" },
+    { key: "start_date", label: "Start Date", type: "text", placeholder: "YYYY-MM" },
+    { key: "end_date", label: "End Date", type: "text", placeholder: "YYYY-MM or Present" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  education: { title: "Education", fields: [
+    { key: "institution", label: "Institution", type: "text" },
+    { key: "degree", label: "Degree", type: "text" },
+    { key: "field", label: "Field", type: "text" },
+    { key: "start_date", label: "Start Date", type: "text" },
+    { key: "end_date", label: "End Date", type: "text" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  projects: { title: "Projects", fields: [
+    { key: "title", label: "Title", type: "text" },
+    { key: "url", label: "Live URL", type: "text" },
+    { key: "repo_url", label: "Repo URL", type: "text" },
+    { key: "tech_stack", label: "Tech Stack", type: "text", placeholder: "comma separated" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  certifications: { title: "Certifications", fields: [
+    { key: "name", label: "Name", type: "text" },
+    { key: "issuer", label: "Issuer", type: "text" },
+    { key: "issue_date", label: "Issue Date", type: "text" },
+    { key: "credential_url", label: "Credential URL", type: "text", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  achievements: { title: "Achievements", fields: [
+    { key: "title", label: "Title", type: "text" },
+    { key: "date", label: "Date", type: "text" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  workshops: { title: "Workshops", fields: [
+    { key: "title", label: "Title", type: "text" },
+    { key: "role", label: "Role", type: "text", placeholder: "Speaker / Attendee" },
+    { key: "organizer", label: "Organizer", type: "text" },
+    { key: "date", label: "Date", type: "text" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  testimonials: { title: "Testimonials", fields: [
+    { key: "name", label: "Name", type: "text" },
+    { key: "role", label: "Role", type: "text" },
+    { key: "company", label: "Company", type: "text" },
+    { key: "quote", label: "Quote", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  social_links: { title: "Social Links", fields: [
+    { key: "platform", label: "Platform", type: "text", placeholder: "LinkedIn / GitHub / ..." },
+    { key: "url", label: "URL", type: "text" },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+  services: { title: "Services", fields: [
+    { key: "name", label: "Name", type: "text" },
+    { key: "description", label: "Description", type: "textarea", full: true },
+    { key: "sort_order", label: "Order", type: "number" },
+  ]},
+};
+
+const table = new URLSearchParams(window.location.search).get("table");
+const config = TABLE_FIELDS[table];
+
+if (!config) {
+  document.body.innerHTML = '<main style="padding:2rem;"><p>Unknown section. <a href="/dashboard.html" style="color:#8aa4ff;">Back to dashboard</a></p></main>';
+  throw new Error("Unknown table");
+}
+
+document.getElementById("pageTitle").textContent = config.title;
+document.title = `${config.title} — naveenshankar.in Admin`;
+
+const authedFetch = (path, opts = {}) =>
+  fetch(`${API}${path}`, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+  });
+
+function renderFieldInputs(container, prefix, values = {}) {
+  container.innerHTML = config.fields
+    .map((f) => {
+      const val = values[f.key] ?? "";
+      const cls = f.full ? "full" : "";
+      const inputEl =
+        f.type === "textarea"
+          ? `<textarea data-field="${f.key}">${val}</textarea>`
+          : `<input type="${f.type}" data-field="${f.key}" value="${val}" placeholder="${f.placeholder || ""}" />`;
+      return `<div class="${cls}"><label>${f.label}</label>${inputEl}</div>`;
+    })
+    .join("");
+}
+
+function readFieldInputs(container) {
+  const payload = {};
+  container.querySelectorAll("[data-field]").forEach((el) => {
+    payload[el.dataset.field] = el.value;
+  });
+  return payload;
+}
+
+async function loadItems() {
+  const res = await authedFetch(`/admin/data/${table}`);
+  if (res.status === 401) { window.location.href = "/login.html"; return; }
+  const data = await res.json();
+  const container = document.getElementById("itemsContainer");
+
+  if (!data.items || data.items.length === 0) {
+    container.innerHTML = '<div class="empty">Nothing here yet — add one below.</div>';
+    return;
+  }
+
+  container.innerHTML = data.items
+    .map((item) => `<div class="item-card" data-id="${item.id}">
+      <div class="grid-fields fieldGrid"></div>
+      <div class="actions">
+        <button class="small saveBtn">Save</button>
+        <button class="small danger deleteBtn">Delete</button>
+      </div>
+    </div>`)
+    .join("");
+
+  container.querySelectorAll(".item-card").forEach((card) => {
+    const id = card.dataset.id;
+    const item = data.items.find((i) => String(i.id) === id);
+    renderFieldInputs(card.querySelector(".fieldGrid"), "edit", item);
+
+    card.querySelector(".saveBtn").addEventListener("click", async () => {
+      const payload = readFieldInputs(card);
+      await authedFetch(`/admin/data/${table}/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      loadItems();
+    });
+    card.querySelector(".deleteBtn").addEventListener("click", async () => {
+      if (!confirm("Delete this entry?")) return;
+      await authedFetch(`/admin/data/${table}/${id}`, { method: "DELETE" });
+      loadItems();
+    });
+  });
+}
+
+renderFieldInputs(document.getElementById("addFields"), "new");
+
+document.getElementById("addBtn").addEventListener("click", async () => {
+  const msg = document.getElementById("addMsg");
+  const payload = readFieldInputs(document.getElementById("addFields"));
+
+  const res = await authedFetch(`/admin/data/${table}`, { method: "POST", body: JSON.stringify(payload) });
+  const data = await res.json();
+  if (!res.ok) { msg.style.color = "#ff6b6b"; msg.textContent = data.error || "Failed to add"; return; }
+
+  msg.style.color = "#7CFC9E";
+  msg.textContent = "Added.";
+  renderFieldInputs(document.getElementById("addFields"), "new");
+  loadItems();
+});
+
+loadItems();
+</script>
+</body>
+</html>
