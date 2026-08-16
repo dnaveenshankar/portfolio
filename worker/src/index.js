@@ -28,6 +28,15 @@ async function requireAuth(request, env) {
   return payload;
 }
 
+async function logActivity(env, username, action, detail, request) {
+  const ip = request.headers.get("CF-Connecting-IP") || "";
+  await env.DB.prepare(
+    "INSERT INTO admin_activity_log (username, action, detail, ip, created_at) VALUES (?, ?, ?, ?, ?)"
+  )
+    .bind(username, action, detail || null, ip, Date.now())
+    .run();
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") return new Response(null, { headers: CORS_HEADERS });
@@ -56,6 +65,8 @@ export default {
           sub: user.id,
           username: user.username,
         });
+
+        await logActivity(env, user.username, "login", null, request);
 
         return json({
           token,
@@ -90,6 +101,8 @@ export default {
         )
           .bind(hash, salt, Date.now(), user.id)
           .run();
+
+        await logActivity(env, user.username, "password_change", null, request);
 
         return json({ success: true });
       }
@@ -161,6 +174,98 @@ export default {
         const auth = await requireAuth(request, env);
         if (!auth) return json({ error: "Unauthorized" }, 401);
         return json({ username: auth.username });
+      }
+
+      // GET /admin/activity  (auth required) — recent activity feed for the dashboard
+      if (path === "/admin/activity" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const limit = Math.min(parseInt(url.searchParams.get("limit") || "20", 10), 100);
+        const { results } = await env.DB.prepare(
+          "SELECT username, action, detail, ip, created_at FROM admin_activity_log ORDER BY created_at DESC LIMIT ?"
+        )
+          .bind(limit)
+          .all();
+
+        return json({ activity: results });
+      }
+
+      // GET /admin/profile  (auth required) — first working CMS section
+      if (path === "/admin/profile" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const profile = await env.DB.prepare("SELECT * FROM profile WHERE id = 1").first();
+        return json({ profile });
+      }
+
+      // PUT /admin/profile  (auth required)  { full_name, title, bio, location, email, avatar_url }
+      if (path === "/admin/profile" && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        const body = await request.json();
+        const { full_name, title, bio, location, email, avatar_url } = body;
+
+        await env.DB.prepare(
+          `UPDATE profile SET full_name = ?, title = ?, bio = ?, location = ?, email = ?, avatar_url = ?, updated_at = ?
+           WHERE id = 1`
+        )
+          .bind(full_name || null, title || null, bio || null, location || null, email || null, avatar_url || null, Date.now())
+          .run();
+
+        await logActivity(env, auth.username, "profile_update", null, request);
+
+        return json({ success: true });
+      }
+
+      // GET /admin/stats  (auth required) — visitor stats via Cloudflare's GraphQL Analytics API.
+      // Requires CF_API_TOKEN (Analytics: Read) and CF_ZONE_ID set as Worker secrets/vars.
+      // Falls back to a "not configured" response until those are set, rather than failing.
+      if (path === "/admin/stats" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json({ error: "Unauthorized" }, 401);
+
+        if (!env.CF_API_TOKEN || !env.CF_ZONE_ID) {
+          return json({ configured: false });
+        }
+
+        const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        const until = new Date().toISOString();
+
+        const query = `
+          query {
+            viewer {
+              zones(filter: { zoneTag: "${env.CF_ZONE_ID}" }) {
+                httpRequests1dGroups(limit: 7, filter: { date_geq: "${since.slice(0, 10)}", date_leq: "${until.slice(0, 10)}" }, orderBy: [date_ASC]) {
+                  dimensions { date }
+                  sum { requests, pageViews, uniques }
+                }
+              }
+            }
+          }`;
+
+        const res = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${env.CF_API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query }),
+        });
+        const data = await res.json();
+        const groups = data?.data?.viewer?.zones?.[0]?.httpRequests1dGroups || [];
+
+        return json({
+          configured: true,
+          daily: groups.map((g) => ({
+            date: g.dimensions.date,
+            requests: g.sum.requests,
+            pageViews: g.sum.pageViews,
+            uniqueVisitors: g.sum.uniques,
+          })),
+        });
       }
 
       return json({ error: "Not found" }, 404);

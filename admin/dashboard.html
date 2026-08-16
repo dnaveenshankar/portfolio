@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dashboard — naveenshankar.in Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background:#0f1115; color:#eee; margin:0; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border-bottom:1px solid #23262e; }
+  header h1 { font-size:1.1rem; margin:0; }
+  header .who { font-size:.85rem; color:#999; }
+  header button { background:none; border:1px solid #333; color:#ccc; padding:.4rem .8rem; border-radius:6px; cursor:pointer; font-size:.8rem; }
+  header button:hover { border-color:#4f7cff; color:#fff; }
+  main { max-width:1000px; margin:0 auto; padding:1.5rem; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:.9rem; margin-bottom:1.6rem; }
+  .card { background:#181b21; border-radius:10px; padding:1rem; }
+  .card .label { font-size:.75rem; color:#999; text-transform:uppercase; letter-spacing:.03em; }
+  .card .value { font-size:1.6rem; font-weight:700; margin-top:.3rem; }
+  .card .sub { font-size:.75rem; color:#666; margin-top:.2rem; }
+  section { margin-bottom:2rem; }
+  section h2 { font-size:.95rem; color:#ccc; margin:0 0 .8rem; }
+  .notice { background:#241d10; border:1px solid #4a3a12; color:#e0b055; font-size:.8rem; padding:.7rem 1rem; border-radius:8px; margin-bottom:1rem; }
+  .cms-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:.8rem; }
+  .cms-card { background:#181b21; border-radius:10px; padding:1rem; text-decoration:none; color:#eee; display:block; transition:background .15s; }
+  .cms-card:hover { background:#20242c; }
+  .cms-card .name { font-weight:600; font-size:.9rem; }
+  .cms-card .status { font-size:.7rem; color:#666; margin-top:.3rem; }
+  .cms-card .status.ready { color:#7CFC9E; }
+  table { width:100%; border-collapse:collapse; background:#181b21; border-radius:10px; overflow:hidden; }
+  th, td { text-align:left; padding:.6rem .9rem; font-size:.82rem; border-bottom:1px solid #23262e; }
+  th { color:#999; font-weight:600; font-size:.72rem; text-transform:uppercase; }
+  tr:last-child td { border-bottom:none; }
+  .empty { color:#666; font-size:.85rem; padding:1rem; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>naveenshankar.in — Admin</h1>
+  <div style="display:flex; align-items:center; gap:1rem;">
+    <span class="who" id="whoami"></span>
+    <button id="logoutBtn">Log out</button>
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="statsGrid">
+    <div class="card"><div class="label">Requests (7d)</div><div class="value">—</div></div>
+    <div class="card"><div class="label">Page Views (7d)</div><div class="value">—</div></div>
+    <div class="card"><div class="label">Unique Visitors (7d)</div><div class="value">—</div></div>
+  </div>
+  <div class="notice" id="statsNotice" style="display:none;">
+    Visitor stats aren't configured yet. Set <code>CF_ZONE_ID</code> and a <code>CF_API_TOKEN</code> secret
+    (Analytics: Read) on the Worker to enable this.
+  </div>
+
+  <section>
+    <h2>Content</h2>
+    <div class="cms-grid" id="cmsGrid"></div>
+  </section>
+
+  <section>
+    <h2>Recent Activity</h2>
+    <table id="activityTable">
+      <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+const API = "https://api.naveenshankar.in";
+const token = sessionStorage.getItem("admin_token");
+if (!token) window.location.href = "/login.html";
+
+const authedFetch = (path, opts = {}) =>
+  fetch(`${API}${path}`, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` },
+  });
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  sessionStorage.removeItem("admin_token");
+  window.location.href = "/login.html";
+});
+
+// Who am I
+authedFetch("/admin/me").then(async (res) => {
+  if (res.status === 401) { window.location.href = "/login.html"; return; }
+  const data = await res.json();
+  document.getElementById("whoami").textContent = data.username || "";
+});
+
+// Stats
+authedFetch("/admin/stats").then(async (res) => {
+  const data = await res.json();
+  if (!data.configured) {
+    document.getElementById("statsNotice").style.display = "block";
+    return;
+  }
+  const totals = data.daily.reduce(
+    (acc, d) => ({
+      requests: acc.requests + (d.requests || 0),
+      pageViews: acc.pageViews + (d.pageViews || 0),
+      uniqueVisitors: acc.uniqueVisitors + (d.uniqueVisitors || 0),
+    }),
+    { requests: 0, pageViews: 0, uniqueVisitors: 0 }
+  );
+  const cards = document.querySelectorAll("#statsGrid .value");
+  cards[0].textContent = totals.requests.toLocaleString();
+  cards[1].textContent = totals.pageViews.toLocaleString();
+  cards[2].textContent = totals.uniqueVisitors.toLocaleString();
+}).catch(() => {
+  document.getElementById("statsNotice").style.display = "block";
+});
+
+// Activity log
+authedFetch("/admin/activity?limit=20").then(async (res) => {
+  const data = await res.json();
+  const tbody = document.querySelector("#activityTable tbody");
+  if (!data.activity || data.activity.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No activity yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.activity
+    .map(
+      (a) => `<tr>
+        <td>${new Date(a.created_at).toLocaleString()}</td>
+        <td>${a.username}</td>
+        <td>${a.action}</td>
+        <td>${a.detail || "—"}</td>
+        <td>${a.ip || "—"}</td>
+      </tr>`
+    )
+    .join("");
+});
+
+// CMS section nav — "ready" ones have a working edit page; the rest are placeholders
+// until their schema/API is built, following the phased plan.
+const sections = [
+  { name: "Profile", href: "/profile-edit.html", ready: true },
+  { name: "Skills", href: "#", ready: false },
+  { name: "Experience", href: "#", ready: false },
+  { name: "Education", href: "#", ready: false },
+  { name: "Projects", href: "#", ready: false },
+  { name: "Certifications", href: "#", ready: false },
+  { name: "Achievements", href: "#", ready: false },
+  { name: "Workshops", href: "#", ready: false },
+  { name: "Blog", href: "#", ready: false },
+  { name: "Quotes", href: "#", ready: false },
+  { name: "Availability", href: "#", ready: false },
+  { name: "Testimonials", href: "#", ready: false },
+  { name: "Social Links", href: "#", ready: false },
+];
+document.getElementById("cmsGrid").innerHTML = sections
+  .map(
+    (s) => `<a class="cms-card" href="${s.href}">
+      <div class="name">${s.name}</div>
+      <div class="status ${s.ready ? "ready" : ""}">${s.ready ? "Ready" : "Coming soon"}</div>
+    </a>`
+  )
+  .join("");
+</script>
+</body>
+</html>

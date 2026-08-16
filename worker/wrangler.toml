@@ -12,4 +12,9 @@ database_name = "naveenshankar-db"
 database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
 
 # Set secrets with: wrangler secret put SESSION_SECRET
-# (do not put SESSION_SECRET or RESEND_API_KEY in this file)
+# (do not put SESSION_SECRET, CF_API_TOKEN, or RESEND_API_KEY in this file)
+
+[vars]
+# Zone ID is not sensitive (find it on the domain overview page in Cloudflare).
+# Leave as-is until you're ready to enable visitor stats on the dashboard.
+CF_ZONE_ID = ""
