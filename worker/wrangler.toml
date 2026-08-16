@@ -1,0 +1,15 @@
+name = "naveenshankar-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+routes = [
+  { pattern = "api.naveenshankar.in", custom_domain = true }
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "naveenshankar-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# Set secrets with: wrangler secret put SESSION_SECRET
+# (do not put SESSION_SECRET or RESEND_API_KEY in this file)

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Login — naveenshankar.in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  body { font-family: system-ui, sans-serif; background:#0f1115; color:#eee; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+  form { background:#181b21; padding:2rem; border-radius:10px; width:300px; box-shadow:0 10px 30px rgba(0,0,0,.4); }
+  h1 { font-size:1.1rem; margin:0 0 1.2rem; }
+  input { width:100%; padding:.6rem; margin-bottom:.9rem; border-radius:6px; border:1px solid #333; background:#0f1115; color:#eee; box-sizing:border-box; }
+  button { width:100%; padding:.65rem; border:none; border-radius:6px; background:#4f7cff; color:#fff; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:default; }
+  .error { color:#ff6b6b; font-size:.85rem; margin-bottom:.8rem; min-height:1em; }
+  .links { text-align:center; margin-top:1rem; font-size:.85rem; }
+  .links a { color:#8aa4ff; text-decoration:none; }
+</style>
+</head>
+<body>
+<form id="loginForm">
+  <h1>Admin Login</h1>
+  <div class="error" id="err"></div>
+  <input type="text" id="username" placeholder="Username" autocomplete="username" required />
+  <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+  <button type="submit" id="submitBtn">Log In</button>
+  <div class="links"><a href="/forgot-password.html">Forgot password?</a></div>
+</form>
+
+<script>
+const API = "https://api.naveenshankar.in";
+const form = document.getElementById("loginForm");
+const err = document.getElementById("err");
+const btn = document.getElementById("submitBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  err.textContent = "";
+  btn.disabled = true;
+  try {
+    const res = await fetch(`${API}/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: document.getElementById("username").value.trim(),
+        password: document.getElementById("password").value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Login failed");
+
+    sessionStorage.setItem("admin_token", data.token);
+    window.location.href = data.mustChangePassword ? "/change-password.html?forced=1" : "/dashboard.html";
+  } catch (ex) {
+    err.textContent = ex.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
