@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agentskills.io/schemas/agent-skills-discovery-v0.2.0.json",
+  "skills": [
+    {
+      "name": "portfolio-navigation",
+      "type": "documentation",
+      "description": "Navigate Naveen Shankar D's public portfolio resources, including the homepage, CV, contact page, and sitemap.",
+      "url": "https://naveenshankar.in/agent-skills/portfolio-navigation.md",
+      "sha256": "883f413ad7168578d4826fe647e383f68374968c6a9d9cb9274c2f82f5ba1870"
+    }
+  ]
+}
