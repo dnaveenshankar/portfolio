@@ -1,0 +1,19 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://naveenshankar.in/",
+      "service-doc": [
+        {
+          "href": "https://naveenshankar.in/",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://naveenshankar.in/",
+          "type": "text/html"
+        }
+      ]
+    }
+  ]
+}
