@@ -6,97 +6,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
 <script src="/admin-nav.js"></script>
+<style>
+/* Dashboard v2 — premium dark admin workspace */
+:root{--dash-bg:#070b1b;--dash-panel:#0e1428;--dash-panel-2:#111a32;--dash-border:rgba(148,163,255,.13);--dash-text:#f4f7ff;--dash-muted:#8792b0;--violet:#8b5cf6;--pink:#ec4899;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24}
+body{background:radial-gradient(circle at 70% -10%,rgba(124,58,237,.18),transparent 34rem),radial-gradient(circle at 100% 60%,rgba(236,72,153,.08),transparent 30rem),#070b1b;color:var(--dash-text)}
+.content{background:transparent}.content>header{background:rgba(7,11,27,.82);border-bottom:1px solid var(--dash-border);color:#fff;backdrop-filter:blur(22px)}
+.content>header h1{color:#fff}.content>header .who{color:#d7def5;background:rgba(255,255,255,.05);border-color:var(--dash-border)}
+.content>header .who::before{background:var(--green);box-shadow:0 0 0 4px rgba(52,211,153,.12)}
+main{max-width:1480px;padding:30px 34px 60px}
+.dash-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}.dash-heading .eyebrow{margin:0 0 7px;color:#9d7cff;font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.dash-heading h2{margin:0;font-size:clamp(1.7rem,3vw,2.25rem);line-height:1.05;letter-spacing:-.045em;color:#fff}.dash-heading p{margin:8px 0 0;color:var(--dash-muted);font-size:.82rem}.dash-actions{display:flex;gap:9px;flex-wrap:wrap}.dash-action{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid var(--dash-border);border-radius:11px;color:#e9edff;background:rgba(255,255,255,.045);text-decoration:none;font-size:.72rem;font-weight:800;transition:.18s}.dash-action:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.13);transform:translateY(-1px)}.dash-action.primary{border-color:transparent;background:linear-gradient(135deg,#7c3aed,#ec4899);box-shadow:0 10px 28px rgba(124,58,237,.25)}
+.stat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;margin-bottom:18px}.stat-card{position:relative;min-height:132px;padding:18px;border:1px solid var(--dash-border);border-radius:17px;background:linear-gradient(145deg,rgba(17,26,50,.96),rgba(10,15,31,.96));box-shadow:0 16px 38px rgba(0,0,0,.18);overflow:hidden}.stat-card::after{content:"";position:absolute;width:100px;height:100px;right:-45px;bottom:-50px;border-radius:50%;background:rgba(139,92,246,.08)}.stat-top{display:flex;justify-content:space-between;align-items:center}.stat-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:rgba(139,92,246,.14);color:#a78bfa}.stat-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.stat-card:nth-child(2) .stat-icon{background:rgba(236,72,153,.13);color:#f472b6}.stat-card:nth-child(3) .stat-icon{background:rgba(34,211,238,.13);color:#67e8f9}.stat-card:nth-child(4) .stat-icon{background:rgba(251,191,36,.13);color:#fcd34d}.stat-card:nth-child(5) .stat-icon{background:rgba(52,211,153,.13);color:#6ee7b7}.stat-label{margin-top:15px;color:#8994b3;font-size:.63rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.stat-value{margin-top:4px;color:#fff;font-size:1.55rem;font-weight:850;letter-spacing:-.04em}.stat-sub{margin-top:5px;color:#67738f;font-size:.64rem}.stat-sub.up{color:var(--green)}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.4fr);gap:16px;margin-bottom:16px}.panel{border:1px solid var(--dash-border);border-radius:19px;background:linear-gradient(145deg,rgba(16,24,47,.95),rgba(10,15,31,.95));box-shadow:0 18px 45px rgba(0,0,0,.18);overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 19px 12px}.panel-title{display:flex;align-items:center;gap:9px;font-size:.86rem;font-weight:850;color:#f4f7ff}.panel-title .title-icon{color:#a78bfa}.panel-title svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.panel-muted{color:#687590;font-size:.64rem}.panel-body{padding:0 19px 19px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.quick-item{min-height:91px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:13px;border:1px solid rgba(148,163,255,.10);border-radius:13px;color:#e9edff;background:rgba(255,255,255,.035);text-decoration:none;transition:.18s}.quick-item:hover{border-color:rgba(139,92,246,.42);background:rgba(139,92,246,.10);transform:translateY(-2px)}.quick-icon{width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:rgba(139,92,246,.13);color:#a78bfa}.quick-item:nth-child(2) .quick-icon{color:#f472b6;background:rgba(236,72,153,.12)}.quick-item:nth-child(3) .quick-icon{color:#67e8f9;background:rgba(34,211,238,.11)}.quick-item:nth-child(4) .quick-icon{color:#fcd34d;background:rgba(251,191,36,.11)}.quick-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.quick-name{font-size:.65rem;font-weight:750}.quick-all{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:9px;padding:9px;border:1px solid rgba(139,92,246,.28);border-radius:10px;color:#a78bfa;text-decoration:none;font-size:.66rem;font-weight:800}
+.chart-wrap{height:245px;padding:4px 0 0}.chart-svg{width:100%;height:100%;overflow:visible}.chart-grid{stroke:rgba(148,163,255,.09);stroke-width:1}.chart-area{fill:url(#chartFill)}.chart-line{fill:none;stroke:url(#chartStroke);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 5px 10px rgba(139,92,246,.22))}.chart-dot{fill:#fff;stroke:#8b5cf6;stroke-width:3}.chart-label{fill:#65718e;font-size:10px;font-family:Inter,system-ui,sans-serif}.range-pill{padding:7px 9px;border:1px solid var(--dash-border);border-radius:9px;color:#aab4cd;background:rgba(255,255,255,.035);font-size:.63rem;font-weight:750}
+.bottom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.activity-list{display:flex;flex-direction:column}.activity-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid rgba(148,163,255,.08)}.activity-item:first-child{border-top:0}.activity-avatar{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:11px;background:rgba(139,92,246,.13);color:#a78bfa}.activity-avatar svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.activity-main{min-width:0;flex:1}.activity-title{color:#eef2ff;font-size:.71rem;font-weight:750}.activity-meta{margin-top:3px;color:#697590;font-size:.62rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.activity-tag{padding:5px 7px;border:1px solid rgba(139,92,246,.24);border-radius:7px;color:#a78bfa;background:rgba(139,92,246,.08);font-size:.56rem;font-weight:800;text-transform:uppercase}.status-list{display:flex;flex-direction:column}.status-row{display:flex;align-items:center;gap:11px;padding:14px 0;border-top:1px solid rgba(148,163,255,.08)}.status-row:first-child{border-top:0}.status-row svg{width:17px;height:17px;stroke:#8792b0;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.status-name{flex:1;color:#b8c1d7;font-size:.7rem;font-weight:650}.status-value{display:flex;align-items:center;gap:6px;color:#6ee7b7;font-size:.65rem;font-weight:800}.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(52,211,153,.08)}
+.notice{margin:0 0 16px!important;border-radius:13px!important;background:rgba(251,191,36,.08)!important;border-color:rgba(251,191,36,.18)!important;color:#f5c96a!important}.notice code{background:rgba(255,255,255,.06)!important}
+.cms-section{margin-top:16px}.cms-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.cms-section h2{margin:0!important;color:#fff!important;font-size:.9rem!important}.cms-section h2::before{background:linear-gradient(180deg,#8b5cf6,#ec4899)!important}.view-all{color:#8f82ff;font-size:.64rem;font-weight:800;text-decoration:none}.cms-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:9px!important}.cms-card{min-height:112px!important;padding:13px!important;border-color:var(--dash-border)!important;border-radius:14px!important;background:rgba(16,24,47,.85)!important;box-shadow:none!important;color:#eaf0ff!important}.cms-card:hover{border-color:rgba(139,92,246,.4)!important;background:rgba(139,92,246,.08)!important;transform:translateY(-2px)!important}.cms-card::after{color:#5e6a87!important}.cms-icon{width:34px!important;height:34px!important;margin-bottom:11px!important;border-radius:10px!important;background:rgba(139,92,246,.11)!important;color:#a78bfa!important}.cms-icon svg{width:17px!important;height:17px!important}.cms-card:nth-child(4n+2) .cms-icon{background:rgba(236,72,153,.10)!important;color:#f472b6!important}.cms-card:nth-child(4n+3) .cms-icon{background:rgba(34,211,238,.10)!important;color:#67e8f9!important}.cms-card:nth-child(4n+4) .cms-icon{background:rgba(251,191,36,.10)!important;color:#fcd34d!important}.cms-card .name{font-size:.68rem!important;color:#eaf0ff}.cms-card .status{display:none!important}
+.empty-state{padding:28px;text-align:center;color:#65718e;font-size:.7rem}
+@media(max-width:1250px){.stat-grid{grid-template-columns:repeat(3,1fr)}.cms-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media(max-width:980px){main{padding:24px 20px 45px}.dashboard-grid,.bottom-grid{grid-template-columns:1fr}.cms-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.dash-heading{align-items:flex-start;flex-direction:column}}
+@media(max-width:680px){main{padding:18px 13px 38px}.stat-grid{grid-template-columns:1fr 1fr}.stat-card{min-height:116px;padding:14px}.stat-value{font-size:1.35rem}.quick-grid{grid-template-columns:1fr 1fr}.cms-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.dash-heading h2{font-size:1.55rem}.panel-head{padding:15px}.panel-body{padding:0 15px 15px}.chart-wrap{height:205px}.content>header{padding-left:67px}}
+@media(max-width:420px){.stat-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr 1fr}.dash-actions{width:100%}.dash-action{flex:1;justify-content:center}}
+</style>
 </head>
 <body>
 <div class="app-shell">
-<div id="sidebarSlot"></div>
-<div class="content">
-<header>
-  <h1>Dashboard</h1>
-  <span class="who" id="whoami"></span>
-</header>
-<main>
-  <section class="dashboard-hero">
-    <div>
-      <p class="eyebrow">Portfolio command center</p>
-      <h2>Your portfolio, organized in one clean workspace.</h2>
-      <p>Manage your profile, skills, work, projects, publishing and professional content without leaving the dashboard.</p>
-    </div>
-    <div class="hero-actions">
-      <a class="hero-btn primary" href="/profile-edit.html"><span>✦</span> Edit profile</a>
-      <a class="hero-btn" href="/data.html?table=projects"><span>↗</span> Projects</a>
-    </div>
-  </section>
+  <div id="sidebarSlot"></div>
+  <div class="content">
+    <header>
+      <h1>Dashboard</h1>
+      <span class="who" id="whoami">Admin</span>
+    </header>
+    <main>
+      <div class="dash-heading">
+        <div>
+          <p class="eyebrow">Admin workspace</p>
+          <h2>Welcome back, admin.</h2>
+          <p>Everything you need to manage your portfolio, in one focused workspace.</p>
+        </div>
+        <div class="dash-actions">
+          <a class="dash-action" href="/" target="_blank"><span>↗</span> View website</a>
+          <a class="dash-action primary" href="/profile-edit.html"><span>＋</span> Quick action</a>
+        </div>
+      </div>
 
-  <div class="grid" id="statsGrid">
-    <div class="card"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/><path d="m3 7 5-4 5 3 7-4"/></svg></span><div><div class="label">Requests · 7d</div><div class="value">—</div><div class="sub">Cloudflare edge requests</div></div></div>
-    <div class="card"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></span><div><div class="label">Page views · 7d</div><div class="value">—</div><div class="sub">Portfolio page views</div></div></div>
-    <div class="card"><span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.3"/><path d="M3 20c.5-3.5 2.5-5.3 6-5.3s5.5 1.8 6 5.3M15 15.5c3.5 0 5.2 1.6 6 4.5"/></svg></span><div><div class="label">Unique visitors · 7d</div><div class="value">—</div><div class="sub">Distinct visitors</div></div></div>
+      <div class="stat-grid" id="statGrid">
+        <div class="stat-card"><div class="stat-top"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19H2"/><path d="m3 7 5-4 5 3 7-4"/></svg></div></div><div class="stat-label">Requests · 7 days</div><div class="stat-value" id="requestsValue">—</div><div class="stat-sub">Edge requests</div></div>
+        <div class="stat-card"><div class="stat-top"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></div></div><div class="stat-label">Page views · 7 days</div><div class="stat-value" id="viewsValue">—</div><div class="stat-sub">Portfolio views</div></div>
+        <div class="stat-card"><div class="stat-top"><div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.3"/><path d="M3 20c.5-3.5 2.5-5.3 6-5.3s5.5 1.8 6 5.3M15 15.5c3.5 0 5.2 1.6 6 4.5"/></svg></div></div><div class="stat-label">Unique visitors · 7 days</div><div class="stat-value" id="uniqueValue">—</div><div class="stat-sub">Distinct visitors</div></div>
+        <div class="stat-card"><div class="stat-top"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3V4Z"/><path d="M8 8h7M8 12h7M8 16h5"/></svg></div></div><div class="stat-label">Content sections</div><div class="stat-value">14</div><div class="stat-sub">Available to manage</div></div>
+        <div class="stat-card"><div class="stat-top"><div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></div></div><div class="stat-label">Admin session</div><div class="stat-value" style="font-size:1.05rem;margin-top:9px">Active</div><div class="stat-sub up">● Secure session</div></div>
+      </div>
+
+      <div class="notice" id="statsNotice" style="display:none">Analytics aren't configured yet. Set <code>CF_ZONE_ID</code> and an Analytics-read <code>CF_API_TOKEN</code> on the Worker to enable visitor metrics.</div>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="title-icon"><svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg></span>Quick access</div><span class="panel-muted">Common actions</span></div>
+          <div class="panel-body">
+            <div class="quick-grid">
+              <a class="quick-item" href="/profile-edit.html"><span class="quick-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.7-3.4 3-5.2 7-5.2s6.3 1.8 7 5.2"/></svg></span><span class="quick-name">Edit Profile</span></a>
+              <a class="quick-item" href="/blog.html"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="m4 20 3.8-1 10.7-10.7a2.2 2.2 0 0 0-3.1-3.1L5 15.9 4 20Z"/><path d="m13.5 6.5 4 4"/></svg></span><span class="quick-name">Manage Blog</span></a>
+              <a class="quick-item" href="/data.html?table=projects"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg></span><span class="quick-name">Add Project</span></a>
+              <a class="quick-item" href="/skills.html"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="m14.5 6.5 3-3 3 3-3 3"/><path d="M4 20 15.5 8.5M6 14l4 4"/></svg></span><span class="quick-name">Manage Skills</span></a>
+              <a class="quick-item" href="/data.html?table=experience"><span class="quick-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/></svg></span><span class="quick-name">Experience</span></a>
+              <a class="quick-item" href="/data.html?table=education"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5-9 5-9-5Z"/><path d="M7 11.5V16c3 2 7 2 10 0v-4.5"/></svg></span><span class="quick-name">Education</span></a>
+              <a class="quick-item" href="/availability.html"><span class="quick-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg></span><span class="quick-name">Availability</span></a>
+              <a class="quick-item" href="/quotes.html"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M7 17H5a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5H6v2h3v2a3 3 0 0 1-2 3Zm10 0h-2a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5h-3v2h3v2a3 3 0 0 1-2 3Z"/></svg></span><span class="quick-name">Quotes</span></a>
+            </div>
+            <a class="quick-all" href="#content-management">View all sections <span>→</span></a>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="title-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-5 4 3 5-7"/></svg></span>Visitor overview</div><span class="range-pill">Last 7 days</span></div>
+          <div class="panel-body"><div class="chart-wrap"><svg class="chart-svg" id="visitorChart" viewBox="0 0 720 245" preserveAspectRatio="none"></svg></div></div>
+        </section>
+      </div>
+
+      <div class="bottom-grid">
+        <section class="panel"><div class="panel-head"><div class="panel-title"><span class="title-icon"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0-9-9c0 2.1.7 4.1 2 5.7L4 21l3.3-1.2A9 9 0 0 0 12 21Z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg></span>Recent activity</div><span class="panel-muted">Latest admin actions</span></div><div class="panel-body"><div class="activity-list" id="activityList"><div class="empty-state">Loading activity…</div></div></div></section>
+        <section class="panel"><div class="panel-head"><div class="panel-title"><span class="title-icon"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3"/></svg></span>System status</div><span class="panel-muted">Live</span></div><div class="panel-body"><div class="status-list"><div class="status-row"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 21h8M12 18v3"/></svg><span class="status-name">Admin dashboard</span><span class="status-value"><i class="status-dot"></i>Online</span></div><div class="status-row"><svg viewBox="0 0 24 24"><path d="M7 3h10v18H7z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg><span class="status-name">API connection</span><span class="status-value" id="apiStatus"><i class="status-dot"></i>Checking</span></div><div class="status-row"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></svg><span class="status-name">Data service</span><span class="status-value" id="dataStatus"><i class="status-dot"></i>Checking</span></div><div class="status-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span class="status-name">Session</span><span class="status-value"><i class="status-dot"></i>Active</span></div></div></div></section>
+      </div>
+
+      <section class="cms-section" id="content-management"><div class="cms-section-head"><h2>Content management</h2><a class="view-all" href="#">All sections →</a></div><div class="cms-grid" id="cmsGrid"></div></section>
+    </main>
   </div>
-
-  <div class="notice" id="statsNotice" style="display:none;">Visitor stats aren't configured yet. Set <code>CF_ZONE_ID</code> and a <code>CF_API_TOKEN</code> secret (Analytics: Read) on the Worker to enable this.</div>
-
-  <section>
-    <h2>Content management</h2>
-    <div class="cms-grid" id="cmsGrid"></div>
-  </section>
-
-  <section>
-    <h2>Recent activity</h2>
-    <table id="activityTable">
-      <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
-</main>
-</div>
 </div>
 <script>
-const API = "https://api.naveenshankar.in";
-const token = sessionStorage.getItem("admin_token");
-if (!token) window.location.href = "/login.html";
-const authedFetch = (path, opts = {}) => fetch(`${API}${path}`, {...opts, headers:{...(opts.headers||{}),Authorization:`Bearer ${token}`}});
-
-authedFetch("/admin/me").then(async res => {
-  if (res.status === 401) { window.location.href = "/login.html"; return; }
-  const data = await res.json();
-  document.getElementById("whoami").textContent = data.username || "Admin";
-});
-
-authedFetch("/admin/stats").then(async res => {
-  const data = await res.json();
-  if (!data.configured) { document.getElementById("statsNotice").style.display="block"; return; }
-  const totals = data.daily.reduce((acc,d)=>({requests:acc.requests+(d.requests||0),pageViews:acc.pageViews+(d.pageViews||0),uniqueVisitors:acc.uniqueVisitors+(d.uniqueVisitors||0)}),{requests:0,pageViews:0,uniqueVisitors:0});
-  const cards=document.querySelectorAll("#statsGrid .value");
-  cards[0].textContent=totals.requests.toLocaleString(); cards[1].textContent=totals.pageViews.toLocaleString(); cards[2].textContent=totals.uniqueVisitors.toLocaleString();
-}).catch(()=>document.getElementById("statsNotice").style.display="block");
-
-authedFetch("/admin/activity?limit=20").then(async res => {
-  const data=await res.json(); const tbody=document.querySelector("#activityTable tbody");
-  if(!data.activity||!data.activity.length){tbody.innerHTML='<tr><td colspan="5" class="empty">No activity yet</td></tr>';return;}
-  tbody.innerHTML=data.activity.map(a=>`<tr><td>${new Date(a.created_at).toLocaleString()}</td><td>${a.username||"—"}</td><td>${a.action||"—"}</td><td>${a.detail||"—"}</td><td>${a.ip||"—"}</td></tr>`).join("");
-}).catch(()=>{});
+const API="https://api.naveenshankar.in";
+const token=sessionStorage.getItem("admin_token");
+if(!token) window.location.href="/login.html";
+const authedFetch=(path,opts={})=>fetch(`${API}${path}`,{...opts,headers:{...(opts.headers||{}),Authorization:`Bearer ${token}`}});
+const esc=(v)=>String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
 const icons={
- profile:`<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.4 3.2-5.2 7-5.2s6.2 1.8 7 5.2"/></svg>`,
- skills:`<svg viewBox="0 0 24 24"><path d="m14.5 6.5 3-3 3 3-3 3"/><path d="M4 20 15.5 8.5M6 14l4 4"/></svg>`,
- experience:`<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7M3 12h18"/></svg>`,
- education:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5-9 5-9-5Z"/><path d="M7 11.5V16c3 2 7 2 10 0v-4.5M21 9v6"/></svg>`,
- projects:`<svg viewBox="0 0 24 24"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg>`,
- certifications:`<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8M9.5 8 11 9.5 14.5 6"/></svg>`,
- achievements:`<svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>`,
- workshops:`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5V3h8v2M7 10h10M7 14h6"/></svg>`,
- blog:`<svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3V4Z"/><path d="M8 8h7M8 12h7M8 16h5"/></svg>`,
- quotes:`<svg viewBox="0 0 24 24"><path d="M7 17H5a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5H6v2h3v2a3 3 0 0 1-2 3Zm10 0h-2a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5h-3v2h3v2a3 3 0 0 1-2 3Z"/></svg>`,
- availability:`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg>`,
- testimonials:`<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>`,
- social:`<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.6M8.3 13.2l7.4 4.6"/></svg>`,
- services:`<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M17 14v6M14 17h6"/></svg>`
-};
-const sections=[
- ["Profile","profile","/profile-edit.html"],["Skills","skills","/skills.html"],["Experience","experience","/data.html?table=experience"],["Education","education","/data.html?table=education"],["Projects","projects","/data.html?table=projects"],["Certifications","certifications","/data.html?table=certifications"],["Achievements","achievements","/data.html?table=achievements"],["Workshops","workshops","/data.html?table=workshops"],["Blog","blog","/blog.html"],["Quotes","quotes","/quotes.html"],["Availability","availability","/availability.html"],["Testimonials","testimonials","/data.html?table=testimonials"],["Social Links","social","/data.html?table=social_links"],["Services","services","/data.html?table=services"]
-];
-document.getElementById("cmsGrid").innerHTML=sections.map(([name,icon,href])=>`<a class="cms-card" href="${href}"><div class="cms-icon">${icons[icon]}</div><div class="name">${name}</div><div class="status ready">● Ready to edit</div></a>`).join("");
+profile:`<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.4 3.2-5.2 7-5.2s6.2 1.8 7 5.2"/></svg>`,skills:`<svg viewBox="0 0 24 24"><path d="m14.5 6.5 3-3 3 3-3 3"/><path d="M4 20 15.5 8.5M6 14l4 4"/></svg>`,experience:`<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/></svg>`,education:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5-9 5-9-5Z"/><path d="M7 11.5V16c3 2 7 2 10 0v-4.5"/></svg>`,projects:`<svg viewBox="0 0 24 24"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg>`,certifications:`<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8M9.5 8 11 9.5 14.5 6"/></svg>`,achievements:`<svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>`,workshops:`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5V3h8v2M7 10h10M7 14h6"/></svg>`,blog:`<svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3V4Z"/><path d="M8 8h7M8 12h7M8 16h5"/></svg>`,quotes:`<svg viewBox="0 0 24 24"><path d="M7 17H5a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5H6v2h3v2a3 3 0 0 1-2 3Zm10 0h-2a2 2 0 0 1-2-2V9a4 4 0 0 1 4-4h2v5h-3v2h3v2a3 3 0 0 1-2 3Z"/></svg>`,availability:`<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg>`,testimonials:`<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>`,social:`<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.6M8.3 13.2l7.4 4.6"/></svg>`,services:`<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M17 14v6M14 17h6"/></svg>`};
+const sections=[["Profile","profile","/profile-edit.html"],["Skills","skills","/skills.html"],["Experience","experience","/data.html?table=experience"],["Education","education","/data.html?table=education"],["Projects","projects","/data.html?table=projects"],["Certifications","certifications","/data.html?table=certifications"],["Achievements","achievements","/data.html?table=achievements"],["Workshops","workshops","/data.html?table=workshops"],["Blog","blog","/blog.html"],["Quotes","quotes","/quotes.html"],["Availability","availability","/availability.html"],["Testimonials","testimonials","/data.html?table=testimonials"],["Social Links","social","/data.html?table=social_links"],["Services","services","/data.html?table=services"]];
+document.getElementById("cmsGrid").innerHTML=sections.map(([name,icon,href])=>`<a class="cms-card" href="${href}"><div class="cms-icon">${icons[icon]}</div><div class="name">${name}</div></a>`).join("");
+
+function drawChart(daily){
+ const svg=document.getElementById("visitorChart"), w=720,h=245,pad={l:10,r:10,t:14,b:28};
+ const values=daily.map(d=>Number(d.pageViews||0));
+ const labels=daily.map(d=>new Date(d.date).toLocaleDateString(undefined,{month:"short",day:"numeric"}));
+ const max=Math.max(...values,1), innerW=w-pad.l-pad.r, innerH=h-pad.t-pad.b;
+ const pts=values.map((v,i)=>({x:pad.l+(values.length===1?innerW/2:i*innerW/(values.length-1)),y:pad.t+(1-v/max)*innerH}));
+ const line=pts.map((p,i)=>`${i?"L":"M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+ const area=`M${pts[0]?.x||pad.l} ${h-pad.b} ${line.slice(1)} L${pts[pts.length-1]?.x||w-pad.r} ${h-pad.b} Z`;
+ let grid=""; for(let i=0;i<4;i++){const y=pad.t+i*innerH/3;grid+=`<line class="chart-grid" x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}"/>`;}
+ const dots=pts.map((p,i)=>`<circle class="chart-dot" cx="${p.x}" cy="${p.y}" r="4"/><text class="chart-label" text-anchor="middle" x="${p.x}" y="${h-7}">${esc(labels[i]||"")}</text>`).join("");
+ svg.innerHTML=`<defs><linearGradient id="chartStroke" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/></linearGradient><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".25"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient></defs>${grid}<path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>${dots}`;
+}
+
+Promise.all([
+ authedFetch("/admin/me"),
+ authedFetch("/admin/stats"),
+ authedFetch("/admin/activity?limit=6")
+]).then(async([meRes,statsRes,activityRes])=>{
+ if(meRes.status===401){window.location.href="/login.html";return;}
+ const me=await meRes.json();document.getElementById("whoami").textContent=me.username||"Admin";document.getElementById("apiStatus").innerHTML='<i class="status-dot"></i>Online';
+ const stats=await statsRes.json();
+ if(stats.configured&&Array.isArray(stats.daily)){
+   const total=stats.daily.reduce((a,d)=>({requests:a.requests+(d.requests||0),pageViews:a.pageViews+(d.pageViews||0),uniqueVisitors:a.uniqueVisitors+(d.uniqueVisitors||0)}),{requests:0,pageViews:0,uniqueVisitors:0});
+   document.getElementById("requestsValue").textContent=total.requests.toLocaleString();document.getElementById("viewsValue").textContent=total.pageViews.toLocaleString();document.getElementById("uniqueValue").textContent=total.uniqueVisitors.toLocaleString();drawChart(stats.daily);
+   document.getElementById("dataStatus").innerHTML='<i class="status-dot"></i>Connected';
+ }else{document.getElementById("statsNotice").style.display="block";drawChart([]);document.getElementById("dataStatus").innerHTML='<i class="status-dot"></i>Ready';}
+ const activity=await activityRes.json();const list=document.getElementById("activityList");
+ if(!activity.activity?.length){list.innerHTML='<div class="empty-state">No recent activity yet.</div>';return;}
+ list.innerHTML=activity.activity.map(a=>{const action=(a.action||"activity").replace(/_/g," ");const time=a.created_at?new Date(a.created_at).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"";return `<div class="activity-item"><div class="activity-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.4 3.2-5.2 7-5.2s6.2 1.8 7 5.2"/></svg></div><div class="activity-main"><div class="activity-title">${esc(action)}</div><div class="activity-meta">${esc(a.username||"admin")} · ${esc(time)}${a.detail?` · ${esc(a.detail)}`:""}</div></div><span class="activity-tag">${esc((a.action||"log").split("_")[0])}</span></div>`}).join("");
+}).catch(()=>{document.getElementById("apiStatus").innerHTML='<i class="status-dot"></i>Unavailable';document.getElementById("dataStatus").innerHTML='<i class="status-dot"></i>Unavailable';document.getElementById("activityList").innerHTML='<div class="empty-state">Unable to load activity right now.</div>';drawChart([]);});
 </script>
 </body>
 </html>
