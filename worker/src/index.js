@@ -663,6 +663,66 @@ export default {
         }
       }
 
+      // POST /public/chat  { message }  — chatbot that answers using the CMS content as context.
+      // No auth (public-facing), rate-limited implicitly by Workers AI's own daily neuron allowance.
+      if (path === "/public/chat" && request.method === "POST") {
+        if (!env.AI) return json(request, { error: "Chat isn't configured yet" }, 400);
+
+        const { message } = await request.json();
+        if (!message || typeof message !== "string" || message.length > 500) {
+          return json(request, { error: "Please send a short message (max 500 characters)" }, 400);
+        }
+
+        try {
+          const [profile, skillsRes, expRes, eduRes, certRes, achRes] = await Promise.all([
+            env.DB.prepare("SELECT * FROM profile WHERE id = 1").first(),
+            env.DB.prepare("SELECT name, category, proficiency, display_type FROM skills ORDER BY sort_order ASC").all(),
+            env.DB.prepare("SELECT meta, title, summary, note FROM experience ORDER BY sort_order ASC").all(),
+            env.DB.prepare("SELECT meta, title, summary FROM education ORDER BY sort_order ASC").all(),
+            env.DB.prepare("SELECT title, summary FROM certifications ORDER BY sort_order ASC").all(),
+            env.DB.prepare("SELECT meta, title, summary FROM achievements ORDER BY sort_order ASC").all(),
+          ]);
+
+          const context = `
+Profile: ${profile?.full_name || ""}, ${profile?.title || ""}. Location: ${profile?.location || ""}. Bio: ${profile?.bio || ""}
+
+Skills: ${(skillsRes.results || []).map((s) => s.name).join(", ")}
+
+Experience:
+${(expRes.results || []).map((e) => `- ${e.title} (${e.meta}): ${e.summary}`).join("\n")}
+
+Education:
+${(eduRes.results || []).map((e) => `- ${e.title} (${e.meta}): ${e.summary}`).join("\n")}
+
+Certifications:
+${(certRes.results || []).map((c) => `- ${c.title}: ${c.summary}`).join("\n")}
+
+Achievements:
+${(achRes.results || []).map((a) => `- ${a.title} (${a.meta}): ${a.summary}`).join("\n")}
+`.trim();
+
+          const result = await env.AI.run("@cf/meta/llama-4-scout-17b-16e-instruct", {
+            messages: [
+              {
+                role: "system",
+                content: `You are a helpful assistant answering questions about ${profile?.full_name || "this person"} on their personal portfolio website, using only the information provided below. Be concise (2-4 sentences), friendly, and professional. If asked something not covered by this information, say you don't have that detail and suggest they use the contact section.\n\n${context}`,
+              },
+              { role: "user", content: message },
+            ],
+          });
+
+          const reply =
+            result.response ||
+            result.output_text ||
+            (Array.isArray(result.output) && result.output.find((o) => o.content)?.content?.[0]?.text) ||
+            "";
+          if (!reply) return json(request, { error: "No response generated" }, 502);
+          return json(request, { reply: reply.trim() });
+        } catch (e) {
+          return json(request, { error: "Chat request failed", detail: String(e) }, 500);
+        }
+      }
+
       return json(request, { error: "Not found" }, 404);
     } catch (err) {
       return json(request, { error: "Server error", detail: String(err) }, 500);

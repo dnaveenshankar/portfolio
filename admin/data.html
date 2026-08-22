@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title>Edit Section — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/admin.css" />
+<link rel="stylesheet" href="/admin.css?v=2" />
 <script src="/admin-nav.js"></script>
 </head>
 <body>
@@ -128,7 +128,7 @@ function renderFieldInputs(container, prefix, values = {}) {
       const cls = f.full ? "full" : "";
       const inputEl =
         f.type === "textarea"
-          ? `<textarea data-field="${f.key}">${val}</textarea><button type="button" class="ai" data-ai-for="${f.key}">✨ AI Assist</button>`
+          ? `<textarea data-field="${f.key}">${val}</textarea><button type="button" class="ai" data-ai-for="${f.key}">✨ AI Assist</button><div class="ai-preview" data-preview-for="${f.key}" style="display:none;"></div>`
           : `<input type="${f.type}" data-field="${f.key}" value="${val}" placeholder="${f.placeholder || ""}" />`;
       return `<div class="${cls}"><label>${f.label}</label>${inputEl}</div>`;
     })
@@ -138,6 +138,7 @@ function renderFieldInputs(container, prefix, values = {}) {
     btn.addEventListener("click", async () => {
       const field = config.fields.find((f) => f.key === btn.dataset.aiFor);
       const textarea = container.querySelector(`[data-field="${field.key}"]`);
+      const previewBox = container.querySelector(`[data-preview-for="${field.key}"]`);
       btn.disabled = true;
       btn.textContent = "✨ Thinking…";
       try {
@@ -149,7 +150,25 @@ function renderFieldInputs(container, prefix, values = {}) {
           }),
         });
         const data = await res.json();
-        if (data.suggestion) textarea.value = data.suggestion;
+        if (data.suggestion) {
+          previewBox.innerHTML = `
+            <div style="background:var(--accent-teal-soft); border:1px solid var(--accent-teal); border-radius:var(--radius-sm); padding:.7rem; margin:-0.4rem 0 .8rem;">
+              <div style="font-size:.68rem; font-weight:700; color:#0891a8; text-transform:uppercase; margin-bottom:.3rem;">✨ AI Suggestion</div>
+              <div style="font-size:.85rem; margin-bottom:.5rem;">${data.suggestion}</div>
+              <button type="button" class="small acceptSuggestion" style="border-color:var(--success); color:var(--success);">✅ Use this</button>
+              <button type="button" class="small discardSuggestion">✖️ Discard</button>
+            </div>`;
+          previewBox.style.display = "block";
+          previewBox.querySelector(".acceptSuggestion").addEventListener("click", () => {
+            textarea.value = data.suggestion;
+            previewBox.style.display = "none";
+          });
+          previewBox.querySelector(".discardSuggestion").addEventListener("click", () => {
+            previewBox.style.display = "none";
+          });
+        } else {
+          showToast(data.error || "AI returned an empty suggestion.", "error");
+        }
       } catch (e) {
         showToast("AI assist failed — try again.", "error");
       } finally {
