@@ -8,7 +8,7 @@
 </head>
 <body>
 <header>
-  <a href="/dashboard.html">&larr; Dashboard</a>
+  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1 id="pageTitle">Section</h1>
 </header>
 
@@ -30,7 +30,7 @@ if (!token) window.location.href = "/login.html";
 
 // Field config per table — must match the Worker's GENERIC_TABLES columns.
 const TABLE_FIELDS = {
-  experience: { title: "Experience", fields: [
+  experience: { title: "Experience", icon: "💼", fields: [
     { key: "role", label: "Role", type: "text" },
     { key: "company", label: "Company", type: "text" },
     { key: "location", label: "Location", type: "text" },
@@ -39,7 +39,7 @@ const TABLE_FIELDS = {
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  education: { title: "Education", fields: [
+  education: { title: "Education", icon: "🎓", fields: [
     { key: "institution", label: "Institution", type: "text" },
     { key: "degree", label: "Degree", type: "text" },
     { key: "field", label: "Field", type: "text" },
@@ -48,7 +48,7 @@ const TABLE_FIELDS = {
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  projects: { title: "Projects", fields: [
+  projects: { title: "Projects", icon: "🚀", fields: [
     { key: "title", label: "Title", type: "text" },
     { key: "url", label: "Live URL", type: "text" },
     { key: "repo_url", label: "Repo URL", type: "text" },
@@ -56,20 +56,20 @@ const TABLE_FIELDS = {
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  certifications: { title: "Certifications", fields: [
+  certifications: { title: "Certifications", icon: "📜", fields: [
     { key: "name", label: "Name", type: "text" },
     { key: "issuer", label: "Issuer", type: "text" },
     { key: "issue_date", label: "Issue Date", type: "text" },
     { key: "credential_url", label: "Credential URL", type: "text", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  achievements: { title: "Achievements", fields: [
+  achievements: { title: "Achievements", icon: "🏆", fields: [
     { key: "title", label: "Title", type: "text" },
     { key: "date", label: "Date", type: "text" },
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  workshops: { title: "Workshops", fields: [
+  workshops: { title: "Workshops", icon: "🧑‍🏫", fields: [
     { key: "title", label: "Title", type: "text" },
     { key: "role", label: "Role", type: "text", placeholder: "Speaker / Attendee" },
     { key: "organizer", label: "Organizer", type: "text" },
@@ -77,19 +77,19 @@ const TABLE_FIELDS = {
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  testimonials: { title: "Testimonials", fields: [
+  testimonials: { title: "Testimonials", icon: "⭐", fields: [
     { key: "name", label: "Name", type: "text" },
     { key: "role", label: "Role", type: "text" },
     { key: "company", label: "Company", type: "text" },
     { key: "quote", label: "Quote", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  social_links: { title: "Social Links", fields: [
+  social_links: { title: "Social Links", icon: "🔗", fields: [
     { key: "platform", label: "Platform", type: "text", placeholder: "LinkedIn / GitHub / ..." },
     { key: "url", label: "URL", type: "text" },
     { key: "sort_order", label: "Order", type: "number" },
   ]},
-  services: { title: "Services", fields: [
+  services: { title: "Services", icon: "🧩", fields: [
     { key: "name", label: "Name", type: "text" },
     { key: "description", label: "Description", type: "textarea", full: true },
     { key: "sort_order", label: "Order", type: "number" },
@@ -104,7 +104,7 @@ if (!config) {
   throw new Error("Unknown table");
 }
 
-document.getElementById("pageTitle").textContent = config.title;
+document.getElementById("pageTitle").textContent = `${config.icon || ""} ${config.title}`;
 document.title = `${config.title} — naveenshankar.in Admin`;
 
 const authedFetch = (path, opts = {}) =>

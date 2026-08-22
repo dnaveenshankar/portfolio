@@ -8,18 +8,18 @@
 </head>
 <body>
 <header>
-  <h1>naveenshankar.in — Admin</h1>
+  <h1>🧭 naveenshankar.in — Admin</h1>
   <div style="display:flex; align-items:center; gap:1rem;">
     <span class="who" id="whoami"></span>
-    <button id="logoutBtn">Log out</button>
+    <button id="logoutBtn">🚪 Log out</button>
   </div>
 </header>
 
 <main>
   <div class="grid" id="statsGrid">
-    <div class="card"><div class="label">Requests (7d)</div><div class="value">—</div></div>
-    <div class="card"><div class="label">Page Views (7d)</div><div class="value">—</div></div>
-    <div class="card"><div class="label">Unique Visitors (7d)</div><div class="value">—</div></div>
+    <div class="card"><div class="label">📈 Requests (7d)</div><div class="value">—</div></div>
+    <div class="card"><div class="label">👁️ Page Views (7d)</div><div class="value">—</div></div>
+    <div class="card"><div class="label">🧑‍🤝‍🧑 Unique Visitors (7d)</div><div class="value">—</div></div>
   </div>
   <div class="notice" id="statsNotice" style="display:none;">
     Visitor stats aren't configured yet. Set <code>CF_ZONE_ID</code> and a <code>CF_API_TOKEN</code> secret
@@ -27,12 +27,12 @@
   </div>
 
   <section>
-    <h2>Content</h2>
+    <h2>🗂️ Content</h2>
     <div class="cms-grid" id="cmsGrid"></div>
   </section>
 
   <section>
-    <h2>Recent Activity</h2>
+    <h2>🕓 Recent Activity</h2>
     <table id="activityTable">
       <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr></thead>
       <tbody></tbody>
@@ -110,26 +110,27 @@ authedFetch("/admin/activity?limit=20").then(async (res) => {
 // CMS section nav — "ready" ones have a working edit page; the rest are placeholders
 // until their schema/API is built, following the phased plan.
 const sections = [
-  { name: "Profile", href: "/profile-edit.html", ready: true },
-  { name: "Skills", href: "/skills.html", ready: true },
-  { name: "Experience", href: "/data.html?table=experience", ready: true },
-  { name: "Education", href: "/data.html?table=education", ready: true },
-  { name: "Projects", href: "/data.html?table=projects", ready: true },
-  { name: "Certifications", href: "/data.html?table=certifications", ready: true },
-  { name: "Achievements", href: "/data.html?table=achievements", ready: true },
-  { name: "Workshops", href: "/data.html?table=workshops", ready: true },
-  { name: "Blog", href: "/blog.html", ready: true },
-  { name: "Quotes", href: "/quotes.html", ready: true },
-  { name: "Availability", href: "/availability.html", ready: true },
-  { name: "Testimonials", href: "/data.html?table=testimonials", ready: true },
-  { name: "Social Links", href: "/data.html?table=social_links", ready: true },
-  { name: "Services", href: "/data.html?table=services", ready: true },
+  { name: "Profile", icon: "👤", href: "/profile-edit.html", ready: true },
+  { name: "Skills", icon: "🛠️", href: "/skills.html", ready: true },
+  { name: "Experience", icon: "💼", href: "/data.html?table=experience", ready: true },
+  { name: "Education", icon: "🎓", href: "/data.html?table=education", ready: true },
+  { name: "Projects", icon: "🚀", href: "/data.html?table=projects", ready: true },
+  { name: "Certifications", icon: "📜", href: "/data.html?table=certifications", ready: true },
+  { name: "Achievements", icon: "🏆", href: "/data.html?table=achievements", ready: true },
+  { name: "Workshops", icon: "🧑‍🏫", href: "/data.html?table=workshops", ready: true },
+  { name: "Blog", icon: "✍️", href: "/blog.html", ready: true },
+  { name: "Quotes", icon: "💬", href: "/quotes.html", ready: true },
+  { name: "Availability", icon: "🗓️", href: "/availability.html", ready: true },
+  { name: "Testimonials", icon: "⭐", href: "/data.html?table=testimonials", ready: true },
+  { name: "Social Links", icon: "🔗", href: "/data.html?table=social_links", ready: true },
+  { name: "Services", icon: "🧩", href: "/data.html?table=services", ready: true },
 ];
 document.getElementById("cmsGrid").innerHTML = sections
   .map(
     (s) => `<a class="cms-card" href="${s.href}">
+      <div class="cms-icon">${s.icon}</div>
       <div class="name">${s.name}</div>
-      <div class="status ${s.ready ? "ready" : ""}">${s.ready ? "Ready" : "Coming soon"}</div>
+      <div class="status ${s.ready ? "ready" : ""}">${s.ready ? "✅ Ready" : "🚧 Coming soon"}</div>
     </a>`
   )
   .join("");

@@ -250,6 +250,7 @@ section > h2 {
 .cms-card:nth-child(4n+3) { border-left-color: var(--brand-3); }
 .cms-card:nth-child(4n+4) { border-left-color: var(--brand-4); }
 .cms-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.cms-icon { font-size: 1.6rem; margin-bottom: 0.5rem; line-height: 1; }
 .cms-card .name { font-weight: 800; font-size: 0.92rem; }
 .cms-card .status { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem; font-weight: 700; }
 .cms-card .status.ready { color: var(--success); }
