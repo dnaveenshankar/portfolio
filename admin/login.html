@@ -23,12 +23,21 @@ const API = "https://api.naveenshankar.in";
 const form = document.getElementById("loginForm");
 const err = document.getElementById("err");
 const btn = document.getElementById("submitBtn");
+const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   err.textContent = "";
   btn.disabled = true;
   try {
+    // Local preview only: never sent to the production API and never active on the live admin domain.
+    if (isLocal) {
+      sessionStorage.setItem("admin_token", "LOCAL_PREVIEW_ONLY");
+      sessionStorage.setItem("admin_local_preview", "1");
+      window.location.href = "/dashboard";
+      return;
+    }
+
     const res = await fetch(`${API}/admin/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
