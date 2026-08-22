@@ -38,25 +38,29 @@ CREATE TABLE IF NOT EXISTS profile (
 INSERT OR IGNORE INTO profile (id, full_name, title, bio, location, email, avatar_url, updated_at)
 VALUES (1, NULL, NULL, NULL, NULL, NULL, NULL, 0);
 
--- Skills section — same pattern as profile, but a list instead of a singleton.
+-- 'bar' = shown with a proficiency progress bar; 'chip' = plain tag (proficiency unused).
 CREATE TABLE IF NOT EXISTS skills (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   category TEXT,
   proficiency INTEGER,
+  display_type TEXT NOT NULL DEFAULT 'bar',
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
 
+-- Shared card shape used by Experience, Education, and Achievements/Leadership:
+-- a short card preview (meta + title + summary) and a "View Details" modal
+-- (details_json: array of [label, value] pairs; bullets_json: array of strings; note: closing paragraph).
 CREATE TABLE IF NOT EXISTS experience (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  role TEXT NOT NULL,
-  company TEXT NOT NULL,
-  location TEXT,
-  start_date TEXT,
-  end_date TEXT,
-  description TEXT,
+  meta TEXT,
+  title TEXT NOT NULL,
+  summary TEXT,
+  details_json TEXT,
+  bullets_json TEXT,
+  note TEXT,
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
@@ -64,12 +68,39 @@ CREATE TABLE IF NOT EXISTS experience (
 
 CREATE TABLE IF NOT EXISTS education (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  institution TEXT NOT NULL,
-  degree TEXT,
-  field TEXT,
-  start_date TEXT,
-  end_date TEXT,
-  description TEXT,
+  meta TEXT,
+  title TEXT NOT NULL,
+  summary TEXT,
+  details_json TEXT,
+  bullets_json TEXT,
+  note TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+-- Covers the site's "Leadership and achievements" section.
+CREATE TABLE IF NOT EXISTS achievements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  meta TEXT,
+  title TEXT NOT NULL,
+  summary TEXT,
+  details_json TEXT,
+  bullets_json TEXT,
+  note TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS certifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  icon TEXT,
+  title TEXT NOT NULL,
+  summary TEXT,
+  details_json TEXT,
+  bullets_json TEXT,
+  note TEXT,
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
@@ -82,27 +113,6 @@ CREATE TABLE IF NOT EXISTS projects (
   url TEXT,
   repo_url TEXT,
   tech_stack TEXT,
-  sort_order INTEGER NOT NULL DEFAULT 0,
-  created_at INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS certifications (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  issuer TEXT,
-  issue_date TEXT,
-  credential_url TEXT,
-  sort_order INTEGER NOT NULL DEFAULT 0,
-  created_at INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS achievements (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title TEXT NOT NULL,
-  description TEXT,
-  date TEXT,
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL

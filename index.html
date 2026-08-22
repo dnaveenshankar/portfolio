@@ -250,9 +250,8 @@
     <section id="experience">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Career</div><h2>Experience with details.</h2></div><p class="section-desc">Professional experience in enterprise network support, monitoring, incident handling and customer environments.</p></div>
-        <div class="timeline">
-          <div class="card timeline-card reveal"><div class="meta">March 2025 - Present · <span class="liveExp"></span></div><h3>Network Engineer - Wipro Limited</h3><p>Supporting enterprise network infrastructure across multiple customer environments under Wipro's EDOH model.</p><div class="card-actions"><button class="mini-btn" data-modal="exp-wipro">View Details</button></div></div>
-          <div class="card timeline-card reveal"><div class="meta">21 Dec 2022 - 31 Dec 2022</div><h3>Web Developer Intern - Kaizen Technosoft</h3><p>Early software development exposure, retained as a supporting strength behind the primary networking profile.</p><div class="card-actions"><button class="mini-btn" data-modal="exp-kaizen">View Details</button></div></div>
+        <div class="timeline" id="experienceTimeline">
+          <p class="section-desc">Loading experience…</p>
         </div>
       </div>
     </section>
@@ -260,34 +259,18 @@
     <section id="skills">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Technical Stack</div><h2>Networking skills map.</h2></div><p class="section-desc">Skills are arranged to prioritize current network engineering responsibilities first, with development moved to supporting capability.</p></div>
-        <div class="skill-wrap">
-          <div class="skill-box reveal">
-            <div class="skill-head">Network Troubleshooting <span>95%</span></div><div class="bar"><div class="bar-fill" data-width="95%"></div></div>
-            <div class="skill-head" style="margin-top:18px">TCP/IP, LAN/WAN, VLAN <span>92%</span></div><div class="bar"><div class="bar-fill" data-width="92%"></div></div>
-            <div class="skill-head" style="margin-top:18px">Cisco, Meraki, Aruba <span>88%</span></div><div class="bar"><div class="bar-fill" data-width="88%"></div></div>
-            <div class="skill-head" style="margin-top:18px">SD-WAN Support <span>82%</span></div><div class="bar"><div class="bar-fill" data-width="82%"></div></div>
-          </div>
-          <div class="skill-box reveal">
-            <div class="skill-head">SolarWinds / OpsRamp <span>88%</span></div><div class="bar"><div class="bar-fill" data-width="88%"></div></div>
-            <div class="skill-head" style="margin-top:18px">ServiceNow / Jira <span>90%</span></div><div class="bar"><div class="bar-fill" data-width="90%"></div></div>
-            <div class="skill-head" style="margin-top:18px">Incident & Change Management <span>90%</span></div><div class="bar"><div class="bar-fill" data-width="90%"></div></div>
-            <div class="skill-head" style="margin-top:18px">Vendor / ISP Coordination <span>86%</span></div><div class="bar"><div class="bar-fill" data-width="86%"></div></div>
-          </div>
+        <div class="skill-wrap" id="skillBoxes">
+          <div class="skill-box reveal"><p class="section-desc">Loading skills…</p></div>
         </div>
-        <div class="chip-row reveal">
-          <span class="chip">DHCP</span><span class="chip">DNS</span><span class="chip">LAN/WAN</span><span class="chip">Wireless Infrastructure</span><span class="chip">Meraki Dashboard</span><span class="chip">AWS Prompt Engineering</span><span class="chip">GitHub Copilot L1</span><span class="chip">HTML/CSS/JS</span><span class="chip">Python</span><span class="chip">SQL</span>
-        </div>
+        <div class="chip-row reveal" id="skillChips"></div>
       </div>
     </section>
 
     <section id="education">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Academics</div><h2>Education timeline.</h2></div><p class="section-desc">Academic background supporting a career in networking, infrastructure operations and enterprise IT support.</p></div>
-        <div class="grid grid-2">
-          <div class="card reveal"><div class="meta">2024 - Present</div><h3>Master of Computer Applications (MCA)</h3><p>Bharathiar University School of Distance Education, Online Mode. Percentage: 75.51%.</p><div class="card-actions"><button class="mini-btn" data-modal="edu-mca">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">2021 - 2024</div><h3>B.Voc Networking and Mobile Application</h3><p>PSG College of Arts & Science, Coimbatore. CGPA: 8.6.</p><div class="card-actions"><button class="mini-btn" data-modal="edu-bvoc">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">2019 - 2021</div><h3>Higher Secondary Education</h3><p>Bharathi Vikas Matric Hr. Sec. School, Tirupur. Science stream and school leadership exposure.</p><div class="card-actions"><button class="mini-btn" data-modal="edu-hse">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">2007 - 2019</div><h3>SSLC / Schooling</h3><p>Kongu Matriculation School, Tirupur. Foundation from LKG to Class 10.</p><div class="card-actions"><button class="mini-btn" data-modal="edu-sslc">View Details</button></div></div>
+        <div class="grid grid-2" id="educationGrid">
+          <p class="section-desc">Loading education…</p>
         </div>
       </div>
     </section>
@@ -295,13 +278,8 @@
     <section id="certifications">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Credentials</div><h2>Certifications.</h2></div><p class="section-desc">Certifications and learning programs aligned with networking, cloud, monitoring and AI-assisted productivity.</p></div>
-        <div class="grid">
-          <div class="card reveal"><div class="card-icon">☁️</div><h3>Cisco Meraki Training</h3><p>Networking certification focused on Meraki environment fundamentals.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-meraki">View Details</button></div></div>
-          <div class="card reveal"><div class="card-icon">🧩</div><h3>Complete Networking Fundamentals</h3><p>Core networking fundamentals including TCP/IP, LAN/WAN and foundation concepts.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-fundamentals">View Details</button></div></div>
-          <div class="card reveal"><div class="card-icon">🔀</div><h3>Basic Routing & Switching</h3><p>Routing and switching foundation for network operations and troubleshooting.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-routing">View Details</button></div></div>
-          <div class="card reveal"><div class="card-icon">🤖</div><h3>AWS Prompt Engineering</h3><p>Cloud and AI learning credential.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-aws">View Details</button></div></div>
-          <div class="card reveal"><div class="card-icon">💡</div><h3>GitHub Copilot L1</h3><p>AI-assisted development skill credential.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-copilot">View Details</button></div></div>
-          <div class="card reveal"><div class="card-icon">➕</div><h3>More Credentials</h3><p>Additional networking, cloud, monitoring and ITSM learning credentials.</p><div class="card-actions"><button class="mini-btn" data-modal="cert-more">View Details</button></div></div>
+        <div class="grid" id="certificationsGrid">
+          <p class="section-desc">Loading certifications…</p>
         </div>
       </div>
     </section>
@@ -309,13 +287,8 @@
     <section id="leadership">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Impact</div><h2>Leadership and achievements.</h2></div><p class="section-desc">Leadership is kept as a strong differentiator, but presented as supporting credibility for a network engineering career.</p></div>
-        <div class="grid">
-          <div class="card reveal"><div class="meta">PSG College of Arts & Science</div><h3>IIC Student Ambassador</h3><p>Promoted innovation and student engagement.</p><div class="card-actions"><button class="mini-btn" data-modal="lead-iic">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">Department Association</div><h3>Association Chairperson</h3><p>Led department events and student initiatives.</p><div class="card-actions"><button class="mini-btn" data-modal="lead-chair">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">College Governance</div><h3>Student Council Member</h3><p>Represented student interests and coordinated campus activities.</p><div class="card-actions"><button class="mini-btn" data-modal="lead-council">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">Award</div><h3>Techathon '22 Winner</h3><p>Won for E-Museum project and innovation contribution.</p><div class="card-actions"><button class="mini-btn" data-modal="award-techathon">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">Organizer</div><h3>Netronics '23 and 2.0</h3><p>Organized major technical events with large participant engagement.</p><div class="card-actions"><button class="mini-btn" data-modal="award-netronics">View Details</button></div></div>
-          <div class="card reveal"><div class="meta">Organizer</div><h3>Gateway '24</h3><p>Inter-college technical symposium coordination and logistics.</p><div class="card-actions"><button class="mini-btn" data-modal="award-gateway">View Details</button></div></div>
+        <div class="grid" id="achievementsGrid">
+          <p class="section-desc">Loading achievements…</p>
         </div>
       </div>
     </section>
@@ -356,36 +329,38 @@
   <div id="modalRoot"></div>
 
   <script>
-    const modalData = {
-      "exp-wipro": { title:"Network Engineer - Wipro Limited", sub:"March 2025 - Present", details:[["Company","Wipro Limited"],["Role","Network Engineer"],["Experience","<span class=\"liveExp\"></span>"],["Model","EDOH enterprise support"],["Accounts","5 enterprise customer accounts"],["Tools","SolarWinds, ServiceNow, Jira, Meraki Dashboard"],["Infrastructure","Cisco, Meraki, Aruba, SD-WAN"]], bullets:["Supported 5 enterprise customer accounts under Wipro's EDOH model.","Troubleshot Cisco, Meraki and Aruba wired/wireless infrastructure.","Supported Silver Peak SD-WAN and monitored networks using SolarWinds.","Managed Incidents, Service Requests and Changes through ServiceNow and Jira.","Coordinated with ISPs and OEM vendors for issue resolution.","Achieved 100% SLA compliance while providing 24x7 production support."], note:"Enterprise network operations experience across monitored production environments."},
-      "exp-kaizen": { title:"Web Developer Intern - Kaizen Technosoft", sub:"21 Dec 2022 - 31 Dec 2022", details:[["Company","Kaizen Technosoft"],["Role","Web Developer Intern"],["Type","Internship"],["Skills","HTML, CSS, Bootstrap, web development"]], bullets:["Contributed to web development tasks during internship.","Gained early exposure to project delivery, UI structure and professional development workflow."], note:"Early web development experience supporting a broader technical foundation."},
-      "edu-mca": { title:"Master of Computer Applications (MCA)", sub:"2024 - Present", details:[["University","Bharathiar University School of Distance Education"],["Mode","Online Mode"],["Percentage","75.51%"],["Status","Ongoing"],["Location","Coimbatore / Online"]], bullets:["Postgraduate learning in computer applications.","Supports technical breadth in software, systems and IT operations."], note:"MCA program through Bharathiar University School of Distance Education in online mode."},
-      "edu-bvoc": { title:"B.Voc Networking and Mobile Application", sub:"2021 - 2024", details:[["College","PSG College of Arts & Science"],["City","Coimbatore"],["Degree","B.Voc"],["Specialization","Networking and Mobile Application"],["CGPA","8.6"],["Status","Completed"]], bullets:["Built the foundation for networking, mobile application and web technology learning.","Held leadership roles during college journey including IIC and student council responsibilities."], note:"This is your core academic foundation for the networking career path."},
-      "edu-hse": { title:"Higher Secondary Education", sub:"2019 - 2021", details:[["School","Bharathi Vikas Matric Hr. Sec. School"],["City","Tirupur"],["Board","Tamil Nadu State Board"],["Stream","Maths, Computer Science, Physics, Chemistry"],["Grade","80% and above"]], bullets:["Completed higher secondary education in science stream.","Served in student representation and school activities."], note:"Completed higher secondary education with 80% and above academic performance."},
-      "edu-sslc": { title:"SSLC / Schooling", sub:"2007 - 2019", details:[["School","Kongu Matriculation School"],["City","Tirupur"],["Board","Tamil Nadu State Board"],["Duration","LKG to Class 10"],["Grade","80% and above"]], bullets:["Completed foundational schooling from LKG to Class 10.","Built academic discipline and early learning foundation."], note:"Completed foundational schooling with 80% and above academic performance."},
-      "cert-meraki": { title:"Cisco Meraki Training", sub:"Udemy", details:[["Category","Networking"],["Issuer","Udemy"],["Credential Type","Training"],["Skills","Meraki Dashboard, cloud-managed networking, wireless fundamentals"]], bullets:["Supports practical exposure to Cisco Meraki environments.","Useful for enterprise wireless and dashboard-based network operations."], note:"Networking learning aligned with Cisco Meraki environments and dashboard-based operations."},
-      "cert-fundamentals": { title:"Complete Networking Fundamentals", sub:"Udemy", details:[["Category","Networking"],["Issuer","Udemy"],["Skills","TCP/IP, LAN/WAN, addressing, network basics"]], bullets:["Strengthens core network engineering fundamentals.","Relevant to incident troubleshooting and device connectivity analysis."], note:"Networking fundamentals used for daily incident analysis and troubleshooting."},
-      "cert-routing": { title:"Basic Routing & Switching", sub:"Udemy", details:[["Category","Networking"],["Issuer","Udemy"],["Skills","Routing basics, switching basics, network connectivity"]], bullets:["Foundational routing and switching learning for enterprise network support.","Helps with VLAN, gateway, interface and reachability troubleshooting."], note:"Routing and switching fundamentals supporting VLAN, gateway and reachability troubleshooting."},
-      "cert-aws": { title:"AWS Prompt Engineering", sub:"Cloud & AI", details:[["Category","Cloud and AI"],["Skill","Prompt engineering"],["Use","AI-assisted productivity and cloud awareness"]], bullets:["Adds modern AI literacy to technical support and documentation workflows."], note:"Cloud and AI learning supporting modern technical productivity."},
-      "cert-copilot": { title:"GitHub Copilot L1", sub:"Cloud & AI", details:[["Category","AI-assisted development"],["Skill","Copilot usage, coding assistance, productivity"]], bullets:["Supports documentation, automation ideas and developer productivity."], note:"AI-assisted productivity learning for documentation, automation ideas and development support."},
-      "cert-more": { title:"More Certifications", sub:"Future updates", details:[["Networking","Cisco, Meraki, routing, switching"],["Cloud","AWS, Azure, distributed systems"],["Operations","ITSM, ServiceNow, monitoring, incident management"]], bullets:["Additional learning includes networking, cloud, ITSM, monitoring and AI-assisted productivity programs."], note:"Continuous learning across networking, cloud, ITSM, monitoring and AI-assisted productivity."},
-      "lead-iic": { title:"IIC Student Ambassador", sub:"PSG College of Arts & Science", details:[["Institution","PSG College of Arts & Science"],["Role","IIC Student Ambassador"],["Focus","Innovation and entrepreneurship"]], bullets:["Encouraged innovation culture among students.","Supported events and student engagement initiatives."], note:"Student innovation leadership experience from PSG College of Arts & Science."},
-      "lead-chair": { title:"Association Chairperson", sub:"Department leadership", details:[["Institution","PSG College of Arts & Science"],["Role","Association Chairperson"],["Focus","Team leadership, events, coordination"]], bullets:["Led departmental initiatives and event planning.","Managed responsibilities across teams, logistics and student coordination."], note:"Leadership experience from academic and technical event environments."},
-      "lead-council": { title:"Student Council Member", sub:"College governance", details:[["Institution","PSG College of Arts & Science"],["Role","Student Council Member"],["Focus","Representation and coordination"]], bullets:["Represented student concerns and supported communication between students and faculty.","Contributed to campus event and activity coordination."], note:"Shows communication, responsibility and stakeholder handling."},
-      "award-techathon": { title:"Techathon '22 Winner", sub:"Award and recognition", details:[["Event","Techathon '22"],["Position","Winner"],["Project","E-Museum"],["Role","Backend developer / project contributor"]], bullets:["Won recognition for E-Museum project.","Presented an innovative technology solution."], note:"Recognized for project innovation and technical problem-solving through the E-Museum project."},
-      "award-netronics": { title:"Netronics '23 and Netronics 2.0", sub:"Organizer", details:[["Event","Netronics '23 / Netronics 2.0"],["Role","Organizer / Chairperson"],["Scale","Large student participation"],["Focus","Technical event leadership"]], bullets:["Coordinated technical event activities and logistics.","Handled team responsibilities and participant coordination."], note:"Evidence of leadership, planning and execution in technical event environments."},
-      "award-gateway": { title:"Gateway '24", sub:"Organizer", details:[["Event","Gateway '24"],["Type","Inter-college technical symposium"],["Role","Organizer"],["Focus","Logistics and coordination"]], bullets:["Supported inter-college communication and event execution.","Managed event flow and coordination responsibilities."], note:"Inter-college event coordination experience with technical symposium exposure."}
-    };
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
 
     function createModal(id, data){
-      const detailHtml = data.details.map(d => `<div class="detail"><small>${d[0]}</small><b>${d[1]}</b></div>`).join('');
-      const bulletHtml = data.bullets.map(b => `<li>${b}</li>`).join('');
-      return `<div class="modal" id="${id}" role="dialog" aria-modal="true" aria-labelledby="${id}-title"><div class="modal-box"><div class="modal-top"><div class="modal-title"><h3 id="${id}-title">${data.title}</h3><p>${data.sub}</p></div><button class="close" data-close="${id}" aria-label="Close modal">×</button></div><div class="modal-body"><div class="detail-grid">${detailHtml}</div><h4 style="margin:8px 0 8px">Highlights</h4><ul>${bulletHtml}</ul><div class="modal-note">${data.note}</div></div></div></div>`;
+      const detailHtml = (data.details || []).map(d => `<div class="detail"><small>${escapeHtml(d[0])}</small><b>${escapeHtml(d[1])}</b></div>`).join('');
+      const bulletHtml = (data.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join('');
+      return `<div class="modal" id="${id}" role="dialog" aria-modal="true" aria-labelledby="${id}-title"><div class="modal-box"><div class="modal-top"><div class="modal-title"><h3 id="${id}-title">${escapeHtml(data.title)}</h3><p>${escapeHtml(data.sub)}</p></div><button class="close" data-close="${id}" aria-label="Close modal">×</button></div><div class="modal-body"><div class="detail-grid">${detailHtml}</div><h4 style="margin:8px 0 8px">Highlights</h4><ul>${bulletHtml}</ul><div class="modal-note">${escapeHtml(data.note)}</div></div></div></div>`;
     }
-    document.getElementById('modalRoot').innerHTML = Object.entries(modalData).map(([id,data]) => createModal(id,data)).join('');
-    document.querySelectorAll('[data-modal]').forEach(btn => btn.addEventListener('click', () => { document.getElementById(btn.dataset.modal).classList.add('show'); document.body.classList.add('no-scroll'); }));
-    document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => { document.getElementById(btn.dataset.close).classList.remove('show'); document.body.classList.remove('no-scroll'); }));
-    document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m){ m.classList.remove('show'); document.body.classList.remove('no-scroll'); }}));
+
+    // Modal open/close via event delegation, so it works regardless of when
+    // dynamically-loaded cards with [data-modal] buttons get added to the page.
+    document.addEventListener('click', (e) => {
+      const openBtn = e.target.closest('[data-modal]');
+      if (openBtn) {
+        const m = document.getElementById(openBtn.dataset.modal);
+        if (m) { m.classList.add('show'); document.body.classList.add('no-scroll'); }
+        return;
+      }
+      const closeBtn = e.target.closest('[data-close]');
+      if (closeBtn) {
+        const m = document.getElementById(closeBtn.dataset.close);
+        if (m) { m.classList.remove('show'); document.body.classList.remove('no-scroll'); }
+        return;
+      }
+      if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('show');
+        document.body.classList.remove('no-scroll');
+      }
+    });
     window.addEventListener('keydown', e => { if(e.key === 'Escape'){ document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show')); document.body.classList.remove('no-scroll'); }});
 
     const html = document.documentElement;
@@ -440,6 +415,107 @@
       if(metric){ metric.textContent = years > 0 ? years + 'Y ' + months + 'M' : months + 'M'; }
     }
     calculateLiveExperience();
+
+    // ---- Dynamic content: fetch Experience/Skills/Education/Certifications/Achievements
+    // from the CMS API and render them, replacing what used to be hardcoded here. ----
+    const API_BASE = "https://api.naveenshankar.in";
+
+    async function loadDynamicContent() {
+      try {
+        const [profileRes, skillsRes, expRes, eduRes, certRes, achRes] = await Promise.all([
+          fetch(`${API_BASE}/public/profile`).then(r => r.json()).catch(() => ({})),
+          fetch(`${API_BASE}/public/skills`).then(r => r.json()).catch(() => ({ items: [] })),
+          fetch(`${API_BASE}/public/experience`).then(r => r.json()).catch(() => ({ items: [] })),
+          fetch(`${API_BASE}/public/education`).then(r => r.json()).catch(() => ({ items: [] })),
+          fetch(`${API_BASE}/public/certifications`).then(r => r.json()).catch(() => ({ items: [] })),
+          fetch(`${API_BASE}/public/achievements`).then(r => r.json()).catch(() => ({ items: [] })),
+        ]);
+
+        const modalData = {};
+        function parseJsonSafe(str, fallback) {
+          if (!str) return fallback;
+          try { return JSON.parse(str); } catch { return fallback; }
+        }
+
+        // Experience
+        const expItems = expRes.items || [];
+        const expEl = document.getElementById('experienceTimeline');
+        if (expEl) {
+          expEl.innerHTML = expItems.length ? expItems.map(item => {
+            const modalId = `exp-${item.id}`;
+            modalData[modalId] = { title: item.title, sub: item.meta, details: parseJsonSafe(item.details_json, []), bullets: parseJsonSafe(item.bullets_json, []), note: item.note || '' };
+            return `<div class="card timeline-card reveal"><div class="meta">${escapeHtml(item.meta)}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="card-actions"><button class="mini-btn" data-modal="${modalId}">View Details</button></div></div>`;
+          }).join('') : '<p class="section-desc">No experience entries yet.</p>';
+        }
+
+        // Skills — bar type split across two boxes to match the original two-column layout;
+        // chip type rendered as the plain tag row.
+        const skillItems = skillsRes.items || [];
+        const barSkills = skillItems.filter(s => s.display_type !== 'chip');
+        const chipSkills = skillItems.filter(s => s.display_type === 'chip');
+        const mid = Math.ceil(barSkills.length / 2);
+        function renderSkillBox(items) {
+          return items.map((s, i) => `<div class="skill-head"${i > 0 ? ' style="margin-top:18px"' : ''}>${escapeHtml(s.name)} <span>${s.proficiency || 0}%</span></div><div class="bar"><div class="bar-fill" data-width="${s.proficiency || 0}%"></div></div>`).join('');
+        }
+        const skillBoxesEl = document.getElementById('skillBoxes');
+        if (skillBoxesEl) {
+          skillBoxesEl.innerHTML = barSkills.length
+            ? `<div class="skill-box reveal">${renderSkillBox(barSkills.slice(0, mid))}</div><div class="skill-box reveal">${renderSkillBox(barSkills.slice(mid))}</div>`
+            : '<div class="skill-box reveal"><p class="section-desc">No skills yet.</p></div>';
+        }
+        const skillChipsEl = document.getElementById('skillChips');
+        if (skillChipsEl) {
+          skillChipsEl.innerHTML = chipSkills.map(s => `<span class="chip">${escapeHtml(s.name)}</span>`).join('');
+        }
+
+        // Education
+        const eduItems = eduRes.items || [];
+        const eduEl = document.getElementById('educationGrid');
+        if (eduEl) {
+          eduEl.innerHTML = eduItems.length ? eduItems.map(item => {
+            const modalId = `edu-${item.id}`;
+            modalData[modalId] = { title: item.title, sub: item.meta, details: parseJsonSafe(item.details_json, []), bullets: parseJsonSafe(item.bullets_json, []), note: item.note || '' };
+            return `<div class="card reveal"><div class="meta">${escapeHtml(item.meta)}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="card-actions"><button class="mini-btn" data-modal="${modalId}">View Details</button></div></div>`;
+          }).join('') : '<p class="section-desc">No education entries yet.</p>';
+        }
+
+        // Certifications
+        const certItems = certRes.items || [];
+        const certEl = document.getElementById('certificationsGrid');
+        if (certEl) {
+          certEl.innerHTML = certItems.length ? certItems.map(item => {
+            const modalId = `cert-${item.id}`;
+            modalData[modalId] = { title: item.title, sub: item.meta || '', details: parseJsonSafe(item.details_json, []), bullets: parseJsonSafe(item.bullets_json, []), note: item.note || '' };
+            return `<div class="card reveal"><div class="card-icon">${escapeHtml(item.icon || '')}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="card-actions"><button class="mini-btn" data-modal="${modalId}">View Details</button></div></div>`;
+          }).join('') : '<p class="section-desc">No certifications yet.</p>';
+        }
+
+        // Achievements / Leadership
+        const achItems = achRes.items || [];
+        const achEl = document.getElementById('achievementsGrid');
+        if (achEl) {
+          achEl.innerHTML = achItems.length ? achItems.map(item => {
+            const modalId = `lead-${item.id}`;
+            modalData[modalId] = { title: item.title, sub: item.meta || '', details: parseJsonSafe(item.details_json, []), bullets: parseJsonSafe(item.bullets_json, []), note: item.note || '' };
+            return `<div class="card reveal"><div class="meta">${escapeHtml(item.meta)}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary)}</p><div class="card-actions"><button class="mini-btn" data-modal="${modalId}">View Details</button></div></div>`;
+          }).join('') : '<p class="section-desc">No achievements yet.</p>';
+        }
+
+        // Build all modals now that every section's ids are known
+        const modalRoot = document.getElementById('modalRoot');
+        if (modalRoot) {
+          modalRoot.innerHTML = Object.entries(modalData).map(([id, data]) => createModal(id, data)).join('');
+        }
+
+        // Re-run the reveal/bar-fill scroll animations for the newly-injected elements
+        // (the observers themselves already exist from the static page setup above).
+        document.querySelectorAll('.reveal').forEach(el => { if (!el.classList.contains('visible')) revealObs.observe(el); });
+        document.querySelectorAll('.bar-fill').forEach(b => barObs.observe(b));
+      } catch (err) {
+        console.error('Failed to load dynamic content:', err);
+      }
+    }
+    loadDynamicContent();
 
     // Live networking background canvas
     const canvas = document.getElementById('networkCanvas');
