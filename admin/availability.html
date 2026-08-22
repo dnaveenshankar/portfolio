@@ -5,10 +5,13 @@
 <title>Availability — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
-  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1>🗓️ Availability</h1>
 </header>
 
@@ -35,6 +38,8 @@
   </div>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -82,11 +87,13 @@ async function loadAvailability() {
         note: row.querySelector('[data-field="note"]').value,
       };
       await authedFetch(`/admin/availability/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      showToast("Availability saved", "success");
       loadAvailability();
     });
     row.querySelector(".deleteBtn").addEventListener("click", async () => {
       if (!confirm("Delete this entry?")) return;
       await authedFetch(`/admin/availability/${id}`, { method: "DELETE" });
+      showToast("Entry deleted", "success");
       loadAvailability();
     });
   });

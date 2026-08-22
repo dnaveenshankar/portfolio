@@ -5,10 +5,13 @@
 <title>Edit Section — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
-  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1 id="pageTitle">Section</h1>
 </header>
 
@@ -23,6 +26,8 @@
   </div>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -146,7 +151,7 @@ function renderFieldInputs(container, prefix, values = {}) {
         const data = await res.json();
         if (data.suggestion) textarea.value = data.suggestion;
       } catch (e) {
-        alert("AI assist failed — try again.");
+        showToast("AI assist failed — try again.", "error");
       } finally {
         btn.disabled = false;
         btn.textContent = "✨ AI Assist";
@@ -237,11 +242,13 @@ async function loadItems() {
     card.querySelector(".saveBtn").addEventListener("click", async () => {
       const payload = readFieldInputs(card);
       await authedFetch(`/admin/data/${table}/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      showToast("Saved", "success");
       loadItems();
     });
     card.querySelector(".deleteBtn").addEventListener("click", async () => {
       if (!confirm("Delete this entry?")) return;
       await authedFetch(`/admin/data/${table}/${id}`, { method: "DELETE" });
+      showToast("Deleted", "success");
       loadItems();
     });
   });

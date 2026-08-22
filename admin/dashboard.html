@@ -5,14 +5,15 @@
 <title>Dashboard — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
   <h1>🧭 naveenshankar.in — Admin</h1>
-  <div style="display:flex; align-items:center; gap:1rem;">
-    <span class="who" id="whoami"></span>
-    <button id="logoutBtn">🚪 Log out</button>
-  </div>
+  <span class="who" id="whoami"></span>
 </header>
 
 <main>
@@ -40,6 +41,8 @@
   </section>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -51,10 +54,7 @@ const authedFetch = (path, opts = {}) =>
     headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` },
   });
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  sessionStorage.removeItem("admin_token");
-  window.location.href = "/login.html";
-});
+// Logout is handled by the shared sidebar (admin-nav.js)
 
 // Who am I
 authedFetch("/admin/me").then(async (res) => {

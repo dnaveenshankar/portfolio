@@ -5,10 +5,13 @@
 <title>Skills — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
-  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1>🛠️ Skills</h1>
 </header>
 
@@ -35,6 +38,8 @@
   </div>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -87,11 +92,13 @@ async function loadSkills() {
       const payload = {};
       row.querySelectorAll("[data-field]").forEach((inp) => (payload[inp.dataset.field] = inp.value));
       await authedFetch(`/admin/skills/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+      showToast("Skill saved", "success");
       loadSkills();
     });
     row.querySelector(".deleteBtn").addEventListener("click", async () => {
       if (!confirm("Delete this skill?")) return;
       await authedFetch(`/admin/skills/${id}`, { method: "DELETE" });
+      showToast("Skill deleted", "success");
       loadSkills();
     });
 

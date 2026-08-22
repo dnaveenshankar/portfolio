@@ -5,10 +5,13 @@
 <title>Blog — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
-  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1>✍️ Blog</h1>
 </header>
 
@@ -29,6 +32,8 @@
   </div>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -88,12 +93,14 @@ async function loadPosts() {
         published: card.querySelector('[data-field="published"]').checked,
       };
       const res = await authedFetch(`/admin/blog/${id}`, { method: "PUT", body: JSON.stringify(payload) });
-      if (!res.ok) { const d = await res.json(); alert(d.error || "Save failed"); return; }
+      if (!res.ok) { const d = await res.json(); showToast(d.error || "Save failed", "error"); return; }
+      showToast("Post saved", "success");
       loadPosts();
     });
     card.querySelector(".deleteBtn").addEventListener("click", async () => {
       if (!confirm("Delete this post?")) return;
       await authedFetch(`/admin/blog/${id}`, { method: "DELETE" });
+      showToast("Post deleted", "success");
       loadPosts();
     });
   });

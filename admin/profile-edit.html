@@ -5,10 +5,13 @@
 <title>Edit Profile — naveenshankar.in Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/admin.css" />
+<script src="/admin-nav.js"></script>
 </head>
 <body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
 <header>
-  <a href="/dashboard.html">🏠 Dashboard</a>
   <h1>👤 Edit Profile</h1>
 </header>
 
@@ -38,6 +41,8 @@
   </form>
 </main>
 
+</div>
+</div>
 <script>
 const API = "https://api.naveenshankar.in";
 const token = sessionStorage.getItem("admin_token");
@@ -74,7 +79,7 @@ document.getElementById("aiBioBtn").addEventListener("click", async () => {
     const data = await res.json();
     if (data.suggestion) bio.value = data.suggestion;
   } catch {
-    alert("AI assist failed — try again.");
+    showToast("AI assist failed — try again.", "error");
   } finally {
     btn.disabled = false;
     btn.textContent = "✨ AI Assist";
