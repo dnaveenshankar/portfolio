@@ -627,6 +627,36 @@ export default {
         return json(request, { items: results });
       }
 
+      // POST /admin/ai/assist  (auth required)  { instruction, text }
+      // Uses Cloudflare Workers AI (included with your Cloudflare account, no external API key).
+      if (path === "/admin/ai/assist" && request.method === "POST") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json(request, { error: "Unauthorized" }, 401);
+
+        if (!env.AI) return json(request, { error: "AI binding not configured" }, 400);
+
+        const { instruction, text } = await request.json();
+        if (!instruction) return json(request, { error: "instruction is required" }, 400);
+
+        try {
+          const result = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+            messages: [
+              {
+                role: "system",
+                content: "You write concise, professional portfolio/resume copy. Return only the requested text with no preamble, no quotes, no markdown formatting.",
+              },
+              {
+                role: "user",
+                content: text ? `${instruction}\n\nExisting text:\n${text}` : instruction,
+              },
+            ],
+          });
+          return json(request, { suggestion: (result.response || "").trim() });
+        } catch (e) {
+          return json(request, { error: "AI request failed", detail: String(e) }, 500);
+        }
+      }
+
       return json(request, { error: "Not found" }, 404);
     } catch (err) {
       return json(request, { error: "Server error", detail: String(err) }, 500);

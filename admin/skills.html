@@ -13,8 +13,9 @@
 </header>
 
 <main>
+  <p style="font-size:.82rem;color:var(--text-muted);margin:-0.5rem 0 1rem;">Drag rows by the ⠿ handle to reorder.</p>
   <table id="skillsTable">
-    <thead><tr><th>Name</th><th>Category</th><th>Proficiency</th><th>Order</th><th></th></tr></thead>
+    <thead><tr><th></th><th>Name</th><th>Type</th><th>Category</th><th>Proficiency</th><th></th></tr></thead>
     <tbody></tbody>
   </table>
 
@@ -22,9 +23,12 @@
     <h2>Add a skill</h2>
     <div class="row">
       <input id="newName" placeholder="Name (e.g. JavaScript)" />
-      <input id="newCategory" placeholder="Category (e.g. Frontend)" />
+      <select id="newType">
+        <option value="bar">Bar (with %)</option>
+        <option value="chip">Chip (plain tag)</option>
+      </select>
+      <input id="newCategory" placeholder="Category (optional)" />
       <input id="newProficiency" class="narrow" type="number" min="0" max="100" placeholder="0-100" />
-      <input id="newOrder" class="narrow" type="number" placeholder="Order" />
     </div>
     <button class="primary" id="addBtn">Add Skill</button>
     <div class="msg" id="addMsg"></div>
@@ -42,6 +46,8 @@ const authedFetch = (path, opts = {}) =>
     headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
   });
 
+let draggedRow = null;
+
 async function loadSkills() {
   const res = await authedFetch("/admin/skills");
   if (res.status === 401) { window.location.href = "/login.html"; return; }
@@ -49,18 +55,25 @@ async function loadSkills() {
   const tbody = document.querySelector("#skillsTable tbody");
 
   if (!data.skills || data.skills.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty">No skills yet</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No skills yet</td></tr>';
     return;
   }
 
   tbody.innerHTML = data.skills
     .map(
-      (s) => `<tr data-id="${s.id}">
-        <td><input value="${s.name}" data-field="name" /></td>
-        <td><input value="${s.category || ""}" data-field="category" /></td>
-        <td><input type="number" min="0" max="100" value="${s.proficiency || ""}" data-field="proficiency" style="width:70px" /></td>
-        <td><input type="number" value="${s.sort_order || 0}" data-field="sort_order" style="width:60px" /></td>
-        <td>
+      (s) => `<tr data-id="${s.id}" draggable="true">
+        <td data-label=""><span class="drag-handle">⠿</span></td>
+        <td data-label="Name"><input value="${s.name}" data-field="name" /></td>
+        <td data-label="Type">
+          <select data-field="display_type">
+            <option value="bar" ${s.display_type !== "chip" ? "selected" : ""}>Bar (with %)</option>
+            <option value="chip" ${s.display_type === "chip" ? "selected" : ""}>Chip (plain tag)</option>
+          </select>
+        </td>
+        <td data-label="Category"><input value="${s.category || ""}" data-field="category" /></td>
+        <td data-label="Proficiency"><input type="number" min="0" max="100" value="${s.proficiency || ""}" data-field="proficiency" style="width:70px" /></td>
+        <td data-label="">
+          <input type="hidden" data-field="sort_order" value="${s.sort_order || 0}" />
           <button class="small saveBtn">Save</button>
           <button class="small danger deleteBtn">Delete</button>
         </td>
@@ -81,28 +94,59 @@ async function loadSkills() {
       await authedFetch(`/admin/skills/${id}`, { method: "DELETE" });
       loadSkills();
     });
+
+    row.addEventListener("dragstart", () => { draggedRow = row; setTimeout(() => row.classList.add("dragging"), 0); });
+    row.addEventListener("dragend", () => {
+      row.classList.remove("dragging");
+      tbody.querySelectorAll("tr").forEach((r) => r.classList.remove("drag-over"));
+    });
+    row.addEventListener("dragover", (e) => { e.preventDefault(); if (row !== draggedRow) row.classList.add("drag-over"); });
+    row.addEventListener("dragleave", () => row.classList.remove("drag-over"));
+    row.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      row.classList.remove("drag-over");
+      if (!draggedRow || draggedRow === row) return;
+
+      const rows = [...tbody.querySelectorAll("tr")];
+      const fromIdx = rows.indexOf(draggedRow);
+      const toIdx = rows.indexOf(row);
+      if (fromIdx < toIdx) row.after(draggedRow);
+      else row.before(draggedRow);
+
+      const reordered = [...tbody.querySelectorAll("tr")];
+      await Promise.all(
+        reordered.map((r, i) => {
+          const orderInput = r.querySelector('[data-field="sort_order"]');
+          if (orderInput) orderInput.value = i;
+          const payload = {};
+          r.querySelectorAll("[data-field]").forEach((inp) => (payload[inp.dataset.field] = inp.value));
+          return authedFetch(`/admin/skills/${r.dataset.id}`, { method: "PUT", body: JSON.stringify(payload) });
+        })
+      );
+    });
   });
 }
 
 document.getElementById("addBtn").addEventListener("click", async () => {
   const msg = document.getElementById("addMsg");
   const name = document.getElementById("newName").value.trim();
-  if (!name) { msg.style.color = "#ff6b6b"; msg.textContent = "Name is required."; return; }
+  if (!name) { msg.style.color = "#e11d48"; msg.textContent = "Name is required."; return; }
 
   const payload = {
     name,
+    display_type: document.getElementById("newType").value,
     category: document.getElementById("newCategory").value.trim(),
     proficiency: document.getElementById("newProficiency").value ? parseInt(document.getElementById("newProficiency").value, 10) : null,
-    sort_order: document.getElementById("newOrder").value ? parseInt(document.getElementById("newOrder").value, 10) : 0,
+    sort_order: 0,
   };
 
   const res = await authedFetch("/admin/skills", { method: "POST", body: JSON.stringify(payload) });
   const data = await res.json();
-  if (!res.ok) { msg.style.color = "#ff6b6b"; msg.textContent = data.error || "Failed to add"; return; }
+  if (!res.ok) { msg.style.color = "#e11d48"; msg.textContent = data.error || "Failed to add"; return; }
 
-  msg.style.color = "#7CFC9E";
+  msg.style.color = "#059669";
   msg.textContent = "Added.";
-  ["newName", "newCategory", "newProficiency", "newOrder"].forEach((id) => (document.getElementById(id).value = ""));
+  ["newName", "newCategory", "newProficiency"].forEach((id) => (document.getElementById(id).value = ""));
   loadSkills();
 });
 

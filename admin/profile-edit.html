@@ -22,6 +22,7 @@
 
     <label for="bio">Bio</label>
     <textarea id="bio"></textarea>
+    <button type="button" class="ai" id="aiBioBtn">✨ AI Assist</button>
 
     <label for="location">Location</label>
     <input id="location" type="text" placeholder="e.g. Chennai, India" />
@@ -55,6 +56,29 @@ authedFetch("/admin/profile").then(async (res) => {
   fields.forEach((f) => {
     if (data.profile && data.profile[f]) document.getElementById(f).value = data.profile[f];
   });
+});
+
+document.getElementById("aiBioBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("aiBioBtn");
+  const bio = document.getElementById("bio");
+  btn.disabled = true;
+  btn.textContent = "✨ Thinking…";
+  try {
+    const res = await authedFetch("/admin/ai/assist", {
+      method: "POST",
+      body: JSON.stringify({
+        instruction: `Write a short, professional 1-2 sentence bio for ${document.getElementById("full_name").value || "this person"}, whose title is "${document.getElementById("title").value || ""}".`,
+        text: bio.value,
+      }),
+    });
+    const data = await res.json();
+    if (data.suggestion) bio.value = data.suggestion;
+  } catch {
+    alert("AI assist failed — try again.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "✨ AI Assist";
+  }
 });
 
 document.getElementById("profileForm").addEventListener("submit", async (e) => {
