@@ -639,7 +639,7 @@ export default {
         if (!instruction) return json(request, { error: "instruction is required" }, 400);
 
         try {
-          const result = await env.AI.run("@cf/openai/gpt-oss-20b", {
+          const result = await env.AI.run("@cf/meta/llama-4-scout-17b-16e-instruct", {
             messages: [
               {
                 role: "system",
@@ -651,7 +651,13 @@ export default {
               },
             ],
           });
-          return json(request, { suggestion: (result.response || "").trim() });
+          const suggestion =
+            result.response ||
+            result.output_text ||
+            (Array.isArray(result.output) && result.output.find((o) => o.content)?.content?.[0]?.text) ||
+            "";
+          if (!suggestion) return json(request, { error: "AI returned an empty response" }, 502);
+          return json(request, { suggestion: suggestion.trim() });
         } catch (e) {
           return json(request, { error: "AI request failed", detail: String(e) }, 500);
         }
