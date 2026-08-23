@@ -1,0 +1,8 @@
+[build.processing.html]
+  pretty_urls = false
+
+[[redirects]]
+  from = "/"
+  to = "/maintenance.html"
+  status = 302
+  force = true
