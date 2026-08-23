@@ -96,7 +96,9 @@ main{max-width:1480px;padding:30px 34px 60px}
 <script>
 const API="https://api.naveenshankar.in";
 const token=sessionStorage.getItem("admin_token");
-if(!token) window.location.href="/login.html";
+if(!token){
+  window.location.href="/login.html";
+} else {
 const authedFetch=(path,opts={})=>fetch(`${API}${path}`,{...opts,headers:{...(opts.headers||{}),Authorization:`Bearer ${token}`}});
 const esc=(v)=>String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
@@ -123,7 +125,7 @@ Promise.all([
  authedFetch("/admin/stats"),
  authedFetch("/admin/activity?limit=6")
 ]).then(async([meRes,statsRes,activityRes])=>{
- if(meRes.status===401){window.location.href="/login.html";return;}
+ if(meRes.status===401){sessionStorage.removeItem("admin_token");window.location.href="/login.html";return;}
  const me=await meRes.json();document.getElementById("whoami").textContent=me.username||"Admin";document.getElementById("apiStatus").innerHTML='<i class="status-dot"></i>Online';
  const stats=await statsRes.json();
  if(stats.configured&&Array.isArray(stats.daily)){
@@ -135,6 +137,7 @@ Promise.all([
  if(!activity.activity?.length){list.innerHTML='<div class="empty-state">No recent activity yet.</div>';return;}
  list.innerHTML=activity.activity.map(a=>{const action=(a.action||"activity").replace(/_/g," ");const time=a.created_at?new Date(a.created_at).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"";return `<div class="activity-item"><div class="activity-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.8-3.4 3.2-5.2 7-5.2s6.2 1.8 7 5.2"/></svg></div><div class="activity-main"><div class="activity-title">${esc(action)}</div><div class="activity-meta">${esc(a.username||"admin")} · ${esc(time)}${a.detail?` · ${esc(a.detail)}`:""}</div></div><span class="activity-tag">${esc((a.action||"log").split("_")[0])}</span></div>`}).join("");
 }).catch(()=>{document.getElementById("apiStatus").innerHTML='<i class="status-dot"></i>Unavailable';document.getElementById("dataStatus").innerHTML='<i class="status-dot"></i>Unavailable';document.getElementById("activityList").innerHTML='<div class="empty-state">Unable to load activity right now.</div>';drawChart([]);});
+} // end else (token present)
 </script>
 </body>
 </html>
