@@ -99,6 +99,8 @@ async function getAvailabilityStatus(env) {
     todayShift: todayResult?.shift ? { code: todayResult.shift.code, label: todayResult.shift.label } : null,
   };
 }
+
+async function logActivity(env, username, action, detail, request) {
   const ip = request.headers.get("CF-Connecting-IP") || "";
   await env.DB.prepare(
     "INSERT INTO admin_activity_log (username, action, detail, ip, created_at) VALUES (?, ?, ?, ?, ?)"
