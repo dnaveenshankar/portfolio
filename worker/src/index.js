@@ -53,13 +53,84 @@ async function requireAuth(request, env) {
   return payload;
 }
 
-async function logActivity(env, username, action, detail, request) {
+// Shared by /public/availability-status and the chatbot — computes whether
+// Naveen is "available" right now based on today's/yesterday's assigned shift.
+async function getAvailabilityStatus(env) {
+  const { dateStr: today, minutesOfDay } = getISTParts();
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const { dateStr: yesterdayStr } = getISTParts(yesterday);
+
+  const [todayEntry, yesterdayEntry, shiftTypesRes] = await Promise.all([
+    env.DB.prepare("SELECT shift_type FROM availability WHERE date = ?").bind(today).first(),
+    env.DB.prepare("SELECT shift_type FROM availability WHERE date = ?").bind(yesterdayStr).first(),
+    env.DB.prepare("SELECT * FROM shift_types").all(),
+  ]);
+
+  const shiftMap = {};
+  (shiftTypesRes.results || []).forEach((s) => (shiftMap[s.code] = s));
+
+  function evaluate(entry) {
+    if (!entry) return null;
+    const shift = shiftMap[entry.shift_type];
+    if (!shift || shift.is_off) return { available: false, shift };
+    const start = timeToMinutes(shift.start_time);
+    const end = timeToMinutes(shift.end_time);
+    const within = isWithinShift(minutesOfDay, start, end, !!shift.end_next_day);
+    return { available: within, shift };
+  }
+
+  const todayResult = evaluate(todayEntry);
+  const yesterdayResult = evaluate(yesterdayEntry);
+
+  let available = false;
+  let activeShift = null;
+
+  if (todayResult?.available) {
+    available = true;
+    activeShift = todayResult.shift;
+  } else if (yesterdayResult?.available && yesterdayResult.shift?.end_next_day) {
+    available = true;
+    activeShift = yesterdayResult.shift;
+  }
+
+  return {
+    available,
+    shift: activeShift ? { code: activeShift.code, label: activeShift.label, start_time: activeShift.start_time, end_time: activeShift.end_time, end_next_day: !!activeShift.end_next_day } : null,
+    todayShift: todayResult?.shift ? { code: todayResult.shift.code, label: todayResult.shift.label } : null,
+  };
+}
   const ip = request.headers.get("CF-Connecting-IP") || "";
   await env.DB.prepare(
     "INSERT INTO admin_activity_log (username, action, detail, ip, created_at) VALUES (?, ?, ?, ?, ?)"
   )
     .bind(username, action, detail || null, ip, Date.now())
     .run();
+}
+
+// IST (Asia/Kolkata, UTC+5:30) time helpers — used for shift/availability logic
+// regardless of where the Worker actually executes.
+const IST_OFFSET_MINUTES = 5 * 60 + 30;
+
+function getISTParts(date = new Date()) {
+  const istMs = date.getTime() + IST_OFFSET_MINUTES * 60 * 1000;
+  const ist = new Date(istMs);
+  const dateStr = ist.toISOString().slice(0, 10);
+  const minutesOfDay = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+  return { dateStr, minutesOfDay };
+}
+
+function timeToMinutes(hhmm) {
+  if (!hhmm) return null;
+  const [h, m] = hhmm.split(":").map(Number);
+  return h * 60 + m;
+}
+
+// Is `nowMinutes` within a shift window that starts at `startMin` and either ends
+// same-day at `endMin`, or (if endsNextDay) spills into the next day up to `endMin`.
+function isWithinShift(nowMinutes, startMin, endMin, endsNextDay) {
+  if (startMin == null || endMin == null) return false;
+  if (!endsNextDay) return nowMinutes >= startMin && nowMinutes < endMin;
+  return nowMinutes >= startMin || nowMinutes < endMin;
 }
 
 export default {
@@ -603,6 +674,59 @@ export default {
         ).all();
         return json(request, { items: results });
       }
+      // GET /admin/shift-types  (auth required) — the 6 configurable shift definitions
+      if (path === "/admin/shift-types" && request.method === "GET") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json(request, { error: "Unauthorized" }, 401);
+        const { results } = await env.DB.prepare(
+          "SELECT * FROM shift_types ORDER BY sort_order ASC"
+        ).all();
+        return json(request, { items: results });
+      }
+
+      // PUT /admin/shift-types/:code  (auth required)  { label, start_time, end_time, end_next_day }
+      if (path.match(/^\/admin\/shift-types\/[A-Z]+$/) && request.method === "PUT") {
+        const auth = await requireAuth(request, env);
+        if (!auth) return json(request, { error: "Unauthorized" }, 401);
+        const code = path.split("/").pop();
+        const { label, start_time, end_time, end_next_day } = await request.json();
+        if (!label) return json(request, { error: "Label is required" }, 400);
+
+        const existing = await env.DB.prepare("SELECT is_off FROM shift_types WHERE code = ?").bind(code).first();
+        if (!existing) return json(request, { error: "Unknown shift code" }, 404);
+
+        await env.DB.prepare(
+          `UPDATE shift_types SET label = ?, start_time = ?, end_time = ?, end_next_day = ?, updated_at = ? WHERE code = ?`
+        )
+          .bind(
+            label,
+            existing.is_off ? null : start_time || null,
+            existing.is_off ? null : end_time || null,
+            end_next_day ? 1 : 0,
+            Date.now(),
+            code
+          )
+          .run();
+
+        await logActivity(env, auth.username, "shift_type_update", `${code}: ${label}`, request);
+        return json(request, { success: true });
+      }
+
+      // GET /public/shift-types — used by the admin availability page and any public display
+      if (path === "/public/shift-types" && request.method === "GET") {
+        const { results } = await env.DB.prepare(
+          "SELECT code, label, start_time, end_time, end_next_day, is_off FROM shift_types ORDER BY sort_order ASC"
+        ).all();
+        return json(request, { items: results });
+      }
+
+      // GET /public/availability-status — "am I available right now?", computed in IST,
+      // handling shifts that cross midnight (e.g. Night 16:00 -> 08:00 next day).
+      if (path === "/public/availability-status" && request.method === "GET") {
+        const status = await getAvailabilityStatus(env);
+        return json(request, status);
+      }
+
       if (path === "/public/quote-of-the-day" && request.method === "GET") {
         const today = new Date().toISOString().slice(0, 10);
         let quote = await env.DB.prepare(
@@ -618,9 +742,11 @@ export default {
         return json(request, { quote: quote || null });
       }
       if (path === "/public/availability" && request.method === "GET") {
-        const today = new Date().toISOString().slice(0, 10);
+        const { dateStr: today } = getISTParts();
         const { results } = await env.DB.prepare(
-          "SELECT date, shift_type, note FROM availability WHERE date >= ? ORDER BY date ASC LIMIT 14"
+          `SELECT a.date, a.shift_type, a.note, s.label, s.start_time, s.end_time, s.end_next_day, s.is_off
+           FROM availability a LEFT JOIN shift_types s ON s.code = a.shift_type
+           WHERE a.date >= ? ORDER BY a.date ASC LIMIT 14`
         )
           .bind(today)
           .all();
@@ -674,17 +800,26 @@ export default {
         }
 
         try {
-          const [profile, skillsRes, expRes, eduRes, certRes, achRes] = await Promise.all([
+          const [profile, skillsRes, expRes, eduRes, certRes, achRes, availability] = await Promise.all([
             env.DB.prepare("SELECT * FROM profile WHERE id = 1").first(),
             env.DB.prepare("SELECT name, category, proficiency, display_type FROM skills ORDER BY sort_order ASC").all(),
             env.DB.prepare("SELECT meta, title, summary, note FROM experience ORDER BY sort_order ASC").all(),
             env.DB.prepare("SELECT meta, title, summary FROM education ORDER BY sort_order ASC").all(),
             env.DB.prepare("SELECT title, summary FROM certifications ORDER BY sort_order ASC").all(),
             env.DB.prepare("SELECT meta, title, summary FROM achievements ORDER BY sort_order ASC").all(),
+            getAvailabilityStatus(env),
           ]);
+
+          const availabilityText = availability.available
+            ? `Naveen IS currently available (on "${availability.shift.label}" shift, ${availability.shift.start_time}–${availability.shift.end_time}${availability.shift.end_next_day ? " next day" : ""}, IST).`
+            : `Naveen is currently NOT available (he works rotational shifts and is off or between shifts right now).`;
 
           const context = `
 Profile: ${profile?.full_name || ""}, ${profile?.title || ""}. Location: ${profile?.location || ""}. Bio: ${profile?.bio || ""}
+Contact email: ${profile?.email || "not provided"}
+
+Current availability: ${availabilityText}
+(Naveen works rotational shifts, so availability changes daily — always mention this is live/real-time info, not a fixed schedule.)
 
 Skills: ${(skillsRes.results || []).map((s) => s.name).join(", ")}
 
@@ -705,7 +840,7 @@ ${(achRes.results || []).map((a) => `- ${a.title} (${a.meta}): ${a.summary}`).jo
             messages: [
               {
                 role: "system",
-                content: `You are a helpful assistant answering questions about ${profile?.full_name || "this person"} on their personal portfolio website, using only the information provided below. Be concise (2-4 sentences), friendly, and professional. If asked something not covered by this information, say you don't have that detail and suggest they use the contact section.\n\n${context}`,
+                content: `You are "Sana", a friendly assistant on ${profile?.full_name || "this person"}'s personal portfolio website. Answer questions about his background, skills, and experience using only the information below. If asked whether he's available or free right now, use the "Current availability" info directly. If someone wants to contact him, book time, or set up a call/meeting, point them to the contact email above — you cannot book anything yourself, just facilitate. Be concise (2-4 sentences), warm, and professional. If asked something not covered here, say you don't have that detail and suggest using the contact section.\n\n${context}`,
               },
               { role: "user", content: message },
             ],

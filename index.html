@@ -134,6 +134,27 @@
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}.reveal.visible{opacity:1;transform:none}
     @media(max-width:980px){.nav-links{display:none}.hamb{display:grid}.hero-grid,.contact-panel{grid-template-columns:1fr}.hero-panel{min-height:auto}.grid,.grid-2,.grid-4{grid-template-columns:1fr 1fr}.skill-wrap{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.hero{padding-top:120px}}
     @media(max-width:640px){.container{width:min(100% - 26px,1180px)}.grid,.grid-2,.grid-4,.metric-row,.detail-grid{grid-template-columns:1fr}.hero-panel{padding:16px;border-radius:26px}.terminal-body{font-size:.78rem}.nav{top:10px;width:calc(100% - 18px)}.brand .brand-text{display:none}section{padding:62px 0}.modal{padding:12px}.modal-box{border-radius:22px}.modal-top{padding:16px}.modal-body{padding:16px}.version-bar{display:none}}
+    .avail-status{display:flex;align-items:center;gap:14px}
+    .avail-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+    .avail-dot.on{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.2)}
+    .avail-dot.off{background:#64748b;box-shadow:0 0 0 4px rgba(100,116,139,.2)}
+    .avail-text b{display:block;font-size:1.05rem;margin-bottom:2px}
+    .avail-text span{color:var(--muted);font-size:.85rem}
+    #chatWidget{position:fixed;right:20px;bottom:20px;z-index:60}
+    #chatToggleBtn{width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--brand),var(--brand-3));color:#020617;font-size:1.4rem;cursor:pointer;box-shadow:0 8px 24px rgba(56,189,248,.4);display:grid;place-items:center}
+    .chat-panel{display:none;position:absolute;right:0;bottom:70px;width:320px;max-width:88vw;height:440px;background:var(--surface-strong);border:1px solid var(--line);border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4);backdrop-filter:blur(10px)}
+    .chat-panel.open{display:flex}
+    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(135deg,var(--brand),var(--brand-3));color:#020617;font-weight:800;font-size:.9rem}
+    .chat-header button{background:none;border:none;color:#020617;font-size:1rem;cursor:pointer;opacity:.8}
+    .chat-header button:hover{opacity:1}
+    .chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+    .chat-msg{max-width:85%;padding:8px 12px;border-radius:12px;font-size:.85rem;line-height:1.5}
+    .chat-msg.bot{background:rgba(56,189,248,.12);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
+    .chat-msg.user{background:var(--brand);color:#020617;align-self:flex-end;border-bottom-right-radius:4px;font-weight:600}
+    .chat-msg.typing{opacity:.6;font-style:italic}
+    .chat-input-row{display:flex;border-top:1px solid var(--line);padding:8px}
+    .chat-input-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:.85rem;padding:6px 8px;outline:none}
+    .chat-input-row button{background:none;border:none;color:var(--brand);font-size:1.1rem;cursor:pointer;padding:0 8px}
   </style>
 </head>
 <body>
@@ -154,7 +175,7 @@
         <li><a href="#skills">Skills</a></li>
         <li><a href="#education">Education</a></li>
         <li><a href="#certifications">Certifications</a></li>
-        
+        <li><a href="#availability">Availability</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
@@ -167,7 +188,7 @@
   <div class="mobile-drawer" id="drawer">
     <button class="icon-btn close-drawer" id="closeDrawer">×</button>
     <div>
-      <a href="#about">About</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#contact">Contact</a>
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#availability">Availability</a><a href="#contact">Contact</a>
     </div>
   </div>
 
@@ -293,6 +314,15 @@
       </div>
     </section>
 
+    <section id="availability">
+      <div class="container">
+        <div class="section-head reveal"><div><div class="kicker">Right now</div><h2>Availability.</h2></div><p class="section-desc">I work rotational shifts, so this updates live rather than following a fixed schedule.</p></div>
+        <div class="card reveal" id="availabilityCard" style="max-width:480px;">
+          <p class="section-desc">Checking availability…</p>
+        </div>
+      </div>
+    </section>
+
     <section id="contact">
       <div class="container">
         <div class="section-head reveal"><div><div class="kicker">Connect</div><h2>Get in touch.</h2></div><p class="section-desc">Use the direct links below or connect through LinkedIn and GitHub.</p></div>
@@ -327,6 +357,25 @@
 
   <!-- MODALS -->
   <div id="modalRoot"></div>
+
+  <!-- Sana: chat assistant that answers questions using live CMS data (skills, experience,
+       availability, etc.) and points visitors to contact info for booking time. -->
+  <div id="chatWidget">
+    <button id="chatToggleBtn" aria-label="Open chat with Sana">💬</button>
+    <div id="chatPanel" class="chat-panel">
+      <div class="chat-header">
+        <span>💬 Sana — ask me anything</span>
+        <button id="chatCloseBtn" aria-label="Close chat">✕</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg bot">Hi, I'm Sana 👋 Ask me about Naveen's experience, skills, education, certifications, or whether he's free right now.</div>
+      </div>
+      <form class="chat-input-row" id="chatForm">
+        <input type="text" id="chatInput" placeholder="Ask Sana a question…" maxlength="500" autocomplete="off" />
+        <button type="submit" id="chatSendBtn">➤</button>
+      </form>
+    </div>
+  </div>
 
   <script>
     function escapeHtml(str) {
@@ -516,6 +565,67 @@
       }
     }
     loadDynamicContent();
+
+    // ---- Live availability status ----
+    async function loadAvailabilityStatus() {
+      const el = document.getElementById('availabilityCard');
+      if (!el) return;
+      try {
+        const res = await fetch(`${API_BASE}/public/availability-status`);
+        const data = await res.json();
+        if (data.available && data.shift) {
+          el.innerHTML = `<div class="avail-status"><span class="avail-dot on"></span><div class="avail-text"><b>🟢 Available now</b><span>On "${escapeHtml(data.shift.label)}" shift, ${escapeHtml(data.shift.start_time)}–${escapeHtml(data.shift.end_time)}${data.shift.end_next_day ? ' next day' : ''} (IST)</span></div></div>`;
+        } else {
+          el.innerHTML = `<div class="avail-status"><span class="avail-dot off"></span><div class="avail-text"><b>⚪ Not available right now</b><span>Rotational shift schedule — check back soon, or reach out via the contact section.</span></div></div>`;
+        }
+      } catch {
+        el.innerHTML = '<p class="section-desc">Availability status is temporarily unavailable.</p>';
+      }
+    }
+    loadAvailabilityStatus();
+
+    // ---- Sana: chat widget, answers from live CMS data via /public/chat ----
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    const chatPanel = document.getElementById('chatPanel');
+    const chatCloseBtn = document.getElementById('chatCloseBtn');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    chatToggleBtn.addEventListener('click', () => chatPanel.classList.toggle('open'));
+    chatCloseBtn.addEventListener('click', () => chatPanel.classList.remove('open'));
+
+    function addChatMessage(text, who) {
+      const div = document.createElement('div');
+      div.className = `chat-msg ${who}`;
+      div.textContent = text;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return div;
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = chatInput.value.trim();
+      if (!message) return;
+      chatInput.value = '';
+      addChatMessage(message, 'user');
+      const typingEl = addChatMessage('Sana is thinking…', 'bot typing');
+
+      try {
+        const res = await fetch(`${API_BASE}/public/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+        const data = await res.json();
+        typingEl.remove();
+        addChatMessage(data.reply || data.error || "Sorry, I couldn't get a response.", 'bot');
+      } catch (err) {
+        typingEl.remove();
+        addChatMessage("Sorry, something went wrong. Please try again.", 'bot');
+      }
+    });
 
     // Live networking background canvas
     const canvas = document.getElementById('networkCanvas');

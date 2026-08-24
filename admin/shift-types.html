@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Shift Hours — naveenshankar.in Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/admin.css?v=2" />
+<script src="/admin-nav.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<div id="sidebarSlot"></div>
+<div class="content">
+<header>
+  <h1>⏰ Shift Hours</h1>
+</header>
+
+<main>
+  <p style="font-size:.85rem;color:var(--text-muted);margin:-0.5rem 0 1.2rem;">
+    Set the default hours for each rotational shift code. These drive both the
+    "am I available right now" status on the public site and the shift picker
+    on the Availability calendar.
+  </p>
+  <div id="shiftsContainer"></div>
+</main>
+
+</div>
+</div>
+<script>
+const API = "https://api.naveenshankar.in";
+const token = sessionStorage.getItem("admin_token");
+if (!token) window.location.href = "/login.html";
+
+const authedFetch = (path, opts = {}) =>
+  fetch(`${API}${path}`, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+  });
+
+async function loadShiftTypes() {
+  const res = await authedFetch("/admin/shift-types");
+  if (res.status === 401) { window.location.href = "/login.html"; return; }
+  const data = await res.json();
+  const container = document.getElementById("shiftsContainer");
+
+  container.innerHTML = (data.items || [])
+    .map((s) => {
+      if (s.is_off) {
+        return `<div class="item-card" data-code="${s.code}">
+          <div class="row" style="align-items:center;">
+            <div style="flex:0 0 60px; font-weight:800; font-size:1.1rem;">${s.code}</div>
+            <input data-field="label" value="${s.label}" style="flex:1;" />
+            <div style="flex:2; color:var(--text-muted); font-size:.85rem;">No hours — marks the day as off</div>
+          </div>
+          <div class="actions"><button class="small saveBtn">Save</button></div>
+        </div>`;
+      }
+      return `<div class="item-card" data-code="${s.code}">
+        <div class="row" style="align-items:center;">
+          <div style="flex:0 0 60px; font-weight:800; font-size:1.1rem;">${s.code}</div>
+          <input data-field="label" value="${s.label}" style="flex:1;" />
+          <div style="flex:0 0 130px;"><label style="margin:0 0 .2rem;">Start</label><input type="time" data-field="start_time" value="${s.start_time || ""}" /></div>
+          <div style="flex:0 0 130px;"><label style="margin:0 0 .2rem;">End</label><input type="time" data-field="end_time" value="${s.end_time || ""}" /></div>
+          <div class="active-row" style="flex:0 0 140px; margin-bottom:0;">
+            <input type="checkbox" data-field="end_next_day" ${s.end_next_day ? "checked" : ""} />
+            <label style="margin:0;">Ends next day</label>
+          </div>
+        </div>
+        <div class="actions"><button class="small saveBtn">Save</button></div>
+      </div>`;
+    })
+    .join("");
+
+  container.querySelectorAll(".item-card").forEach((card) => {
+    const code = card.dataset.code;
+    card.querySelector(".saveBtn").addEventListener("click", async () => {
+      const payload = {
+        label: card.querySelector('[data-field="label"]').value,
+        start_time: card.querySelector('[data-field="start_time"]')?.value || null,
+        end_time: card.querySelector('[data-field="end_time"]')?.value || null,
+        end_next_day: card.querySelector('[data-field="end_next_day"]')?.checked || false,
+      };
+      const res = await authedFetch(`/admin/shift-types/${code}`, { method: "PUT", body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || "Save failed", "error"); return; }
+      showToast(`${code} shift hours saved`, "success");
+    });
+  });
+}
+
+loadShiftTypes();
+</script>
+</body>
+</html>

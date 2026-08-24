@@ -170,11 +170,34 @@ CREATE TABLE IF NOT EXISTS quotes (
   updated_at INTEGER NOT NULL
 );
 
--- Rotational shift availability, date-based.
+-- Configurable rotational shift definitions — editable in admin, drives both
+-- the availability calendar and the "am I available right now" public status.
+-- start_time/end_time are 'HH:MM' 24-hour, IST. end_next_day=1 means the shift
+-- crosses midnight (e.g. Night 16:00 - 08:00 the next day).
+CREATE TABLE IF NOT EXISTS shift_types (
+  code TEXT PRIMARY KEY,      -- 'G','M','A','S','N','OFF'
+  label TEXT NOT NULL,
+  start_time TEXT,            -- NULL for OFF
+  end_time TEXT,              -- NULL for OFF
+  end_next_day INTEGER NOT NULL DEFAULT 0,
+  is_off INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL
+);
+
+INSERT OR IGNORE INTO shift_types (code, label, start_time, end_time, end_next_day, is_off, sort_order, updated_at) VALUES
+  ('G', 'General', '06:00', '22:00', 0, 0, 0, 0),
+  ('M', 'Morning', '05:00', '21:00', 0, 0, 1, 0),
+  ('A', 'Afternoon', '10:00', '01:00', 1, 0, 2, 0),
+  ('S', 'Second', '12:00', '04:00', 1, 0, 3, 0),
+  ('N', 'Night', '16:00', '08:00', 1, 0, 4, 0),
+  ('OFF', 'Off', NULL, NULL, 0, 1, 5, 0);
+
+-- Rotational shift availability, date-based. shift_type references shift_types.code.
 CREATE TABLE IF NOT EXISTS availability (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   date TEXT NOT NULL,         -- 'YYYY-MM-DD'
-  shift_type TEXT NOT NULL,   -- 'Morning' | 'Evening' | 'Night' | 'Off'
+  shift_type TEXT NOT NULL,   -- references shift_types.code
   note TEXT,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL

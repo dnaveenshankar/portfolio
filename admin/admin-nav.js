@@ -67,6 +67,7 @@ const ADMIN_NAV_SECTIONS = [
   { name: "Blog", icon: ICONS.blog, href: "/blog.html" },
   { name: "Quotes", icon: ICONS.quotes, href: "/quotes.html" },
   { name: "Availability", icon: ICONS.availability, href: "/availability.html" },
+  { name: "Shift Hours", icon: "⏰", href: "/shift-types.html" },
   { name: "Testimonials", icon: ICONS.testimonials, href: "/data.html?table=testimonials" },
   { name: "Social Links", icon: ICONS.social, href: "/data.html?table=social_links" },
   { name: "Services", icon: ICONS.services, href: "/data.html?table=services" },
