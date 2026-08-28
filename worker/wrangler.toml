@@ -15,8 +15,7 @@ database_id = "93ce8223-8916-4d2e-b32f-8b61308ceb5f"
 binding = "AI"
 
 # Set secrets with: wrangler secret put SESSION_SECRET
-# RESEND_API_KEY is optional but required for Sana email verification.
-# SANA_FROM_EMAIL is optional and should be a verified sender address.
+# (do not put SESSION_SECRET, CF_API_TOKEN, or RESEND_API_KEY in this file)
 
 [vars]
-CF_ZONE_ID = ""
+CF_ZONE_ID = "7396c83d2ae68f44e5e6f137910498fa"
