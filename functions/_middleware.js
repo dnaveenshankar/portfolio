@@ -11,7 +11,7 @@ export async function onRequest(context) {
   const html = await response.text();
   let injected = html;
   if (isMainSanaPage && !html.includes('/sana.js')) {
-    injected = injected.replace(/<\/body>/i, '  <script src="/sana.js?v=1" defer></script>\n</body>');
+    injected = injected.replace(/<\/body>/i, '  <script src="/sana.js?v=2" defer></script>\n</body>');
   }
   if (isAdminPage && !html.includes('/sana-admin-presence.js')) {
     injected = injected.replace(/<\/body>/i, '  <script src="/sana-admin-presence.js?v=1" defer></script>\n</body>');
