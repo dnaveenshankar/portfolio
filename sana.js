@@ -16,11 +16,10 @@
 
   const $ = (id) => document.getElementById(id);
   const headers = () => ({ "Content-Type": "application/json", "X-Sana-Session": session, "X-Sana-Timezone": TIMEZONE });
-  const localHour = new Intl.DateTimeFormat("en-US", { timeZone: TIMEZONE, hour: "numeric", hour12: false }).format(new Date()) * 1;
-  const indiaHour = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()) * 1;
+  const localHour = Number(new Intl.DateTimeFormat("en-US", { timeZone: TIMEZONE, hour: "numeric", hour12: false }).format(new Date()));
   const greeting = (h) => h >= 5 && h < 12 ? "Good morning" : h >= 12 && h < 17 ? "Good afternoon" : h >= 17 && h < 21 ? "Good evening" : "Hi";
   const indiaTimeText = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true }).format(new Date());
-  const country = navigator.language?.toLowerCase().startsWith("en-in") || TIMEZONE === "Asia/Kolkata" ? "IN" : "OTHER";
+  const isIndia = TIMEZONE === "Asia/Kolkata" || /^en-IN$/i.test(navigator.language || "");
 
   function injectStyles() {
     if ($("sanaEnhancedStyles")) return;
@@ -64,7 +63,7 @@
     }
     const tick = () => {
       const seconds = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
-      box.innerHTML = `<b>${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}</b> · checking for Naveen…`;
+      box.innerHTML = `<b>${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}</b> · connecting with Naveen…`;
       if (seconds <= 0) { box.remove(); return; }
       setTimeout(tick, 1000);
     };
@@ -82,8 +81,8 @@
     $("sanaBookBtn").addEventListener("click", () => { $("chatInput").value = "I'd like to book a service"; $("chatForm").requestSubmit(); });
   }
   function greetingText() {
-    const base = `${greeting(localHour)}! I'm Sana, Naveen's personal AI assistant. I'm happy to help here. 👋`;
-    return country === "OTHER" ? `${base} It's ${indiaTimeText} in India right now.` : base;
+    const base = `${greeting(localHour)}! I'm Sana, Naveen's personal AI assistant. I'm happy to help here. 😊`;
+    return isIndia ? base : `${base} It's ${indiaTimeText} in India right now. 🇮🇳`;
   }
   async function connectToNaveen() {
     if (liveConversation) return;
@@ -91,22 +90,22 @@
     try {
       const status = await fetch(`${API}/public/sana/status`, { headers: headers() }).then(r => r.json());
       typing.remove();
-      if (!status.online) { addMessage(`${greeting(localHour)}! Naveen is offline right now. I can pass a message to him, and he'll get back to you.`, "bot"); return; }
-      addMessage(`${greeting(localHour)}! I'll check the live connection for you.`, "bot");
+      if (!status.online) { addMessage(`${greeting(localHour)}! Naveen is offline right now. I can pass a message to him, and he'll get back to you. 💛`, "bot"); return; }
+      addMessage(`${greeting(localHour)}! Of course 😊 I'll check the live connection for you.`, "bot");
       const r = await fetch(`${API}/public/sana/connect`, { method: "POST", headers: headers(), body: "{}" }).then(x => x.json());
-      if (r.offline) { addMessage("Naveen is offline right now. I can pass a message to him for you.", "bot"); return; }
+      if (r.offline) { addMessage("Naveen is offline right now. I can pass a message to him for you. 💛", "bot"); return; }
       if (r.approved && r.conversation_id) return enterLive(r.conversation_id);
       connectRequest = r.request_id;
       showCountdown(r.expires_at);
       pollConnection(r.request_id);
-    } catch { typing.remove(); addMessage("I couldn't check the live connection right now. Please try again in a moment.", "bot"); }
+    } catch { typing.remove(); addMessage("Oops 😊 I couldn't check the live connection right now. Please try again in a moment.", "bot"); }
   }
   function pollConnection(id) {
     const poll = async () => {
       try {
         const r = await fetch(`${API}/public/sana/connect/${id}`, { headers: headers() }).then(x => x.json());
         if (r.approved && r.conversation_id) return enterLive(r.conversation_id);
-        if (r.status === "expired" || r.status === "rejected") { $("sanaCountdown")?.remove(); if (r.status === "expired") addMessage(`${greeting(localHour)}! The live connection window has closed. Naveen is offline for live chat right now, but I can pass him a message.`, "bot"); return; }
+        if (r.status === "expired" || r.status === "rejected") { $("sanaCountdown")?.remove(); if (r.status === "expired") addMessage(`${greeting(localHour)}! The live connection window has closed for now. Naveen is offline for live chat, but I can pass him a message. 💛`, "bot"); return; }
         setTimeout(poll, 2000);
       } catch { setTimeout(poll, 4000); }
     };
@@ -117,7 +116,7 @@
     $("chatPanel")?.classList.add("sana-live");
     $("sanaCountdown")?.remove();
     $("sanaConnectBtn")?.remove();
-    addMessage(`${greeting(localHour)}! You're connected with Naveen now. 👋`, "bot");
+    addMessage(`${greeting(localHour)}! You're connected with Naveen now. 😊👋`, "bot");
     startLivePolling();
   }
   async function startLivePolling() {
@@ -141,16 +140,16 @@
     try {
       const r = await fetch(`${API}/public/sana/message`, { method: "POST", headers: headers(), body: JSON.stringify({ conversation_id: liveConversation, message }) }).then(x => x.json());
       typing.remove();
-      if (!r.success) addMessage("The live chat is no longer connected. I can still pass your message to Naveen.", "bot");
-    } catch { typing.remove(); addMessage("I couldn't send that just now. Please try again.", "bot"); }
+      if (!r.success) addMessage("The live chat is no longer connected. I can still pass your message to Naveen. 💛", "bot");
+    } catch { typing.remove(); addMessage("I couldn't send that just now. Please try again 😊", "bot"); }
   }
   async function sendAi(message) {
     const typing = addTyping();
     try {
       const r = await fetch(`${API}/public/chat`, { method: "POST", headers: headers(), body: JSON.stringify({ message }) }).then(x => x.json());
       typing.remove();
-      addMessage(r.reply || r.error || "Sorry, I couldn't get a response.", "bot");
-    } catch { typing.remove(); addMessage("Sorry, something went wrong. Please try again.", "bot"); }
+      addMessage(r.reply || r.error || "Sorry, I couldn't get a response just now. 😊", "bot");
+    } catch { typing.remove(); addMessage("Oops, something went wrong. Give me another try? 😊", "bot"); }
   }
   async function handleSubmit(e) {
     e.preventDefault();
