@@ -14,6 +14,15 @@
   };
 
   const timezone = () => localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata";
+  const greeting = () => {
+    const hour = Number(new Intl.DateTimeFormat("en-US", { timeZone: state.timezone, hour: "numeric", hour12: false }).format(new Date()));
+    if (hour >= 5 && hour < 12) return "Good morning";
+    if (hour >= 12 && hour < 17) return "Good afternoon";
+    if (hour >= 17 && hour < 21) return "Good evening";
+    return "Hi";
+  };
+  const defaultGreeting = () => `${greeting()}! 👋 I'm Sana, Naveen's personal assistant. I'm happy to help here. Hope you're doing well! 💙`;
+
   state.session = session();
   state.timezone = timezone();
 
@@ -118,12 +127,11 @@
         try {
           let data;
 
-          // Live connection deliberately bypasses the AI chat endpoint so Sana
-          // never creates a request without collecting the visitor's name.
+          // Live connection is intentionally explicit: never create a request from a normal greeting.
           if (!state.conversationId && /\b(live|talk|connect|speak|call|chat with naveen|talk to naveen|connect me)\b/i.test(text)) {
             state.connectNameRequested = true;
             dots.remove();
-            add("Of course! 😊 Before I send the live connection request, may I have your name?", "sana");
+            add("Of course! 😊 Before I check Naveen's live availability, may I have your name?", "sana");
             input.placeholder = "Your name…";
             list.scrollTop = list.scrollHeight;
             return;
@@ -161,12 +169,13 @@
 
     document.querySelectorAll("[data-sana-messages]").forEach(list => {
       const first = [...list.querySelectorAll(".sana-bot-message")].find(el => /Sana/i.test(el.textContent || ""));
+      const text = defaultGreeting();
       if (first) {
-        first.textContent = "Hi I'm Sana, Naveen's personal assistant. I'm happy to help here. 💙";
+        first.textContent = text;
         first.setAttribute("data-sana-default", "1");
       } else {
         const b = document.createElement("div");
-        b.textContent = "Hi I'm Sana, Naveen's personal assistant. I'm happy to help here. 💙";
+        b.textContent = text;
         b.className = "sana-bot-message";
         b.setAttribute("data-sana-default", "1");
         list.insertBefore(b, list.firstChild);
