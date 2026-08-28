@@ -17,10 +17,9 @@ const ICONS = {
   testimonials: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>`,
   social: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.6M8.3 13.2l7.4 4.6"/></svg>`,
   services: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M17 14v6M14 17h6"/></svg>`,
+  sana: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.1 0-2.2-.2-3.1-.6L4 20l1.6-3.8A7.2 7.2 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>`,
 };
 
-// Local preview mode: mock only the dashboard's read-only API calls.
-// This is deliberately limited to localhost/127.0.0.1 and never affects production.
 (function installLocalDashboardPreview() {
   if (!/^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)) return;
   const realFetch = window.fetch.bind(window);
@@ -28,23 +27,17 @@ const ICONS = {
     const url = typeof input === "string" ? input : input?.url || "";
     if (!url.includes("api.naveenshankar.in/admin/")) return realFetch(input, init);
     const path = new URL(url, window.location.origin).pathname;
-    const localResponse = (data, status = 200) => new Response(JSON.stringify(data), {
-      status,
-      headers: { "Content-Type": "application/json" }
-    });
+    const localResponse = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
     if (path === "/admin/me") return localResponse({ username: "admin (local preview)" });
-    if (path === "/admin/stats") return localResponse({
-      configured: true,
-      daily: [
-        { date: new Date(Date.now()-6*86400000).toISOString(), requests: 182, pageViews: 96, uniqueVisitors: 54 },
-        { date: new Date(Date.now()-5*86400000).toISOString(), requests: 241, pageViews: 128, uniqueVisitors: 73 },
-        { date: new Date(Date.now()-4*86400000).toISOString(), requests: 214, pageViews: 117, uniqueVisitors: 69 },
-        { date: new Date(Date.now()-3*86400000).toISOString(), requests: 326, pageViews: 174, uniqueVisitors: 101 },
-        { date: new Date(Date.now()-2*86400000).toISOString(), requests: 289, pageViews: 153, uniqueVisitors: 88 },
-        { date: new Date(Date.now()-1*86400000).toISOString(), requests: 371, pageViews: 205, uniqueVisitors: 119 },
-        { date: new Date().toISOString(), requests: 318, pageViews: 176, uniqueVisitors: 104 }
-      ]
-    });
+    if (path === "/admin/stats") return localResponse({ configured: true, daily: [
+      { date: new Date(Date.now()-6*86400000).toISOString(), requests: 182, pageViews: 96, uniqueVisitors: 54 },
+      { date: new Date(Date.now()-5*86400000).toISOString(), requests: 241, pageViews: 128, uniqueVisitors: 73 },
+      { date: new Date(Date.now()-4*86400000).toISOString(), requests: 214, pageViews: 117, uniqueVisitors: 69 },
+      { date: new Date(Date.now()-3*86400000).toISOString(), requests: 326, pageViews: 174, uniqueVisitors: 101 },
+      { date: new Date(Date.now()-2*86400000).toISOString(), requests: 289, pageViews: 153, uniqueVisitors: 88 },
+      { date: new Date(Date.now()-1*86400000).toISOString(), requests: 371, pageViews: 205, uniqueVisitors: 119 },
+      { date: new Date().toISOString(), requests: 318, pageViews: 176, uniqueVisitors: 104 }
+    ] });
     if (path === "/admin/activity") return localResponse({ activity: [
       { username: "admin", action: "profile_update", detail: "Local preview", created_at: Date.now()-8*60000, ip: "127.0.0.1" },
       { username: "admin", action: "dashboard_preview", detail: "Local-only mock data", created_at: Date.now()-22*60000, ip: "127.0.0.1" },
@@ -56,6 +49,7 @@ const ICONS = {
 
 const ADMIN_NAV_SECTIONS = [
   { name: "Dashboard", icon: ICONS.dashboard, href: "/dashboard.html" },
+  { name: "Sana Chat", icon: ICONS.sana, href: "/sana-chat.html" },
   { name: "Profile", icon: ICONS.profile, href: "/profile-edit.html" },
   { name: "Skills", icon: ICONS.skills, href: "/skills.html" },
   { name: "Experience", icon: ICONS.experience, href: "/data.html?table=experience" },
@@ -115,4 +109,34 @@ function showToast(message, type = "info") {
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 250); }, 3200);
 }
 
-document.addEventListener("DOMContentLoaded", renderSidebar);
+function integrateSanaDashboard() {
+  if (window.location.pathname !== "/dashboard.html") return;
+  const quickGrid = document.querySelector(".quick-grid");
+  if (!quickGrid || quickGrid.querySelector('[data-sana-dashboard]')) return;
+  const card = document.createElement("a");
+  card.className = "quick-item";
+  card.href = "/sana-chat.html";
+  card.dataset.sanaDashboard = "true";
+  card.innerHTML = `<span class="quick-icon" style="color:#67e8f9;background:rgba(34,211,238,.11)">${ICONS.sana}</span><span class="quick-name">Sana Chat <b data-sana-count style="display:none;margin-left:5px;color:#fcd34d"></b></span>`;
+  quickGrid.insertBefore(card, quickGrid.firstElementChild);
+
+  const token = sessionStorage.getItem("admin_token");
+  if (!token) return;
+  const loadCount = async () => {
+    try {
+      const r = await fetch("https://api.naveenshankar.in/admin/sana/requests", { headers: { Authorization: `Bearer ${token}` } });
+      if (!r.ok) return;
+      const data = await r.json();
+      const count = (data.requests || []).filter(x => x.status === "pending").length;
+      const badge = card.querySelector("[data-sana-count]");
+      if (count) { badge.textContent = `(${count} new)`; badge.style.display = "inline"; } else badge.style.display = "none";
+    } catch {}
+  };
+  loadCount();
+  setInterval(loadCount, 5000);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderSidebar();
+  integrateSanaDashboard();
+});
