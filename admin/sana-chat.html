@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sana Chat — naveenshankar.in Admin</title>
+<link rel="stylesheet" href="/admin.css?v=2" />
+<script src="/admin-nav.js"></script>
+<style>
+:root{--bg:#070b1b;--panel:#0e1428;--panel2:#111a32;--border:rgba(148,163,255,.13);--text:#f4f7ff;--muted:#8792b0;--violet:#8b5cf6;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24}
+body{background:radial-gradient(circle at 70% -10%,rgba(124,58,237,.18),transparent 34rem),#070b1b;color:var(--text)}
+main{max-width:1480px;padding:30px 34px 60px}.head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px}.eyebrow{color:#9d7cff;font-size:.65rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.head h2{margin:5px 0 0;font-size:2rem;letter-spacing:-.04em}.head p{margin:6px 0 0;color:var(--muted);font-size:.78rem}.online{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.04);font-size:.7rem;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:#64748b}.dot.on{background:var(--green);box-shadow:0 0 0 4px rgba(52,211,153,.1)}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px;min-height:680px}.panel{border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,rgba(16,24,47,.96),rgba(10,15,31,.96));overflow:hidden;box-shadow:0 18px 45px rgba(0,0,0,.18)}.panel-head{padding:16px 18px;border-bottom:1px solid rgba(148,163,255,.08);display:flex;align-items:center;justify-content:space-between}.panel-head b{font-size:.78rem}.badge{padding:4px 7px;border-radius:999px;background:rgba(139,92,246,.12);color:#b9a8ff;font-size:.58rem;font-weight:800}.requests{max-height:620px;overflow:auto}.request{padding:14px 16px;border-bottom:1px solid rgba(148,163,255,.07);cursor:pointer}.request:hover,.request.active{background:rgba(139,92,246,.09)}.request-title{display:flex;justify-content:space-between;gap:8px;font-size:.72rem;font-weight:800}.request-meta{margin-top:5px;color:#6f7b98;font-size:.6rem}.status{font-size:.55rem;color:#6ee7b7;text-transform:uppercase}.pending{color:#fcd34d}.request-actions{display:flex;gap:6px;margin-top:10px}.request-actions button{border:1px solid var(--border);border-radius:8px;padding:6px 9px;background:rgba(255,255,255,.04);color:#eef2ff;font-size:.58rem;font-weight:800;cursor:pointer}.request-actions .approve{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.2);color:#6ee7b7}
+.chat{display:flex;flex-direction:column;min-width:0}.chat-messages{flex:1;min-height:540px;max-height:620px;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:9px}.msg{max-width:75%;padding:9px 12px;border-radius:12px;font-size:.76rem;line-height:1.5;white-space:pre-wrap}.msg.visitor{align-self:flex-start;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.08)}.msg.sana{align-self:flex-start;background:rgba(139,92,246,.1)}.msg.naveen{align-self:flex-end;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff}.msg small{display:block;margin-top:4px;opacity:.55;font-size:.52rem}.empty{height:100%;display:grid;place-items:center;color:#66728f;font-size:.72rem;text-align:center;padding:40px}.composer{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(148,163,255,.08)}.composer input{flex:1;border:1px solid var(--border);border-radius:11px;background:rgba(255,255,255,.035);color:#fff;padding:11px 12px;outline:none;font-size:.76rem}.composer button{border:0;border-radius:11px;padding:0 15px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;font-weight:800;cursor:pointer}.side-bottom{padding:12px;border-top:1px solid rgba(148,163,255,.08);max-height:230px;overflow:auto}.booking{padding:9px 0;border-bottom:1px solid rgba(148,163,255,.07);font-size:.62rem}.booking b{display:block;color:#eaf0ff}.booking span{color:#707c99}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.requests{max-height:300px}.chat-messages{min-height:420px}.side-bottom{display:none}}@media(max-width:620px){main{padding:18px 13px 38px}.head{align-items:flex-start;flex-direction:column}.head h2{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="app-shell"><div id="sidebarSlot"></div><div class="content"><header><h1>Sana Chat</h1><span class="who">Naveen</span></header><main>
+  <div class="head"><div><div class="eyebrow">Sana · Live assistant</div><h2>Talk to visitors in real time.</h2><p>Keep this page open while you want Sana to show you as online. Connection requests expire after 3 minutes.</p></div><div class="online"><span id="onlineDot" class="dot"></span><span id="onlineText">Connecting…</span></div></div>
+  <div class="layout">
+    <section class="panel"><div class="panel-head"><b>Connection requests</b><span class="badge" id="requestCount">0</span></div><div class="requests" id="requests"><div class="empty">No active requests yet.</div></div><div class="side-bottom"><div class="panel-head" style="padding:6px 0 10px;border:0"><b>Recent bookings</b></div><div id="bookings"><div class="empty">No bookings yet.</div></div></div></section>
+    <section class="panel chat"><div class="panel-head"><b id="chatTitle">Select a connected visitor</b><span class="badge" id="chatStatus">Offline</span></div><div class="chat-messages" id="messages"><div class="empty">Approve a connection request to start chatting with a visitor.</div></div><form class="composer" id="composer"><input id="messageInput" maxlength="2000" placeholder="Write a message…" autocomplete="off" disabled /><button type="submit" disabled id="sendBtn">Send</button></form></section>
+  </div>
+</main></div></div>
+<script>
+const API='https://api.naveenshankar.in';
+const token=sessionStorage.getItem('admin_token');
+if(!token){window.location.href='/login.html';}
+const auth={Authorization:`Bearer ${token}`,'Content-Type':'application/json'};
+let activeConversation=null;
+let activeRequest=null;
+const $=id=>document.getElementById(id);
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+async function api(path,options={}){return fetch(API+path,{...options,headers:{...auth,...(options.headers||{})}}).then(async r=>({ok:r.ok,data:await r.json().catch(()=>({}))}))}
+async function heartbeat(){try{const r=await api('/admin/sana/heartbeat',{method:'POST'});if(r.ok){$('onlineDot').classList.add('on');$('onlineText').textContent='Naveen is online';}}catch{} }
+function time(ts){return new Date(ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+async function loadRequests(){const r=await api('/admin/sana/requests');if(!r.ok)return;const rows=r.data.requests||[];$('requestCount').textContent=rows.filter(x=>x.status==='pending').length;const el=$('requests');if(!rows.length){el.innerHTML='<div class="empty">No active requests yet.</div>';return}el.innerHTML=rows.map(x=>`<div class="request ${x.conversation_id===activeConversation?'active':''}" data-id="${x.id}" data-conv="${esc(x.conversation_id||'')}"><div class="request-title"><span>Visitor #${x.id}</span><span class="status ${x.status==='pending'?'pending':''}">${x.status}</span></div><div class="request-meta">${esc(x.country||'')} · ${esc(x.timezone||'')} · ${time(x.created_at)}</div>${x.status==='pending'?`<div class="request-actions"><button class="approve" data-action="approve">Connect</button><button data-action="reject">Decline</button></div>`:''}</div>`).join('')}
+async function approve(id){const r=await api(`/admin/sana/requests/${id}/approve`,{method:'POST'});if(r.ok&&r.data.conversation_id){activeConversation=r.data.conversation_id;activeRequest=id;enableChat();await loadRequests();await loadMessages();}}
+async function reject(id){await api(`/admin/sana/requests/${id}/reject`,{method:'POST'});await loadRequests()}
+function enableChat(){$('messageInput').disabled=false;$('sendBtn').disabled=false;$('chatStatus').textContent='Connected';$('chatTitle').textContent=`Visitor #${activeRequest}`}
+async function loadMessages(){if(!activeConversation)return;const r=await api(`/admin/sana/messages?conversation_id=${encodeURIComponent(activeConversation)}`);if(!r.ok)return;const rows=r.data.messages||[];const el=$('messages');if(!rows.length){el.innerHTML='<div class="empty">No messages yet.</div>';return}el.innerHTML=rows.map(m=>`<div class="msg ${m.sender}">${esc(m.message)}<small>${time(m.created_at)}</small></div>`).join('');el.scrollTop=el.scrollHeight}
+async function sendMessage(message){if(!activeConversation)return;const r=await api('/admin/sana/message',{method:'POST',body:JSON.stringify({conversation_id:activeConversation,message})});if(r.ok){$('messageInput').value='';await loadMessages()}}
+async function loadBookings(){const r=await api('/admin/sana/bookings');if(!r.ok)return;const rows=r.data.bookings||[];$('bookings').innerHTML=rows.length?rows.slice(0,20).map(b=>`<div class="booking"><b>${esc(b.service||'Booking')} · ${esc(b.name||'')}</b><span>${esc(b.email||'')} · ${esc(b.preferred_date||'')} ${esc(b.preferred_time||'')} (${esc(b.timezone||'')})</span></div>`).join(''):'<div class="empty">No bookings yet.</div>'}
+$('requests').addEventListener('click',e=>{const card=e.target.closest('.request');if(!card)return;const id=Number(card.dataset.id);const action=e.target.dataset.action;if(action==='approve')approve(id);else if(action==='reject')reject(id);else if(card.dataset.conv){activeConversation=card.dataset.conv;activeRequest=id;enableChat();loadMessages();loadRequests();}});
+$('composer').addEventListener('submit',e=>{e.preventDefault();const v=$('messageInput').value.trim();if(v)sendMessage(v)});
+heartbeat();loadRequests();loadBookings();setInterval(heartbeat,15000);setInterval(loadRequests,3000);setInterval(()=>{loadMessages();loadBookings()},2000);
+</script>
+</body></html>

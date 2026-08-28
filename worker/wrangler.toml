@@ -1,5 +1,5 @@
 name = "naveenshankar-api"
-main = "src/index.js"
+main = "src/sana-worker.js"
 compatibility_date = "2025-01-01"
 
 routes = [
@@ -18,6 +18,4 @@ binding = "AI"
 # (do not put SESSION_SECRET, CF_API_TOKEN, or RESEND_API_KEY in this file)
 
 [vars]
-# Zone ID is not sensitive (find it on the domain overview page in Cloudflare).
-# Leave as-is until you're ready to enable visitor stats on the dashboard.
 CF_ZONE_ID = ""
