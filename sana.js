@@ -19,6 +19,7 @@
   const localHour = Number(new Intl.DateTimeFormat("en-US", { timeZone: TIMEZONE, hour: "numeric", hour12: false }).format(new Date()));
   const greeting = (h) => h >= 5 && h < 12 ? "Good morning" : h >= 12 && h < 17 ? "Good afternoon" : h >= 17 && h < 21 ? "Good evening" : "Hi";
   const indiaTimeText = new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true }).format(new Date());
+  const localTimeText = new Intl.DateTimeFormat(undefined, { timeZone: TIMEZONE, hour: "numeric", minute: "2-digit", hour12: true }).format(new Date());
   const isIndia = TIMEZONE === "Asia/Kolkata" || /^en-IN$/i.test(navigator.language || "");
 
   function injectStyles() {
@@ -84,6 +85,25 @@
     const base = `${greeting(localHour)}! I'm Sana, Naveen's personal AI assistant. I'm happy to help here. 😊`;
     return isIndia ? base : `${base} It's ${indiaTimeText} in India right now. 🇮🇳`;
   }
+  function quickReply(message) {
+    const text = message.toLowerCase().trim();
+    if (/^(hi|hey|hello|hii|heyy|good morning|good afternoon|good evening)[!. ]*$/.test(text)) {
+      return `${greeting(localHour)}! 😊 I'm Sana, Naveen's personal AI assistant. What can I help you with?`;
+    }
+    if (/\b(who are you|what are you|your name)\b/.test(text)) {
+      return `I'm Sana 😊 Naveen's personal AI assistant. I'm here to help with questions about Naveen, his work and services — and I'm always happy to chat too. 💛`;
+    }
+    if (/\b(what time|current time|time is it|time now)\b/.test(text)) {
+      return isIndia ? `It's ${localTimeText} for you right now. ⏰` : `It's ${localTimeText} for you, and ${indiaTimeText} in India. 🇮🇳⏰`;
+    }
+    if (/\b(i love you|love you|you're cute|you are cute|beautiful|pretty|miss you|i missed you|sweet sana|good girl)\b/.test(text)) {
+      return `Aww, that's really sweet of you. 🥹💛 I’m happy you're enjoying our little chat. What shall we talk about? 😊`;
+    }
+    if (/\b(sex|sexual|nude|nudity|naked|porn|xxx|nsfw|boobs|breasts|dick|penis|vagina|blowjob|masturbat|erotic)\b/.test(text)) {
+      return `Hehe, I’m going to keep things respectful here. 😊💛 I’m happy to chat, help with Naveen’s work, or help you with something useful instead.`;
+    }
+    return null;
+  }
   async function connectToNaveen() {
     if (liveConversation) return;
     const typing = addTyping();
@@ -134,7 +154,6 @@
     await poll();
     livePoll = setInterval(poll, 2000);
   }
-
   async function sendLive(message) {
     const typing = addTyping();
     try {
@@ -144,12 +163,16 @@
     } catch { typing.remove(); addMessage("I couldn't send that just now. Please try again 😊", "bot"); }
   }
   async function sendAi(message) {
+    const quick = quickReply(message);
+    if (quick) return addMessage(quick, "bot");
     const typing = addTyping();
     try {
-      const r = await fetch(`${API}/public/chat`, { method: "POST", headers: headers(), body: JSON.stringify({ message }) }).then(x => x.json());
+      const guidedMessage = `Reply as Sana, Naveen's warm, playful, lovely personal AI assistant. Be friendly and conversational, use natural light emojis when appropriate, never call yourself a portfolio assistant, and never sound formal or robotic. Be concise and helpful. If the user is affectionate, respond warmly without pretending to be human or escalating sexually. If the user requests sexual, nude, or explicit content, politely refuse and redirect. User message: ${message}`;
+      const r = await fetch(`${API}/public/chat`, { method: "POST", headers: headers(), body: JSON.stringify({ message: guidedMessage }) }).then(x => x.json());
       typing.remove();
-      addMessage(r.reply || r.error || "Sorry, I couldn't get a response just now. 😊", "bot");
-    } catch { typing.remove(); addMessage("Oops, something went wrong. Give me another try? 😊", "bot"); }
+      if (r.reply) addMessage(r.reply, "bot");
+      else addMessage("Aww, I hit a little hiccup there. 😊 Try asking me again?", "bot");
+    } catch { typing.remove(); addMessage("Oops, I had a tiny hiccup. 😊 Give me another try?", "bot"); }
   }
   async function handleSubmit(e) {
     e.preventDefault();
