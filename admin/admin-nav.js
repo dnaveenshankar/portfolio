@@ -17,9 +17,10 @@ const ICONS = {
   testimonials: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>`,
   social: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.6M8.3 13.2l7.4 4.6"/></svg>`,
   services: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M17 14v6M14 17h6"/></svg>`,
-  sana: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.2-.6L4 20l1.4-3.6A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/><path d="M9 11h.01M12 11h.01M15 11h.01"/></svg>`,
 };
 
+// Local preview mode: mock only the dashboard's read-only API calls.
+// This is deliberately limited to localhost/127.0.0.1 and never affects production.
 (function installLocalDashboardPreview() {
   if (!/^(localhost|127\.0.0.1)$/.test(window.location.hostname)) return;
   const realFetch = window.fetch.bind(window);
@@ -27,17 +28,23 @@ const ICONS = {
     const url = typeof input === "string" ? input : input?.url || "";
     if (!url.includes("api.naveenshankar.in/admin/")) return realFetch(input, init);
     const path = new URL(url, window.location.origin).pathname;
-    const localResponse = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+    const localResponse = (data, status = 200) => new Response(JSON.stringify(data), {
+      status,
+      headers: { "Content-Type": "application/json" }
+    });
     if (path === "/admin/me") return localResponse({ username: "admin (local preview)" });
-    if (path === "/admin/stats") return localResponse({ configured: true, daily: [
-      { date: new Date(Date.now()-6*86400000).toISOString(), requests: 182, pageViews: 96, uniqueVisitors: 54 },
-      { date: new Date(Date.now()-5*86400000).toISOString(), requests: 241, pageViews: 128, uniqueVisitors: 73 },
-      { date: new Date(Date.now()-4*86400000).toISOString(), requests: 214, pageViews: 117, uniqueVisitors: 69 },
-      { date: new Date(Date.now()-3*86400000).toISOString(), requests: 326, pageViews: 174, uniqueVisitors: 101 },
-      { date: new Date(Date.now()-2*86400000).toISOString(), requests: 289, pageViews: 153, uniqueVisitors: 88 },
-      { date: new Date(Date.now()-1*86400000).toISOString(), requests: 371, pageViews: 205, uniqueVisitors: 119 },
-      { date: new Date().toISOString(), requests: 318, pageViews: 176, uniqueVisitors: 104 }
-    ] });
+    if (path === "/admin/stats") return localResponse({
+      configured: true,
+      daily: [
+        { date: new Date(Date.now()-6*86400000).toISOString(), requests: 182, pageViews: 96, uniqueVisitors: 54 },
+        { date: new Date(Date.now()-5*86400000).toISOString(), requests: 241, pageViews: 128, uniqueVisitors: 73 },
+        { date: new Date(Date.now()-4*86400000).toISOString(), requests: 214, pageViews: 117, uniqueVisitors: 69 },
+        { date: new Date(Date.now()-3*86400000).toISOString(), requests: 326, pageViews: 174, uniqueVisitors: 101 },
+        { date: new Date(Date.now()-2*86400000).toISOString(), requests: 289, pageViews: 153, uniqueVisitors: 88 },
+        { date: new Date(Date.now()-1*86400000).toISOString(), requests: 371, pageViews: 205, uniqueVisitors: 119 },
+        { date: new Date().toISOString(), requests: 318, pageViews: 176, uniqueVisitors: 104 }
+      ]
+    });
     if (path === "/admin/activity") return localResponse({ activity: [
       { username: "admin", action: "profile_update", detail: "Local preview", created_at: Date.now()-8*60000, ip: "127.0.0.1" },
       { username: "admin", action: "dashboard_preview", detail: "Local-only mock data", created_at: Date.now()-22*60000, ip: "127.0.0.1" },
@@ -50,7 +57,6 @@ const ICONS = {
 const ADMIN_NAV_SECTIONS = [
   { name: "Dashboard", icon: ICONS.dashboard, href: "/dashboard.html" },
   { name: "Profile", icon: ICONS.profile, href: "/profile-edit.html" },
-  { name: "Sana Chat", icon: ICONS.sana, href: "/sana-chat.html" },
   { name: "Skills", icon: ICONS.skills, href: "/skills.html" },
   { name: "Experience", icon: ICONS.experience, href: "/data.html?table=experience" },
   { name: "Education", icon: ICONS.education, href: "/data.html?table=education" },
@@ -107,13 +113,5 @@ function showToast(message, type = "info") {
   requestAnimationFrame(() => toast.classList.add("show"));
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 250); }, 3200);
 }
-document.addEventListener("DOMContentLoaded", renderSidebar);
 
-// Sana presence: any authenticated admin page keeps Naveen marked online while open.
-(function sanaPresenceHeartbeat() {
-  const token = sessionStorage.getItem("admin_token");
-  if (!token) return;
-  const send = () => fetch("https://api.naveenshankar.in/admin/sana/heartbeat", { method: "POST", headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
-  send();
-  setInterval(send, 15000);
-})();
+document.addEventListener("DOMContentLoaded", renderSidebar);
