@@ -1,5 +1,5 @@
 name = "naveenshankar-api"
-main = "src/sana-worker.js"
+main = "src/sana-booking-worker.js"
 compatibility_date = "2025-01-01"
 
 routes = [
