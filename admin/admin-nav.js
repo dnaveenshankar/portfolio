@@ -22,7 +22,7 @@ const ICONS = {
 // Local preview mode: mock only the dashboard's read-only API calls.
 // This is deliberately limited to localhost/127.0.0.1 and never affects production.
 (function installLocalDashboardPreview() {
-  if (!/^(localhost|127\.0.0.1)$/.test(window.location.hostname)) return;
+  if (!/^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)) return;
   const realFetch = window.fetch.bind(window);
   window.fetch = async function(input, init) {
     const url = typeof input === "string" ? input : input?.url || "";
@@ -98,6 +98,7 @@ function renderSidebar() {
   });
   document.getElementById("sidebarToggleBtn").addEventListener("click", () => document.querySelector(".sidebar")?.classList.toggle("open"));
 }
+
 function ensureToastRoot() {
   let root = document.getElementById("toastRoot");
   if (!root) { root = document.createElement("div"); root.id = "toastRoot"; root.className = "toast-root"; document.body.appendChild(root); }
