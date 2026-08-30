@@ -62,13 +62,6 @@ async function publicConnect(request, env) {
   if (!name) return json(request, { error: "Please provide your name." }, 400);
 
   const { online } = await getPresence(env);
-  if (!online) {
-    return json(request, {
-      reply: "Naveen is offline right now. Please try again when he is online. 💙",
-      action: "naveen_offline",
-      online: false,
-    });
-  }
 
   const existing = await env.DB.prepare(
     "SELECT * FROM sana_connect_requests WHERE session_id=? AND status IN('pending','accepted') ORDER BY id DESC LIMIT 1"
@@ -79,7 +72,7 @@ async function publicConnect(request, env) {
       return json(request, { reply: "You're already connected with Naveen. 💬", action: "connected", conversation_id: existing.conversation_id, status });
     }
     if (status === "pending") {
-      return json(request, { reply: "Your connection request is already waiting for Naveen. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status });
+      return json(request, { reply: online ? "Your connection request is already waiting for Naveen. 💙" : "Your connection request is queued. Naveen will see it when he is online. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status, online });
     }
   }
 
@@ -92,15 +85,20 @@ async function publicConnect(request, env) {
 
   await env.DB.prepare(
     "INSERT INTO sana_messages(session_id,conversation_id,sender,message,created_at) VALUES(?,?,?,?,?)"
-  ).bind(session, conversationId, "sana", `Hi ${name}! 👋 I've sent Naveen a live connection request. Please wait for him to accept it.`, created).run();
+  ).bind(session, conversationId, "sana", online
+    ? `Hi ${name}! 👋 I've sent Naveen a live connection request. Please wait for him to accept it.`
+    : `Hi ${name}! 👋 Your live connection request is queued for Naveen. He is currently offline, but the request has been saved.`, created).run();
 
   return json(request, {
-    reply: `Thanks, ${name}! 😊 Naveen is online. I've sent him your live connection request. I'll wait for his Accept or Reject decision.`,
+    reply: online
+      ? `Thanks, ${name}! 😊 Naveen is online. I've sent him your live connection request. I'll wait for his Accept or Reject decision.`
+      : `Thanks, ${name}! 😊 I've saved your live connection request. Naveen is currently offline and can see it when he comes online.`,
     action: "connect_requested",
     conversation_id: conversationId,
     expires_at: expires,
     request_id: result.meta?.last_row_id || null,
     status: "pending",
+    online,
   });
 }
 
@@ -118,9 +116,7 @@ async function publicLive(request, env) {
   if (!row) return json(request, { error: "Connection not found" }, 404);
 
   let status = await expireIfNeeded(env, row);
-  if (status === "expired") {
-    return json(request, { status: "expired", messages: [] });
-  }
+  if (status === "expired") return json(request, { status: "expired", messages: [] });
 
   const messages = await env.DB.prepare(
     "SELECT id,sender,message,created_at FROM sana_messages WHERE conversation_id=? AND id>? ORDER BY id ASC LIMIT 100"
@@ -209,9 +205,6 @@ async function adminMessages(request, env) {
   if (request.method === "POST") body = await request.json().catch(() => ({}));
   if (!conversationId && typeof body?.conversation_id === "string") conversationId = body.conversation_id.trim();
 
-  // Be tolerant of an old/stale admin client that calls this endpoint once without
-  // the query parameter. Prefer the currently accepted conversation instead of
-  // returning the misleading "conversation_id is required" error.
   if (!conversationId) {
     const fallback = await env.DB.prepare(
       "SELECT conversation_id FROM sana_connect_requests WHERE status='accepted' ORDER BY updated_at DESC, id DESC LIMIT 1"
