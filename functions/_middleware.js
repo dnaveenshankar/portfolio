@@ -14,10 +14,14 @@ export async function onRequest(context) {
     injected = injected.replace(/<\/body>/i, '  <script src="/sana.js?v=3" defer></script>\n</body>');
   }
   if (isAdminPage && !html.includes('/sana-admin-presence.js')) {
-    injected = injected.replace(/<\/body>/i, '  <script src="/sana-admin-presence.js?v=1" defer></script>\n</body>');
+    injected = injected.replace(/<\/body>/i, '  <script src="/sana-admin-presence.js?v=2" defer></script>\n</body>');
   }
-  if (injected === html) return new Response(html, response);
   const headers = new Headers(response.headers);
   headers.delete("content-length");
+  // Admin pages contain authenticated/live state and must not be served from a stale edge cache.
+  if (isAdminPage) {
+    headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+    headers.set("Pragma", "no-cache");
+  }
   return new Response(injected, { status: response.status, statusText: response.statusText, headers });
 }
