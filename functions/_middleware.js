@@ -6,6 +6,8 @@ export async function onRequest(context) {
 
   const isMainSanaPage = url.hostname.endsWith("naveenshankar.in") && !url.hostname.startsWith("admin.") && (url.pathname === "/" || url.pathname === "/index.html");
   const isAdminPage = url.hostname.startsWith("admin.") && (
+    url.pathname === "/sana-live" ||
+    url.pathname === "/sana-live.html" ||
     url.pathname === "/sana-chat" ||
     url.pathname === "/sana-chat.html" ||
     (url.pathname.endsWith(".html") && url.pathname !== "/login.html")
