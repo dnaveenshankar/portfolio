@@ -29,27 +29,16 @@ const ICONS = {
     const path = new URL(url, window.location.origin).pathname;
     const localResponse = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
     if (path === "/admin/me") return localResponse({ username: "admin (local preview)" });
-    if (path === "/admin/stats") return localResponse({ configured: true, daily: [
-      { date: new Date(Date.now()-6*86400000).toISOString(), requests: 182, pageViews: 96, uniqueVisitors: 54 },
-      { date: new Date(Date.now()-5*86400000).toISOString(), requests: 241, pageViews: 128, uniqueVisitors: 73 },
-      { date: new Date(Date.now()-4*86400000).toISOString(), requests: 214, pageViews: 117, uniqueVisitors: 69 },
-      { date: new Date(Date.now()-3*86400000).toISOString(), requests: 326, pageViews: 174, uniqueVisitors: 101 },
-      { date: new Date(Date.now()-2*86400000).toISOString(), requests: 289, pageViews: 153, uniqueVisitors: 88 },
-      { date: new Date(Date.now()-1*86400000).toISOString(), requests: 371, pageViews: 205, uniqueVisitors: 119 },
-      { date: new Date().toISOString(), requests: 318, pageViews: 176, uniqueVisitors: 104 }
-    ] });
-    if (path === "/admin/activity") return localResponse({ activity: [
-      { username: "admin", action: "profile_update", detail: "Local preview", created_at: Date.now()-8*60000, ip: "127.0.0.1" },
-      { username: "admin", action: "dashboard_preview", detail: "Local-only mock data", created_at: Date.now()-22*60000, ip: "127.0.0.1" },
-      { username: "admin", action: "login", detail: "Local preview", created_at: Date.now()-41*60000, ip: "127.0.0.1" }
-    ] });
+    if (path === "/admin/stats") return localResponse({ configured: true, daily: [] });
+    if (path === "/admin/activity") return localResponse({ activity: [] });
     return realFetch(input, init);
   };
 })();
 
 const ADMIN_NAV_SECTIONS = [
   { name: "Dashboard", icon: ICONS.dashboard, href: "/dashboard.html" },
-  { name: "Sana Chat", icon: ICONS.sana, href: "/sana-chat.html" },
+  { name: "Sana Live", icon: ICONS.sana, href: "/sana-live.html" },
+  { name: "Legacy Sana Chat", icon: ICONS.sana, href: "/sana-chat.html" },
   { name: "Profile", icon: ICONS.profile, href: "/profile-edit.html" },
   { name: "Skills", icon: ICONS.skills, href: "/skills.html" },
   { name: "Experience", icon: ICONS.experience, href: "/data.html?table=experience" },
@@ -72,71 +61,12 @@ function renderSidebar() {
   if (!slot) return;
   const currentPath = window.location.pathname + window.location.search;
   const currentTable = new URLSearchParams(window.location.search).get("table");
-  slot.innerHTML = `
-    <aside class="sidebar">
-      <div class="sidebar-brand"><span>naveenshankar.in</span></div>
-      <nav class="sidebar-nav">
-        ${ADMIN_NAV_SECTIONS.map((s) => {
-          const isActive = currentPath === s.href || (s.href.includes("table=") && currentTable && s.href.includes(`table=${currentTable}`));
-          return `<a href="${s.href}" class="${isActive ? "active" : ""}"><span class="icon">${s.icon}</span><span>${s.name}</span></a>`;
-        }).join("")}
-      </nav>
-      <button class="sidebar-logout" id="sidebarLogoutBtn"><span class="icon">${ICONS.social}</span> Log out</button>
-    </aside>
-    <button class="sidebar-toggle" id="sidebarToggleBtn" aria-label="Toggle menu">☰</button>
-  `;
-  document.getElementById("sidebarLogoutBtn").addEventListener("click", () => {
-    sessionStorage.removeItem("admin_token");
-    sessionStorage.removeItem("admin_local_preview");
-    window.location.href = "/login.html";
-  });
-  document.getElementById("sidebarToggleBtn").addEventListener("click", () => document.querySelector(".sidebar")?.classList.toggle("open"));
+  slot.innerHTML = `<aside class="sidebar"><div class="sidebar-brand"><span>naveenshankar.in</span></div><nav class="sidebar-nav">${ADMIN_NAV_SECTIONS.map(s=>{const isActive=currentPath===s.href||(s.href.includes("table=")&&currentTable&&s.href.includes(`table=${currentTable}`));return `<a href="${s.href}" class="${isActive?'active':''}"><span class="icon">${s.icon}</span><span>${s.name}</span></a>`}).join("")}</nav><button class="sidebar-logout" id="sidebarLogoutBtn"><span class="icon">${ICONS.social}</span> Log out</button></aside><button class="sidebar-toggle" id="sidebarToggleBtn" aria-label="Toggle menu">☰</button>`;
+  document.getElementById("sidebarLogoutBtn").addEventListener("click",()=>{sessionStorage.removeItem("admin_token");sessionStorage.removeItem("admin_local_preview");window.location.href="/login.html"});
+  document.getElementById("sidebarToggleBtn").addEventListener("click",()=>document.querySelector(".sidebar")?.classList.toggle("open"));
 }
+function ensureToastRoot(){let root=document.getElementById("toastRoot");if(!root){root=document.createElement("div");root.id="toastRoot";root.className="toast-root";document.body.appendChild(root)}return root}
+function showToast(message,type="info"){const root=ensureToastRoot(),toast=document.createElement("div");toast.className=`toast toast-${type}`;toast.innerHTML=`<span>${type==="success"?'✓':type==="error"?'!':'i'}</span><span>${message}</span>`;root.appendChild(toast);requestAnimationFrame(()=>toast.classList.add("show"));setTimeout(()=>{toast.classList.remove("show");setTimeout(()=>toast.remove(),250)},3200)}
+function integrateSanaDashboard(){if(window.location.pathname!=="/dashboard.html")return;const quickGrid=document.querySelector(".quick-grid");if(!quickGrid||quickGrid.querySelector('[data-sana-dashboard]'))return;const card=document.createElement("a");card.className="quick-item";card.href="/sana-live.html";card.dataset.sanaDashboard="true";card.innerHTML=`<span class="quick-icon" style="color:#67e8f9;background:rgba(34,211,238,.11)">${ICONS.sana}</span><span class="quick-name">Sana Live <b data-sana-count style="display:none;margin-left:5px;color:#fcd34d"></b></span>`;quickGrid.insertBefore(card,quickGrid.firstElementChild);const token=sessionStorage.getItem("admin_token");if(!token)return;const loadCount=async()=>{try{const r=await fetch("https://api.naveenshankar.in/admin/sana/requests",{headers:{Authorization:`Bearer ${token}`}});if(!r.ok)return;const data=await r.json(),count=(data.requests||[]).filter(x=>x.status==='pending').length,badge=card.querySelector('[data-sana-count]');if(count){badge.textContent=`(${count} new)`;badge.style.display='inline'}else badge.style.display='none'}catch{}};loadCount();setInterval(loadCount,5000)}
 
-function ensureToastRoot() {
-  let root = document.getElementById("toastRoot");
-  if (!root) { root = document.createElement("div"); root.id = "toastRoot"; root.className = "toast-root"; document.body.appendChild(root); }
-  return root;
-}
-function showToast(message, type = "info") {
-  const root = ensureToastRoot();
-  const toast = document.createElement("div");
-  toast.className = `toast toast-${type}`;
-  const icon = type === "success" ? "✓" : type === "error" ? "!" : "i";
-  toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
-  root.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add("show"));
-  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 250); }, 3200);
-}
-
-function integrateSanaDashboard() {
-  if (window.location.pathname !== "/dashboard.html") return;
-  const quickGrid = document.querySelector(".quick-grid");
-  if (!quickGrid || quickGrid.querySelector('[data-sana-dashboard]')) return;
-  const card = document.createElement("a");
-  card.className = "quick-item";
-  card.href = "/sana-chat.html";
-  card.dataset.sanaDashboard = "true";
-  card.innerHTML = `<span class="quick-icon" style="color:#67e8f9;background:rgba(34,211,238,.11)">${ICONS.sana}</span><span class="quick-name">Sana Chat <b data-sana-count style="display:none;margin-left:5px;color:#fcd34d"></b></span>`;
-  quickGrid.insertBefore(card, quickGrid.firstElementChild);
-
-  const token = sessionStorage.getItem("admin_token");
-  if (!token) return;
-  const loadCount = async () => {
-    try {
-      const r = await fetch("https://api.naveenshankar.in/admin/sana/requests", { headers: { Authorization: `Bearer ${token}` } });
-      if (!r.ok) return;
-      const data = await r.json();
-      const count = (data.requests || []).filter(x => x.status === "pending").length;
-      const badge = card.querySelector("[data-sana-count]");
-      if (count) { badge.textContent = `(${count} new)`; badge.style.display = "inline"; } else badge.style.display = "none";
-    } catch {}
-  };
-  loadCount();
-  setInterval(loadCount, 5000);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderSidebar();
-  integrateSanaDashboard();
-});
+document.addEventListener("DOMContentLoaded",()=>{renderSidebar();integrateSanaDashboard()});
