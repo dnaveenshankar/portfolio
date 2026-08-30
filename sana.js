@@ -21,7 +21,11 @@
     if (hour >= 17 && hour < 21) return "Good evening";
     return "Hi";
   };
-  const defaultGreeting = () => `${greeting()}! 👋 I'm Sana, Naveen's personal assistant. I'm happy to help here. Hope you're doing well! 💙`;
+  const defaultGreeting = () => {
+    const g = greeting();
+    const opening = g === "Hi" ? "Hi!" : `Hi, ${g}!`;
+    return `${opening} I'm Sana, Naveen's personal AI assistant. How was your day? How can I help you today? 👋`;
+  };
 
   state.session = session();
   state.timezone = timezone();
