@@ -5,7 +5,11 @@ export async function onRequest(context) {
   if (!contentType.includes("text/html")) return response;
 
   const isMainSanaPage = url.hostname.endsWith("naveenshankar.in") && !url.hostname.startsWith("admin.") && (url.pathname === "/" || url.pathname === "/index.html");
-  const isAdminPage = url.hostname.startsWith("admin.") && url.pathname.endsWith(".html") && url.pathname !== "/login.html";
+  const isAdminPage = url.hostname.startsWith("admin.") && (
+    url.pathname === "/sana-chat" ||
+    url.pathname === "/sana-chat.html" ||
+    (url.pathname.endsWith(".html") && url.pathname !== "/login.html")
+  );
   if (!isMainSanaPage && !isAdminPage) return response;
 
   const html = await response.text();
@@ -18,7 +22,6 @@ export async function onRequest(context) {
   }
   const headers = new Headers(response.headers);
   headers.delete("content-length");
-  // Admin pages contain authenticated/live state and must not be served from a stale edge cache.
   if (isAdminPage) {
     headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
     headers.set("Pragma", "no-cache");
