@@ -1,5 +1,6 @@
 import apiWorker from "./index.js";
 import sanaBookingWorker from "./sana-booking-worker.js";
+import sanaLiveBridge from "./sana-live-bridge.js";
 
 function isSanaRoute(path) {
   return (
@@ -19,9 +20,10 @@ export default {
   async fetch(request, env, ctx) {
     const path = new URL(request.url).pathname;
 
-    // Sana's booking/live worker owns all Sana-specific routes.
-    // The existing API worker continues to own admin auth, CMS, profile,
-    // password reset, availability, and the other non-Sana API routes.
+    if (path === "/public/chat") {
+      return sanaLiveBridge.fetch(request, env, ctx);
+    }
+
     if (isSanaRoute(path)) {
       return sanaBookingWorker.fetch(request, env, ctx);
     }
