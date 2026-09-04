@@ -54,20 +54,14 @@ async function expireIfNeeded(env, requestRow) {
   return requestRow?.status || null;
 }
 
-async function publicConnect(request, env) {
-  const session = visitorSession(request);
-  if (!session) return json(request, { error: "A valid Sana session is required." }, 400);
-  const body = await request.json().catch(() => ({}));
-  const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
-  if (!name) return json(request, { error: "Please provide your name." }, 400);
-
+export async function createConnectRequest(env, session, name) {
   const { online } = await getPresence(env);
   if (!online) {
-    return json(request, {
+    return {
       reply: "Naveen is offline right now. Please try again when he is online. 💙",
       action: "naveen_offline",
       online: false,
-    });
+    };
   }
 
   const existing = await env.DB.prepare(
@@ -76,10 +70,10 @@ async function publicConnect(request, env) {
   if (existing) {
     const status = await expireIfNeeded(env, existing);
     if (status === "accepted") {
-      return json(request, { reply: "You're already connected with Naveen. 💬", action: "connected", conversation_id: existing.conversation_id, status });
+      return { reply: "You're already connected with Naveen. 💬", action: "connected", conversation_id: existing.conversation_id, status };
     }
     if (status === "pending") {
-      return json(request, { reply: "Your connection request is already waiting for Naveen. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status });
+      return { reply: "Your connection request is already waiting for Naveen. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status };
     }
   }
 
@@ -94,14 +88,25 @@ async function publicConnect(request, env) {
     "INSERT INTO sana_messages(session_id,conversation_id,sender,message,created_at) VALUES(?,?,?,?,?)"
   ).bind(session, conversationId, "sana", `Hi ${name}! 👋 I've sent Naveen a live connection request. Please wait for him to accept it.`, created).run();
 
-  return json(request, {
+  return {
     reply: `Thanks, ${name}! 😊 Naveen is online. I've sent him your live connection request. I'll wait for his Accept or Reject decision.`,
     action: "connect_requested",
     conversation_id: conversationId,
     expires_at: expires,
     request_id: result.meta?.last_row_id || null,
     status: "pending",
-  });
+  };
+}
+
+async function publicConnect(request, env) {
+  const session = visitorSession(request);
+  if (!session) return json(request, { error: "A valid Sana session is required." }, 400);
+  const body = await request.json().catch(() => ({}));
+  const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
+  if (!name) return json(request, { error: "Please provide your name." }, 400);
+
+  const result = await createConnectRequest(env, session, name);
+  return json(request, result);
 }
 
 async function publicLive(request, env) {
