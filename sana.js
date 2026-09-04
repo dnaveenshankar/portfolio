@@ -1,20 +1,264 @@
 (() => {
+  "use strict";
+
   const API = "https://api.naveenshankar.in";
-  const state = { session: null, timezone: "Asia/Kolkata", conversationId: null, liveStatus: null, lastMessageId: 0, liveTimer: null, connectNameRequested: false };
-  function getSession() { let id = localStorage.getItem("sana_session"); if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 40); localStorage.setItem("sana_session", id); } return id; }
-  function getTimezone() { const stored = localStorage.getItem("sana_timezone"); if (stored) return stored; try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata"; } catch { return "Asia/Kolkata"; } }
-  state.session = getSession(); state.timezone = getTimezone();
-  async function request(path, options = {}) { const r = await fetch(`${API}${path}`, { ...options, headers: { "Content-Type": "application/json", "X-Sana-Session": state.session, "X-Sana-Timezone": state.timezone, ...(options.headers || {}) } }); const data = await r.json().catch(() => ({})); if (!r.ok) throw new Error(data.error || `Sana request failed (${r.status})`); return data; }
-  function installStyles() { if (document.getElementById("sana-live-fix-styles")) return; const style = document.createElement("style"); style.id = "sana-live-fix-styles"; style.textContent = `#chatPanel .chat-input-row{display:flex!important;align-items:center!important;gap:8px!important;background:rgba(15,23,42,.96)!important;border-top:1px solid rgba(148,163,184,.18)!important;padding:10px!important}#chatPanel .chat-input-row input,#chatPanel #chatInput{flex:1!important;min-width:0!important;background:rgba(255,255,255,.06)!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;caret-color:#38bdf8!important;border:1px solid rgba(148,163,184,.25)!important;border-radius:12px!important;padding:10px 12px!important;opacity:1!important;outline:none!important}#chatPanel .chat-input-row input::placeholder{color:#94a3b8!important;opacity:1!important}#chatPanel .chat-input-row input:focus{border-color:#38bdf8!important;box-shadow:0 0 0 3px rgba(56,189,248,.12)!important}#chatPanel .chat-input-row button,#chatPanel #chatSendBtn{flex:0 0 42px!important;width:42px!important;height:42px!important;border:0!important;border-radius:12px!important;background:linear-gradient(135deg,#38bdf8,#8b5cf6)!important;color:#020617!important;-webkit-text-fill-color:#020617!important;display:grid!important;place-items:center!important;cursor:pointer!important;opacity:1!important;pointer-events:auto!important;font-weight:900!important}#chatPanel .sana-live-status{margin:2px 12px 4px;padding:7px 10px;border-radius:10px;font-size:.72rem;color:#94a3b8;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.12)}#chatPanel .chat-msg.sana-live-bot{background:rgba(56,189,248,.12)!important;color:#f8fafc!important;align-self:flex-start!important}#chatPanel .chat-msg.sana-live-user{background:#38bdf8!important;color:#020617!important;align-self:flex-end!important;font-weight:600!important}`; document.head.appendChild(style); }
-  function addMessage(list, text, kind) { const div = document.createElement("div"); div.textContent = text; div.className = `chat-msg ${kind === "visitor" ? "user sana-live-user" : "bot sana-live-bot"}`; list.appendChild(div); list.scrollTop = list.scrollHeight; return div; }
-  function addStatus(list, text) { const old = list.querySelector(".sana-live-status"); if (old) old.remove(); const div = document.createElement("div"); div.className = "sana-live-status"; div.textContent = text; list.appendChild(div); list.scrollTop = list.scrollHeight; }
-  async function sendNormal(message) { if (state.conversationId && state.liveStatus === "accepted") return request("/public/sana/message", { method: "POST", body: JSON.stringify({ conversation_id: state.conversationId, message }) }); return request("/public/chat", { method: "POST", body: JSON.stringify({ message }) }); }
-  async function requestLiveConnection(name) { return request("/public/sana/connect", { method: "POST", body: JSON.stringify({ name }) }); }
-  async function pollLive(render) { if (!state.conversationId) return; try { const data = await request(`/public/sana/live?conversation_id=${encodeURIComponent(state.conversationId)}&after=${state.lastMessageId}`); const previous = state.liveStatus; state.liveStatus = data.status; (data.messages || []).forEach(m => { state.lastMessageId = Math.max(state.lastMessageId, Number(m.id) || 0); if (m.sender !== "visitor" && typeof render === "function") render(m.message, m.sender); }); if (data.status === "accepted" && previous !== "accepted" && typeof render === "function") render("You're connected with Naveen now. 💬", "naveen"); if (data.status === "pending" && previous !== "pending" && typeof render === "function") render("Connection request sent. Please wait for Naveen to accept. ⏳", "status"); if ((data.status === "declined" || data.status === "expired") && previous !== data.status) { if (typeof render === "function") render(data.status === "declined" ? "Naveen couldn't accept the connection right now. I can still help you here. 💙" : "The live connection request has expired. You can request another connection.", "status"); state.conversationId = null; state.liveStatus = null; state.lastMessageId = 0; } } catch (_) {} }
-  function startPolling(list) { if (state.liveTimer) clearInterval(state.liveTimer); const render = (text, sender) => sender === "status" ? addStatus(list, text) : addMessage(list, text, "bot"); state.liveTimer = setInterval(() => pollLive(render), 2000); pollLive(render); }
-  function wireChatForm() { const original = document.getElementById("chatForm") || document.querySelector("[data-sana-chat-form]"); if (!original || original.dataset.sanaLiveWired === "1") return; const form = original.cloneNode(true); original.replaceWith(form); form.dataset.sanaLiveWired = "1"; const input = form.querySelector("#chatInput") || form.querySelector("[data-sana-input]"); const list = document.getElementById("chatMessages") || form.closest("[data-sana-widget]")?.querySelector("[data-sana-messages]"); if (!input || !list) return; form.addEventListener("submit", async event => { event.preventDefault(); event.stopPropagation(); const text = input.value.trim(); if (!text) return; input.value = ""; addMessage(list, text, "visitor"); const typing = addMessage(list, "Sana is thinking…", "bot"); try { let data; if (!state.conversationId && !state.connectNameRequested && /\b(live|talk|connect|speak|call|chat with naveen|talk to naveen|connect me)\b/i.test(text)) { state.connectNameRequested = true; typing.remove(); addMessage(list, "Of course! 😊 Before I send a live connection request to Naveen, may I have your name?", "bot"); input.focus(); return; } if (state.connectNameRequested && !state.conversationId) { state.connectNameRequested = false; data = await requestLiveConnection(text); typing.remove(); if (data.reply) addMessage(list, data.reply, "bot"); if (data.conversation_id) { state.conversationId = data.conversation_id; state.liveStatus = data.status || "pending"; state.lastMessageId = 0; addStatus(list, "⏳ Waiting for Naveen to accept…"); startPolling(list); } if (data.action === "naveen_offline") { state.conversationId = null; state.liveStatus = null; } return; } data = await sendNormal(text); typing.remove(); if (data.reply) addMessage(list, data.reply, "bot"); if (data.conversation_id) { state.conversationId = data.conversation_id; state.liveStatus = data.status || "pending"; state.lastMessageId = 0; startPolling(list); } if (data.action === "naveen_offline") { state.conversationId = null; state.liveStatus = null; } } catch (error) { typing.remove(); addMessage(list, "I'm having a little trouble connecting right now. Please try again. 💙", "bot"); console.error("Sana live chat error", error); } list.scrollTop = list.scrollHeight; }); input.addEventListener("keydown", event => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); } }); }
-  function setGreeting() { const list = document.getElementById("chatMessages") || document.querySelector("[data-sana-messages]"); if (!list) return; const first = list.querySelector(".chat-msg.bot, .sana-bot-message"); const text = "Hi! I'm Sana, Naveen's personal AI assistant. How can I help you today? 👋"; if (first) first.textContent = text; else addMessage(list, text, "bot"); }
-  function boot() { if (window.__sanaLiveFixed) return; window.__sanaLiveFixed = true; installStyles(); wireChatForm(); setGreeting(); }
+  const state = {
+    session: null,
+    timezone: "Asia/Kolkata",
+    conversationId: null,
+    liveStatus: null,
+    lastMessageId: 0,
+    liveTimer: null,
+    connectNameRequested: false,
+    wiredForm: null,
+  };
+
+  function getSession() {
+    let id = localStorage.getItem("sana_session");
+    if (!id) {
+      id = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`)
+        .replace(/[^a-zA-Z0-9_-]/g, "")
+        .slice(0, 40);
+      localStorage.setItem("sana_session", id);
+    }
+    return id;
+  }
+
+  function getTimezone() {
+    const stored = localStorage.getItem("sana_timezone");
+    if (stored) return stored;
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata"; }
+    catch { return "Asia/Kolkata"; }
+  }
+
+  state.session = getSession();
+  state.timezone = getTimezone();
+
+  async function request(path, options = {}) {
+    const r = await fetch(`${API}${path}`, {
+      ...options,
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Sana-Session": state.session,
+        "X-Sana-Timezone": state.timezone,
+        ...(options.headers || {}),
+      },
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || `Sana request failed (${r.status})`);
+    return data;
+  }
+
+  function installStyles() {
+    if (document.getElementById("sana-live-fix-styles")) return;
+    const style = document.createElement("style");
+    style.id = "sana-live-fix-styles";
+    style.textContent = `
+      #chatPanel .chat-input-row{display:flex!important;align-items:center!important;gap:8px!important;background:rgba(15,23,42,.96)!important;border-top:1px solid rgba(148,163,184,.18)!important;padding:10px!important}
+      #chatPanel .chat-input-row input,#chatPanel #chatInput{flex:1!important;min-width:0!important;background:rgba(255,255,255,.06)!important;color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;caret-color:#38bdf8!important;border:1px solid rgba(148,163,184,.25)!important;border-radius:12px!important;padding:10px 12px!important;opacity:1!important;outline:none!important}
+      #chatPanel .chat-input-row input::placeholder{color:#94a3b8!important;opacity:1!important}
+      #chatPanel .chat-input-row input:focus{border-color:#38bdf8!important;box-shadow:0 0 0 3px rgba(56,189,248,.12)!important}
+      #chatPanel .chat-input-row button,#chatPanel #chatSendBtn{flex:0 0 42px!important;width:42px!important;height:42px!important;border:0!important;border-radius:12px!important;background:linear-gradient(135deg,#38bdf8,#8b5cf6)!important;color:#020617!important;-webkit-text-fill-color:#020617!important;display:grid!important;place-items:center!important;cursor:pointer!important;opacity:1!important;pointer-events:auto!important;font-weight:900!important}
+      #chatPanel .sana-live-status{margin:2px 12px 4px;padding:7px 10px;border-radius:10px;font-size:.72rem;color:#94a3b8;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.12)}
+      #chatPanel .chat-msg.sana-live-bot{background:rgba(56,189,248,.12)!important;color:#f8fafc!important;align-self:flex-start!important}
+      #chatPanel .chat-msg.sana-live-user{background:#38bdf8!important;color:#020617!important;align-self:flex-end!important;font-weight:600!important}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function addMessage(list, text, kind) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    div.className = `chat-msg ${kind === "visitor" ? "user sana-live-user" : "bot sana-live-bot"}`;
+    list.appendChild(div);
+    list.scrollTop = list.scrollHeight;
+    return div;
+  }
+
+  function addStatus(list, text) {
+    const old = list.querySelector(".sana-live-status");
+    if (old) old.remove();
+    const div = document.createElement("div");
+    div.className = "sana-live-status";
+    div.textContent = text;
+    list.appendChild(div);
+    list.scrollTop = list.scrollHeight;
+  }
+
+  async function sendNormal(message) {
+    if (state.conversationId && state.liveStatus === "accepted") {
+      return request("/public/sana/message", {
+        method: "POST",
+        body: JSON.stringify({ conversation_id: state.conversationId, message }),
+      });
+    }
+    return request("/public/chat", { method: "POST", body: JSON.stringify({ message }) });
+  }
+
+  async function requestLiveConnection(name) {
+    return request("/public/sana/connect", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    });
+  }
+
+  async function pollLive(render) {
+    if (!state.conversationId) return;
+    try {
+      const data = await request(`/public/sana/live?conversation_id=${encodeURIComponent(state.conversationId)}&after=${state.lastMessageId}`);
+      const previous = state.liveStatus;
+      state.liveStatus = data.status;
+
+      (data.messages || []).forEach(m => {
+        state.lastMessageId = Math.max(state.lastMessageId, Number(m.id) || 0);
+        if (m.sender !== "visitor" && typeof render === "function") render(m.message, m.sender);
+      });
+
+      if (data.status === "accepted" && previous !== "accepted" && typeof render === "function") {
+        render("You're connected with Naveen now. 💬", "naveen");
+      }
+      if (data.status === "pending" && previous !== "pending" && typeof render === "function") {
+        render("Connection request sent. Please wait for Naveen to accept. ⏳", "status");
+      }
+      if ((data.status === "declined" || data.status === "expired") && previous !== data.status) {
+        if (typeof render === "function") {
+          render(
+            data.status === "declined"
+              ? "Naveen couldn't accept the connection right now. I can still help you here. 💙"
+              : "The live connection request has expired. You can request another connection.",
+            "status"
+          );
+        }
+        state.conversationId = null;
+        state.liveStatus = null;
+        state.lastMessageId = 0;
+      }
+    } catch (error) {
+      console.debug("Sana live poll", error);
+    }
+  }
+
+  function startPolling(list) {
+    if (state.liveTimer) clearInterval(state.liveTimer);
+    const render = (text, sender) => sender === "status"
+      ? addStatus(list, text)
+      : addMessage(list, text, "bot");
+    state.liveTimer = setInterval(() => pollLive(render), 2000);
+    pollLive(render);
+  }
+
+  function isLiveIntent(text) {
+    return /\b(live|human|person|agent|naveen|talk|connect|speak|call|real\s*(person|human)|someone|contact|reach)\b/i.test(text)
+      || /talk to|chat with|connect me|speak to|speak with|let me talk|want to talk|need to talk/i.test(text);
+  }
+
+  function wireChatForm() {
+    const original = document.getElementById("chatForm") || document.querySelector("[data-sana-chat-form]");
+    if (!original || state.wiredForm === original) return;
+    if (original.dataset.sanaLiveWired === "1") return;
+
+    const form = original.cloneNode(true);
+    original.replaceWith(form);
+    form.dataset.sanaLiveWired = "1";
+    state.wiredForm = form;
+
+    const input = form.querySelector("#chatInput") || form.querySelector("[data-sana-input]");
+    const list = document.getElementById("chatMessages") || form.closest("[data-sana-widget]")?.querySelector("[data-sana-messages]");
+    if (!input || !list) {
+      state.wiredForm = null;
+      return;
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = "";
+      addMessage(list, text, "visitor");
+      const typing = addMessage(list, "Sana is thinking…", "bot");
+
+      try {
+        let data;
+
+        if (!state.conversationId && !state.connectNameRequested && isLiveIntent(text)) {
+          state.connectNameRequested = true;
+          typing.remove();
+          addMessage(list, "Of course! 😊 Before I send a live connection request to Naveen, may I have your name?", "bot");
+          input.focus();
+          return;
+        }
+
+        if (state.connectNameRequested && !state.conversationId) {
+          state.connectNameRequested = false;
+          data = await requestLiveConnection(text);
+          typing.remove();
+          if (data.reply) addMessage(list, data.reply, "bot");
+
+          if (data.conversation_id) {
+            state.conversationId = data.conversation_id;
+            state.liveStatus = data.status || "pending";
+            state.lastMessageId = 0;
+            addStatus(list, "⏳ Waiting for Naveen to accept…");
+            startPolling(list);
+          }
+          return;
+        }
+
+        data = await sendNormal(text);
+        typing.remove();
+        if (data.reply) addMessage(list, data.reply, "bot");
+
+        if (data.conversation_id) {
+          state.conversationId = data.conversation_id;
+          state.liveStatus = data.status || "pending";
+          state.lastMessageId = 0;
+          startPolling(list);
+        }
+      } catch (error) {
+        typing.remove();
+        addMessage(list, "I'm having a little trouble connecting right now. Please try again. 💙", "bot");
+        console.error("Sana live chat error", error);
+      }
+      list.scrollTop = list.scrollHeight;
+    });
+
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+  }
+
+  function setGreeting() {
+    const list = document.getElementById("chatMessages") || document.querySelector("[data-sana-messages]");
+    if (!list) return;
+    const first = list.querySelector(".chat-msg.bot, .sana-bot-message");
+    const text = "Hi! I'm Sana, Naveen's personal AI assistant. How can I help you today? 👋";
+    if (first) first.textContent = text;
+    else addMessage(list, text, "bot");
+  }
+
+  function boot() {
+    if (window.__sanaLiveFixed) return;
+    window.__sanaLiveFixed = true;
+    installStyles();
+    wireChatForm();
+    setGreeting();
+
+    // The portfolio chat can be mounted/re-rendered after DOMContentLoaded.
+    // Keep watching until the real form exists, then wire it once.
+    const observer = new MutationObserver(() => wireChatForm());
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    setTimeout(() => observer.disconnect(), 30000);
+  }
+
   window.SanaAPI = { send: sendNormal, state, pollLive, requestLiveConnection };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true }); else boot();
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
+  else boot();
 })();

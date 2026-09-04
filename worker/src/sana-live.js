@@ -54,15 +54,14 @@ async function expireIfNeeded(env, requestRow) {
   return requestRow?.status || null;
 }
 
-export async function createConnectRequest(env, session, name) {
+async function publicConnect(request, env) {
+  const session = visitorSession(request);
+  if (!session) return json(request, { error: "A valid Sana session is required." }, 400);
+  const body = await request.json().catch(() => ({}));
+  const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
+  if (!name) return json(request, { error: "Please provide your name." }, 400);
+
   const { online } = await getPresence(env);
-  if (!online) {
-    return {
-      reply: "Naveen is offline right now. Please try again when he is online. 💙",
-      action: "naveen_offline",
-      online: false,
-    };
-  }
 
   const existing = await env.DB.prepare(
     "SELECT * FROM sana_connect_requests WHERE session_id=? AND status IN('pending','accepted') ORDER BY id DESC LIMIT 1"
@@ -70,10 +69,10 @@ export async function createConnectRequest(env, session, name) {
   if (existing) {
     const status = await expireIfNeeded(env, existing);
     if (status === "accepted") {
-      return { reply: "You're already connected with Naveen. 💬", action: "connected", conversation_id: existing.conversation_id, status };
+      return json(request, { reply: "You're already connected with Naveen. 💬", action: "connected", conversation_id: existing.conversation_id, status });
     }
     if (status === "pending") {
-      return { reply: "Your connection request is already waiting for Naveen. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status };
+      return json(request, { reply: online ? "Your connection request is already waiting for Naveen. 💙" : "Your connection request is queued. Naveen will see it when he is online. 💙", action: "connect_requested", conversation_id: existing.conversation_id, expires_at: existing.expires_at, status, online });
     }
   }
 
@@ -86,27 +85,21 @@ export async function createConnectRequest(env, session, name) {
 
   await env.DB.prepare(
     "INSERT INTO sana_messages(session_id,conversation_id,sender,message,created_at) VALUES(?,?,?,?,?)"
-  ).bind(session, conversationId, "sana", `Hi ${name}! 👋 I've sent Naveen a live connection request. Please wait for him to accept it.`, created).run();
+  ).bind(session, conversationId, "sana", online
+    ? `Hi ${name}! 👋 I've sent Naveen a live connection request. Please wait for him to accept it.`
+    : `Hi ${name}! 👋 Your live connection request is queued for Naveen. He is currently offline, but the request has been saved.`, created).run();
 
-  return {
-    reply: `Thanks, ${name}! 😊 Naveen is online. I've sent him your live connection request. I'll wait for his Accept or Reject decision.`,
+  return json(request, {
+    reply: online
+      ? `Thanks, ${name}! 😊 Naveen is online. I've sent him your live connection request. I'll wait for his Accept or Reject decision.`
+      : `Thanks, ${name}! 😊 I've saved your live connection request. Naveen is currently offline and can see it when he comes online.`,
     action: "connect_requested",
     conversation_id: conversationId,
     expires_at: expires,
     request_id: result.meta?.last_row_id || null,
     status: "pending",
-  };
-}
-
-async function publicConnect(request, env) {
-  const session = visitorSession(request);
-  if (!session) return json(request, { error: "A valid Sana session is required." }, 400);
-  const body = await request.json().catch(() => ({}));
-  const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
-  if (!name) return json(request, { error: "Please provide your name." }, 400);
-
-  const result = await createConnectRequest(env, session, name);
-  return json(request, result);
+    online,
+  });
 }
 
 async function publicLive(request, env) {
@@ -123,9 +116,7 @@ async function publicLive(request, env) {
   if (!row) return json(request, { error: "Connection not found" }, 404);
 
   let status = await expireIfNeeded(env, row);
-  if (status === "expired") {
-    return json(request, { status: "expired", messages: [] });
-  }
+  if (status === "expired") return json(request, { status: "expired", messages: [] });
 
   const messages = await env.DB.prepare(
     "SELECT id,sender,message,created_at FROM sana_messages WHERE conversation_id=? AND id>? ORDER BY id ASC LIMIT 100"
@@ -207,20 +198,31 @@ async function adminDecision(request, env, id, decision) {
 async function adminMessages(request, env) {
   const auth = await adminAuth(request, env);
   if (!auth) return json(request, { error: "Unauthorized" }, 401);
+
   const url = new URL(request.url);
-  const conversationId = url.searchParams.get("conversation_id");
-  if (!conversationId) return json(request, { error: "conversation_id is required" }, 400);
+  let conversationId = url.searchParams.get("conversation_id") || "";
+  let body = null;
+  if (request.method === "POST") body = await request.json().catch(() => ({}));
+  if (!conversationId && typeof body?.conversation_id === "string") conversationId = body.conversation_id.trim();
+
+  if (!conversationId) {
+    const fallback = await env.DB.prepare(
+      "SELECT conversation_id FROM sana_connect_requests WHERE status='accepted' ORDER BY updated_at DESC, id DESC LIMIT 1"
+    ).first();
+    conversationId = fallback?.conversation_id || "";
+  }
+  if (!conversationId) return json(request, { error: "No active Sana conversation" }, 409);
+
   const row = await env.DB.prepare("SELECT * FROM sana_connect_requests WHERE conversation_id=? LIMIT 1").bind(conversationId).first();
   if (!row) return json(request, { error: "Connection not found" }, 404);
 
   if (request.method === "GET") {
     const after = Math.max(0, Number(url.searchParams.get("after") || 0));
     const messages = await env.DB.prepare("SELECT id,sender,message,created_at FROM sana_messages WHERE conversation_id=? AND id>? ORDER BY id ASC LIMIT 100").bind(conversationId, after).all();
-    return json(request, { status: row.status, expires_at: row.expires_at, visitor_name: row.visitor_name || null, messages: messages.results || [] });
+    return json(request, { status: row.status, expires_at: row.expires_at, visitor_name: row.visitor_name || null, conversation_id: conversationId, messages: messages.results || [] });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const message = typeof body.message === "string" ? body.message.trim().slice(0, 2000) : "";
+  const message = typeof body?.message === "string" ? body.message.trim().slice(0, 2000) : "";
   if (!message) return json(request, { error: "message is required" }, 400);
   if (row.status !== "accepted") return json(request, { error: "Connection is not active.", status: row.status }, 409);
   if (Number(row.expires_at) <= now()) {
@@ -229,7 +231,7 @@ async function adminMessages(request, env) {
   }
   const created = now();
   await env.DB.prepare("INSERT INTO sana_messages(session_id,conversation_id,sender,message,created_at) VALUES(?,?,?,?,?)").bind(row.session_id, conversationId, "naveen", message, created).run();
-  return json(request, { ok: true, created_at: created });
+  return json(request, { ok: true, created_at: created, conversation_id: conversationId });
 }
 
 export default {
